@@ -5,8 +5,13 @@ Anyone else?
 
 Breakdown:
 Enemy AI & Obstacles
+
 Upgrade Store
+
 Movement
+
 Save/Load Progress/Levels (XML)
+
 Art + UI + Sound
+
 Collision
