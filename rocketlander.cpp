@@ -988,6 +988,6 @@ void render(Game *g)
 	}
 	// Draw Ramon's Menu
 	if (ramon_menu == 1) {
-		UpgradeMenu(xres, yres, r);
+		drawRamRMenu(xres, yres, r);
 	}
 }
