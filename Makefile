@@ -10,4 +10,3 @@ rocketlander: rocketlander.cpp log.cpp mytime.cpp nicholasP.cpp
 clean:
 	rm -f rocketlander
 	rm -f *.o
-

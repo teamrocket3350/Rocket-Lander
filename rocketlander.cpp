@@ -41,6 +41,7 @@
 #include <GL/glx.h>
 #include "log.h"
 #include "fonts.h"
+#include "nicholasP.h"
 
 //defined types
 typedef float Flt;
@@ -79,10 +80,12 @@ extern struct timespec timePause;
 extern double physicsCountdown;
 extern double timeSpan;
 extern double timeDiff(struct timespec *start, struct timespec *end);
+extern void drawnicholasMenu(int xres, int yres, Rect r);
 extern void timeCopy(struct timespec *dest, struct timespec *source);
 //-----------------------------------------------------------------------------
 
 int xres=1250, yres=900;
+int nick_menu = 0;
 
 // Added shape to detect collisions
 struct Shape {
@@ -133,7 +136,8 @@ struct Asteroid {
 	Vec pos;
 	Vec vel;
 	int nverts;
-	Flt radius;
+	Shape s;
+	//Flt radius;
 	Vec vert[8];
 	float angle;
 	float rotate;
@@ -337,13 +341,13 @@ void init(Game *g)
 	for (int j=0; j<3; j++) {
 		Asteroid *a = new Asteroid;
 		a->nverts = 8;
-		a->radius = rnd()*40.0 + 20.0;
-		Flt r2 = a->radius / 2.0;
+		a->s.radius = rnd()*40.0 + 20.0;
+		Flt r2 = a->s.radius / 2.0;
 		Flt angle = 0.0f;
 		Flt inc = (PI * 2.0) / (Flt)a->nverts;
 		for (int i=0; i<a->nverts; i++) {
-			a->vert[i][0] = sin(angle) * (r2 + rnd() * a->radius);
-			a->vert[i][1] = cos(angle) * (r2 + rnd() * a->radius);
+			a->vert[i][0] = sin(angle) * (r2 + rnd() * a->s.radius);
+			a->vert[i][1] = cos(angle) * (r2 + rnd() * a->s.radius);
 			angle += inc;
 		}
 		a->pos[0] = (Flt)(rand() % xres);
@@ -536,6 +540,8 @@ int check_keys(XEvent *e)
 			return 1;
 		case XK_f:
 			break;
+		case XK_n:
+			nick_menu = nick_menu ^ 1;
 		case XK_s:
 			break;
 		case XK_Down:
@@ -578,13 +584,13 @@ void buildAsteroidFragment(Asteroid *ta, Asteroid *a)
 {
 	//build ta from a
 	ta->nverts = 8;
-	ta->radius = a->radius / 2.0;
-	Flt r2 = ta->radius / 2.0;
+	ta->s.radius = a->s.radius / 2.0;
+	Flt r2 = ta->s.radius / 2.0;
 	Flt angle = 0.0f;
 	Flt inc = (PI * 2.0) / (Flt)ta->nverts;
 	for (int i=0; i<ta->nverts; i++) {
-		ta->vert[i][0] = sin(angle) * (r2 + rnd() * ta->radius);
-		ta->vert[i][1] = cos(angle) * (r2 + rnd() * ta->radius);
+		ta->vert[i][0] = sin(angle) * (r2 + rnd() * ta->s.radius);
+		ta->vert[i][1] = cos(angle) * (r2 + rnd() * ta->s.radius);
 		angle += inc;
 	}
 	ta->pos[0] = a->pos[0] + rnd()*10.0-5.0;
@@ -713,10 +719,10 @@ void physics(Game *g)
 			d0 = b->pos[0] - a->pos[0];
 			d1 = b->pos[1] - a->pos[1];
 			dist = (d0*d0 + d1*d1);
-			if (dist < (a->radius*a->radius)) {
+			if (dist < (a->s.radius*a->s.radius)) {
 				//std::cout << "asteroid hit." << std::endl;
 				//this asteroid is hit.
-				if (a->radius > MINIMUM_ASTEROID_SIZE) {
+				if (a->s.radius > MINIMUM_ASTEROID_SIZE) {
 					//break it into pieces.
 					Asteroid *ta = a;
 					buildAsteroidFragment(ta, a);
@@ -926,7 +932,7 @@ void render(Game *g)
 			glEnd();
 			//glBegin(GL_LINES);
 			//	glVertex2f(0,   0);
-			//	glVertex2f(a->radius, 0);
+			//	glVertex2f(a->s.radius, 0);
 			//glEnd();
 			glPopMatrix();
 			glColor3f(1.0f, 0.0f, 0.0f);
@@ -954,6 +960,11 @@ void render(Game *g)
 		glVertex2f(b->pos[0]+1.0f, b->pos[1]-1.0f);
 		glVertex2f(b->pos[0]+1.0f, b->pos[1]+1.0f);
 		glEnd();
+	}
+
+	// Draw Nick's Menu
+	if (nick_menu == 1) {
+	    drawNicholasMenu(xres, yres, r);
 	}
 }
 
