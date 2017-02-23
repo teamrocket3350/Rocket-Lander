@@ -41,11 +41,10 @@
 #include <GL/glx.h>
 #include "log.h"
 #include "fonts.h"
-<<<<<<< HEAD
 #include "abrahamA.h"
-=======
 #include "nicholasP.h"
->>>>>>> 8c07361e9bf5626cdfb22cfbf2dc329779a336e4
+#include "patrickE.h"
+#include "ramonR.h"
 
 //defined types
 typedef float Flt;
@@ -89,11 +88,10 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 //-----------------------------------------------------------------------------
 
 int xres=1250, yres=900;
-<<<<<<< HEAD
 int abrahamMenu = 0;
-=======
 int nick_menu = 0;
->>>>>>> 8c07361e9bf5626cdfb22cfbf2dc329779a336e4
+int pat_menu = 0;
+int ramon_menu = 0;
 
 // Added shape to detect collisions
 struct Shape {
@@ -560,6 +558,10 @@ int check_keys(XEvent *e)
 			break;
 		case XK_a:
 			abrahamMenu = abrahamMenu ^ 1;
+		case XK_r:
+			ramon_menu = ramon_menu ^ 1;
+		case XK_p:
+			pat_menu = pat_menu ^ 1;
 	}
 	return 0;
 }
@@ -972,19 +974,20 @@ void render(Game *g)
 		glEnd();
 	}
 
-<<<<<<< HEAD
 	//draw abrahams menu
 	if (abrahamMenu == 1) {
 	    menuAbraham(xres,yres,r);
 	}
-
-=======
 	// Draw Nick's Menu
 	if (nick_menu == 1) {
 	    drawNicholasMenu(xres, yres, r);
 	}
->>>>>>> 8c07361e9bf5626cdfb22cfbf2dc329779a336e4
+	// Draw Pat's Menu
+	if (pat_menu == 1) {
+	    UpgradeMenu(int xres,int yres,Rect r)
+	}
+	// Draw Ramon's Menu
+	if (ramon_menu == 1) {
+		UpgradeMenu(int xres,int yres,Rect r);
+	}
 }
-
-
-
