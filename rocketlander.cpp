@@ -984,7 +984,7 @@ void render(Game *g)
 	}
 	// Draw Pat's Menu
 	if (pat_menu == 1) {
-	    UpgradeMenu(int xres,int yres,Rect r)
+	    UpgradeMenu(int xres,int yres,Rect r);
 	}
 	// Draw Ramon's Menu
 	if (ramon_menu == 1) {
