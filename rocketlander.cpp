@@ -548,6 +548,7 @@ int check_keys(XEvent *e)
 			break;
 		case XK_n:
 			nick_menu = nick_menu ^ 1;
+			break;
 		case XK_s:
 			break;
 		case XK_Down:
@@ -558,10 +559,13 @@ int check_keys(XEvent *e)
 			break;
 		case XK_a:
 			abrahamMenu = abrahamMenu ^ 1;
+			break;
 		case XK_r:
 			ramon_menu = ramon_menu ^ 1;
+			break;
 		case XK_p:
 			pat_menu = pat_menu ^ 1;
+			break;
 	}
 	return 0;
 }
