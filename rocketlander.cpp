@@ -41,6 +41,7 @@
 #include <GL/glx.h>
 #include "log.h"
 #include "fonts.h"
+#include "abrahamA.h"
 
 //defined types
 typedef float Flt;
@@ -83,6 +84,7 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 //-----------------------------------------------------------------------------
 
 int xres=1250, yres=900;
+int abrahamMenu = 0;
 
 // Added shape to detect collisions
 struct Shape {
@@ -544,6 +546,8 @@ int check_keys(XEvent *e)
 			break;
 		case XK_minus:
 			break;
+		case XK_a:
+			abrahamMenu = abrahamMenu ^ 1;
 	}
 	return 0;
 }
@@ -955,6 +959,12 @@ void render(Game *g)
 		glVertex2f(b->pos[0]+1.0f, b->pos[1]+1.0f);
 		glEnd();
 	}
+
+	//draw abrahams menu
+	if (abrahamMenu == 1) {
+	    menuAbraham(xres,yres,r);
+	}
+
 }
 
 
