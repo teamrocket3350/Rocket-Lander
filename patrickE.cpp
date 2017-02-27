@@ -11,7 +11,7 @@
 #include "log.h"
 #include "fonts.h"
 #include "patrickE.h"
-#include "ppm.h"
+//#include "ppm.h"
 
 /*
 Ppmimage *background = NULL;
