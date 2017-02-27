@@ -11,8 +11,19 @@
 #include "log.h"
 #include "fonts.h"
 #include "patrickE.h"
+#include "ppm.h"
 
+/*
+Ppmimage *background = NULL;
 
+// convert image to ppm
+system(convert "./images/background.jpg" "./images/background.ppm");
+
+// load image files into a ppm structure
+background = ppm6GetImage("./images/background.ppm");
+
+int forest = 1;
+*/
 
 void UpgradeMenu(int xres,int yres,Rect r)
 {
@@ -31,3 +42,10 @@ void UpgradeMenu(int xres,int yres,Rect r)
     r.center=1;
     ggprint8b(&r,16,0,"Upgrades");    
 }
+
+/*
+// background image
+glBindTexture(GL_TEXTURE_2D, background);
+glTexImage2D(GL_TEXTURE_2D,0,3, background ->width, 
+background-> height, 0, GL_RGB, GL_UNSIGNED_BYTE, background->data);
+*/
