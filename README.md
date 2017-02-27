@@ -1,20 +1,18 @@
 # Rocket-Lander
 
-Patrick was here
-Anyone else?
-
 Breakdown:
-Enemy AI & Obstacles
-
-Upgrade Store
-
-Movement
-
-Save/Load Progress/Levels (XML)
-
-Art + UI + Sound
-
-Collision
-
-
-Test
+------------------------------------------------
+Enemy AI & Obstacles            | Ramon
+------------------------------------------------
+Upgrade Store                   | Patrick
+------------------------------------------------
+Movement                        | Nick
+------------------------------------------------
+Save/Load Progress/Levels (XML) | Abraham
+------------------------------------------------
+Art + UI + Sound                | Patrick
+------------------------------------------------
+Collision                       | Nick
+------------------------------------------------
+Objectives                      | Nick?
+------------------------------------------------
