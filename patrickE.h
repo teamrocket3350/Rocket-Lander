@@ -1,4 +1,4 @@
-#include <stdio.h>
+/*#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -11,4 +11,11 @@
 #include "log.h"
 #include "fonts.h"
 
+*/
+
+#ifndef patrickE
+#define patrickE
+
 void UpgradeMenu(int xres,int yres,Rect r);
+
+#endif
