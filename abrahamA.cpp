@@ -4,6 +4,7 @@
 // abrahamA.cpp
 
 #include<iostream>
+#include<fstream>
 #include<cstdlib>
 #include<cstring>
 #include<unistd.h>
@@ -15,7 +16,6 @@
 #include"log.h"
 #include"fonts.h"
 #include"abrahamA.h"
-
 
 void menuAbraham(int xres, int yres, Rect r)
 {
@@ -36,3 +36,61 @@ void menuAbraham(int xres, int yres, Rect r)
 	ggprint8b(&r,16, 0x00000000, "Abraham Menu");
     
 }
+
+int loadLevel()
+{
+    	int level;
+	ifstream load;
+	load.open ("./save_file.txt");
+		if (load.is_open()) {
+			cout << "\nSave file loaded successfully\n";
+			load >> level;
+			cout << "Level - " << level << "\n";
+		}
+		else {
+			cout << "\nCould not open save file\n";
+			level = 1;
+			cout << "Level - 1\n";	
+		}
+	load.close();
+	return (level);	
+}
+
+int loadShip()
+{
+    	int ship;
+	char buffer[3];
+	ifstream load;
+	load.open ("./save_file.txt");
+		if (load.is_open()) {
+			cout << "Loaded successfully\n";
+			load.getline(buffer,3);
+			load >> ship;	  
+			cout << "Ship - " << ship << "\n\n";
+		}
+		else {
+			cout << "Could not open save file\n";
+			ship = 1;
+			cout << "Ship - 1\n\n";	
+		}
+
+	load.close();
+	return (ship);	
+}
+
+void save(int level, int ship)
+{
+	ofstream save;
+	save.open ("./save_file.txt");
+		save << level << "\n"; 
+		save << ship;
+	save.close();
+}
+/*
+int main() {
+    int level, ship;
+    level = loadLevel();
+    ship = loadShip();
+    return 0;
+}
+*/
