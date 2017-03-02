@@ -4,6 +4,7 @@
 // abrahamA.cpp
 
 #include<iostream>
+#include<fstream>
 #include<cstdlib>
 #include<cstring>
 #include<unistd.h>
@@ -17,3 +18,8 @@
 
 void menuAbraham(int xres, int yres, Rect r);
 
+int loadLevel();
+
+int loadShip();
+
+void save(int level, int ship);
