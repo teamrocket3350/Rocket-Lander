@@ -18,10 +18,10 @@ void drawRamRMenu(int xres, int yres, Rect r)
     int cx = xres/2;
     int cy = yres/2;
     glBegin(GL_QUADS);
-	glVertex2f(cx-100, cy+100);
-	glVertex2f(cx+100, cy+100);
-	glVertex2f(cx+100, cy-100);
-	glVertex2f(cx-100, cy-100);
+	glVertex2f(cx-500, cy+500);
+	glVertex2f(cx+500, cy+500);
+	glVertex2f(cx+500, cy-500);
+	glVertex2f(cx-500, cy-500);
     glEnd();
     glEnable(GL_TEXTURE_2D);
     r.bot = cy + 20;
