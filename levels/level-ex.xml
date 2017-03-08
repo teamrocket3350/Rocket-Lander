@@ -1,0 +1,72 @@
+<!-- Not finished --!>
+<level>
+
+    <world>
+        <number>1</number> <!--Level Number --!>
+        <gravity>3.0</gravity>
+        <time>60</time> <!-- Time given to complete level --!>
+        <objectivetype></objectivetype>
+    </world>
+
+    <object>
+        <type>0</type>
+        <posx>0</posx>
+        <posy>0</posy>
+    </object>
+
+    <object>
+        <type>1</type>
+        <posx>200</posx>
+        <posy>200</posy>
+        <width>100</width>
+        <height>20</height>
+    </object>
+
+    <object>
+        <type>2</type>
+        <posx>100</posx>
+        <posy>100</posy>
+        <width>100</width>
+        <height>20</height>
+    </object>
+
+    <object>
+        <type>4</type>
+        <posx>50</posx>
+        <posy>50</posy>
+        <velx>10</velx>
+        <vely>2</vely>
+        <radius>30</radius>
+    </object>
+
+    <object>
+        <type>7</type>
+        <posx>0</posx>
+        <posy>0</posy>
+        <health>100</health> <!-- Might not use this --!>
+    </object>
+
+
+</level>
+
+<!-- Type keys: 
+     <type>
+            0:player ship
+            1:goal platform
+            2:platform
+            3:refuel platform
+            4:normal asteroid
+            5:spike asteroid
+            6:circler enemy
+            7:chaser/blinder enemy (blinds player if it runs into them)
+            ...
+     </type>
+
+    <objectivetype>
+            0: None
+            1: Destroy all enemies
+            2: Collect items
+            3: Refuel the ship
+            4: Land on multiple platforms
+    </objectivetype>
+-->
