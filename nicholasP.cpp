@@ -45,6 +45,11 @@ class Object
                         shape.center[1] = 0.0;
                 }
 
+		~Object()
+		{
+
+		}
+
                 virtual void move() = 0;
                 virtual bool collidesWith() = 0;
 };
@@ -101,19 +106,16 @@ class Asteroid : public Object {
 
 void drawNicholasMenu(int xres, int yres, Rect r)
 {
-        // Segfaults
         //Ship ship;
         //ship.move();
         //ship.collidesWith();
         //
 
-        // Segfaults
         //Ship ship;
         //Enemy enemy(&ship);
         //enemy.move();
         //enemy.collidesWith();
 
-        // Runs fine
         //Asteroid ast;
         //ast.move();
         //ast.collidesWith();
