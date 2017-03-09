@@ -23,12 +23,11 @@ struct Shape {
         Vec center;
 };
 
-
+// Objects such as: platforms
 class Object
 {
         private:
                 Vec pos;
-                Vec vel;
                 Shape shape;
                 
         public:
@@ -36,8 +35,6 @@ class Object
                 {
                         pos[0] = 0;
                         pos[1] = 0;
-                        vel[0] = 0;
-                        vel[1] = 0;
                         shape.width = 0.0;
                         shape.height = 0.0;
                         shape.radius = 0.0;
@@ -50,24 +47,44 @@ class Object
 
 		}
 
-                virtual void move() = 0;
-                virtual bool collidesWith() = 0;
+		virtual void draw() = 0;
 };
 
-class Ship : public Object {
+// Objects such as: player, enemies, asteroids
+class MovableObject : public Object
+{
+        private:
+                Vec vel;
+                
+        public:
+                MovableObject()
+                {
+                        vel[0] = 0;
+                        vel[1] = 0;
+                }
+
+                virtual void move() = 0;
+};
+
+class Ship : public MovableObject {
 
         public:
                 void move() override {
                     printf("The ship is moving!\n");
                 }
 
-                bool collidesWith() override {
+                bool collidesWith() {
                     printf("The ship is colliding!\n");
                     return true;
                 }
+
+                void draw() override {
+                    printf("Drawing the ship!\n");
+                }
+
 };
 
-class Enemy : public Object {
+class Enemy : public MovableObject {
 
         private:
                 int health;
@@ -84,41 +101,95 @@ class Enemy : public Object {
                     printf("The enemy is moving!\n");
                 }
 
-                bool collidesWith() override {
-                    printf("The enemy is colliding!\n");
-                    return true;
+                void draw() override {
+                    printf("Drawing the enemy!\n");
                 }
 };
 
-class Asteroid : public Object {
+class Asteroid : public MovableObject {
 
         public:
                 void move() override {
                     printf("The asteroid is moving!\n");
                 }
 
-                bool collidesWith() override {
-                    printf("The asteroid is colliding!\n");
-                    return true;
+                void draw() override {
+                    printf("Drawing the asteroid!\n");
                 }
 };
 
+class Platform : public Object {
+
+	public:
+		void draw() override {
+			printf("Drawing the platform!\n");
+		}
+};
+
+class Level {
+	private:
+		float gravity;
+		float time; // Use whatever type is needed
+		int score;
+		Ship * ship;
+		//Enemy enemies[10](s); // handled in constructor
+		Asteroid asteroids[10]; // handle enemies like bullets in asteroid framework
+		Platform platforms[100]; // This can be a normal array
+		//Objective objective; // Don't know how to handle this yet
+		/*
+		 * Other variables
+		 * that are needed
+		 */
+
+		// Functions:
+		void loadLevel() {} // Reads xml file and contains switch case to load objects
+		void moveObjects() {} // Calls move() for all MovableObject (ship/enemies/asteroids)
+		void removeEnemy(int index) {}
+		void addEnemy(Enemy enemy) {}
+		void addAsteroid(Asteroid ast) {}
+		void removeAsteroid(int index) {}
+		int calculateFinalScore() {return 0;}
+		bool objectiveComplete() {return false;} // Check if objective has been complete
+
+	public:
+		void init_level() {} // Run any initialization code
+		void runCycle() {} // Run a single cycle of the game
+
+		Level(Ship * s)
+		{
+			time = 60.0;
+			score = 0;
+			ship = s;
+			Enemy enemies[10](s); // handle enemies like bullets in asteroid framework
+			loadLevel();
+		}
+//
+//		~Level()
+//		{
+//
+//		}
+
+};
 
 void drawNicholasMenu(int xres, int yres, Rect r)
 {
         //Ship ship;
         //ship.move();
         //ship.collidesWith();
-        //
+	//ship.draw();
+        
 
         //Ship ship;
         //Enemy enemy(&ship);
         //enemy.move();
-        //enemy.collidesWith();
+	//enemy.draw();
 
         //Asteroid ast;
         //ast.move();
-        //ast.collidesWith();
+	//ast.draw();
+
+	//Platform plat;
+	//plat.draw();
 
         glColor3f(1.0, 0.0, 0.0);
         int cx = xres/2;
