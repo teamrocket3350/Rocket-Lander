@@ -131,8 +131,8 @@ class Level {
 		float gravity;
 		float time; // Use whatever type is needed
 		int score;
-		Ship * ship;
-		//Enemy enemies[10](s); // handled in constructor
+		Ship ship;
+		Enemy enemies[5] = {Enemy(&ship),Enemy(&ship),Enemy(&ship),Enemy(&ship),Enemy(&ship)}; // This will be changed when we add enemy types
 		Asteroid asteroids[10]; // handle enemies like bullets in asteroid framework
 		Platform platforms[100]; // This can be a normal array
 		//Objective objective; // Don't know how to handle this yet
@@ -142,7 +142,7 @@ class Level {
 		 */
 
 		// Functions:
-		void loadLevel() {} // Reads xml file and contains switch case to load objects
+		void loadLevel(char levelFile[]) {printf("%s\n", levelFile);} // Reads xml file and contains switch case to load objects
 		void moveObjects() {} // Calls move() for all MovableObject (ship/enemies/asteroids)
 		void removeEnemy(int index) {}
 		void addEnemy(Enemy enemy) {}
@@ -155,20 +155,11 @@ class Level {
 		void init_level() {} // Run any initialization code
 		void runCycle() {} // Run a single cycle of the game
 
-		Level(Ship * s)
+		Level(char levelFile[])
 		{
-			time = 60.0;
 			score = 0;
-			ship = s;
-			Enemy enemies[10](s); // handle enemies like bullets in asteroid framework
-			loadLevel();
+			loadLevel(levelFile);
 		}
-//
-//		~Level()
-//		{
-//
-//		}
-
 };
 
 void drawNicholasMenu(int xres, int yres, Rect r)
@@ -190,6 +181,8 @@ void drawNicholasMenu(int xres, int yres, Rect r)
 
 	//Platform plat;
 	//plat.draw();
+	
+	//Level level1((char*)"This is a test");
 
         glColor3f(1.0, 0.0, 0.0);
         int cx = xres/2;
@@ -205,4 +198,5 @@ void drawNicholasMenu(int xres, int yres, Rect r)
         r.left = cx;
         r.center = 1;
         ggprint8b(&r, 16, 0x00ffff00, "This is Nick's menu");
+        ggprint8b(&r, 16, 0x00ffff00, "Debugging!");
 }
