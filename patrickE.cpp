@@ -116,7 +116,7 @@ void LaserSound()
 
     //Buffer holds sound info
     ALuint alBuffer;
-    alBuffer = alutCreateBufferFromFile("/sounds/test.wav");
+    alBuffer = alutCreateBufferFromFile("test.wav");
 
     //Source refers to sound
     ALuint alSource;
@@ -132,4 +132,31 @@ void LaserSound()
     if (alGetError() != AL_NO_ERROR) {
 	printf("ERror: sound\n");
     }
+    //for (int i =0; i<1; i++) {
+	
+    else { 
+	alSourcePlay(alSource);
+	//usleep(2500000);
+    }
 }
+/*
+void cleanLaserSound()
+{
+    //Cleanup
+    //delete the buff 
+    alDeleteSources(1,&alSource);
+    //delete buffer
+    alDeleteBuffers(1,&alSource);   
+    //close out openal
+    //get active context
+    ALCcontext *Context = alcGetCurrentContext();
+    //get device for active contex
+    ALCdevice *Device = alcGetContextsDevice(Context);
+    //disable contex
+    alcMakeContextCurrent(NULL);
+    //release context(s)
+    alcDestroyContext(Context);
+    //close device
+    alcCloseDevice(Device);
+}
+*/
