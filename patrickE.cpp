@@ -100,7 +100,9 @@ void LaserMenu(int xres,int yres,Rect r)
 
 /**********SOUNDS**********/
 // testing out gordon's sound file first
-void LaserSound()
+
+// add extern void startUpSound to main
+void startUpSound()
 {
     //Start up
     alutInit(0,NULL);
@@ -113,7 +115,12 @@ void LaserSound()
     alListener3f(AL_POSITION, 0,0,0);
     alListenerfv(AL_ORIENTATION,vec);
     alListenerf(AL_GAIN, 1);
+}
 
+
+//when space is hit, shoot bullet when < MAX_BULLLETS
+void LaserSound()
+{
     //Buffer holds sound info
     ALuint alBuffer;
     alBuffer = alutCreateBufferFromFile("test.wav");
@@ -139,9 +146,12 @@ void LaserSound()
 	//usleep(2500000);
     }
 }
-/*
-void cleanLaserSound()
+
+
+// add extern void cleanSound to main
+void cleanSound()
 {
+    ALuint alSource;
     //Cleanup
     //delete the buff 
     alDeleteSources(1,&alSource);
@@ -159,4 +169,4 @@ void cleanLaserSound()
     //close device
     alcCloseDevice(Device);
 }
-*/
+
