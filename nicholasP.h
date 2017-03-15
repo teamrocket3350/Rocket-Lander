@@ -13,4 +13,18 @@
 #include "log.h"
 #include "fonts.h"
 
+//typedef float Vec[3];
+
+//struct Shape {
+//    float width, height;
+//    float radius;
+//    Vec center;
+//};
+
+//class Platform
+//{
+//    public:
+//	void draw();
+//};
+
 void drawNicholasMenu(int xres, int yres, Rect r);
