@@ -87,6 +87,11 @@ extern void drawnicholasMenu(int xres, int yres, Rect r);
 extern void timeCopy(struct timespec *dest, struct timespec *source);
 //-----------------------------------------------------------------------------
 
+// Patrick's extern
+extern void startUpSound();
+extern void cleanSound();
+
+
 int xres=1250, yres=900;
 int abrahamMenu = 0;
 int nick_menu = 0;
@@ -212,6 +217,7 @@ int main(void)
 	logOpen();
 	initXWindows();
 	init_opengl();
+	startUpSound();		// from Patrick to add sound
 	Game game;
 	init(&game);
 	srand(time(NULL));
@@ -240,6 +246,7 @@ int main(void)
 	}
 	cleanupXWindows();
 	cleanup_fonts();
+	cleanSound();		// clean up sounds
 	logClose();
 	return 0;
 }
@@ -444,6 +451,7 @@ void check_mouse(XEvent *e, Game *g)
 				timeCopy(&g->bulletTimer, &bt);
 				//shoot a bullet...
 				if (g->nbullets < MAX_BULLETS) {
+				LaserSound();
 					Bullet *b = &g->barr[g->nbullets];
 					timeCopy(&b->time, &bt);
 					b->pos[0] = g->ship.pos[0];
@@ -816,6 +824,7 @@ void physics(Game *g)
 		if (ts > 0.1) {
 			timeCopy(&g->bulletTimer, &bt);
 			if (g->nbullets < MAX_BULLETS) {
+				LaserSound();
 				//shoot a bullet...
 				//Bullet *b = new Bullet;
 				Bullet *b = &g->barr[g->nbullets];
