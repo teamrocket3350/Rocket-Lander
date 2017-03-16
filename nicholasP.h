@@ -79,11 +79,11 @@ class MovableObject : public Object
 //		void draw();
 //};
 //
-//class Asteroid : public MovableObject {
-//	public:
-//		void move();
-//		void draw();
-//};
+class Asteroid2 : public MovableObject {
+	public:
+		void move();
+		void draw();
+};
 
 class Platform : public Object
 {
