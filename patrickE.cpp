@@ -21,18 +21,18 @@
 //#include "ppm.h"
 
 /*
-Ppmimage *forestImage=NULL;
-GLuint forestTexture;
-int forest=1;
-forestImage	= ppm6GetImage("./images/forest.ppm");
-glGenTextures(1, &forestTexture);
+   Ppmimage *forestImage=NULL;
+   GLuint forestTexture;
+   int forest=1;
+   forestImage	= ppm6GetImage("./images/forest.ppm");
+   glGenTextures(1, &forestTexture);
 
-glBindTexture(GL_TEXTURE_2D, forestTexture);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-glTexImage2D(GL_TEXTURE_2D, 0,3, forestImage-> width, forestImage->height,
-	0, GL_RGB, GL_UNSIGNED_BYTE, forestImage->data);
-*/
+   glBindTexture(GL_TEXTURE_2D, forestTexture);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+   glTexImage2D(GL_TEXTURE_2D, 0,3, forestImage-> width, forestImage->height,
+   0, GL_RGB, GL_UNSIGNED_BYTE, forestImage->data);
+   */
 
 /**********UPGRADE MENUS**********/
 void UpgradeMenu(int xres,int yres,Rect r)
@@ -123,7 +123,7 @@ void LaserSound()
 {
     //Buffer holds sound info
     ALuint alBuffer;
-    alBuffer = alutCreateBufferFromFile("test.wav");
+    alBuffer = alutCreateBufferFromFile("./sounds/test.wav");
 
     //Source refers to sound
     ALuint alSource;
@@ -137,26 +137,56 @@ void LaserSound()
     alSourcef(alSource, AL_PITCH,1);
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
     if (alGetError() != AL_NO_ERROR) {
-	printf("ERror: sound\n");
+	printf("ERror: laser sound\n");
     }
     //for (int i =0; i<1; i++) {
-	
+
     else { 
 	alSourcePlay(alSource);
 	//usleep(2500000);
     }
 }
 
+void BoosterSound()
+{
+    //Buffer holds sound info
+    ALuint alBuffer;
+    alBuffer = alutCreateBufferFromFile("./sounds/test.wav");
+
+    //Source refers to sound
+    ALuint alSource;
+
+    //Generate a source
+    alGenSources(1, &alSource);
+    alSourcei(alSource, AL_BUFFER, alBuffer);
+
+    //Set volume and pitch to normal, no looping
+    alSourcef(alSource, AL_GAIN, 4);
+    alSourcef(alSource, AL_PITCH,4);
+    alSourcei(alSource, AL_LOOPING, AL_FALSE);
+    if (alGetError() != AL_NO_ERROR) {
+	printf("Error: booster sound\n");
+	alDeleteSources(1,&alSource);
+	alDeleteBuffers(1,&alBuffer);
+    alGenSources(1, &alSource);
+    alSourcei(alSource, AL_BUFFER, alBuffer);
+    alBuffer = alutCreateBufferFromFile("./sounds/test.wav");
+    }
+    else { 
+	alSourcePlay(alSource);
+    }
+}
 
 // add extern void cleanSound to main
 void cleanSound()
 {
     ALuint alSource;
+    ALuint alBuffer;
     //Cleanup
-    //delete the buff 
+    //delete the source
     alDeleteSources(1,&alSource);
     //delete buffer
-    alDeleteBuffers(1,&alSource);   
+    alDeleteBuffers(1,&alBuffer);   
     //close out openal
     //get active context
     ALCcontext *Context = alcGetCurrentContext();
