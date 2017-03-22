@@ -17,6 +17,8 @@
 #include"fonts.h"
 #include"abrahamA.h"
 
+using namespace std;
+
 void menuAbraham(int xres, int yres, Rect r)
 {
 	glColor3f(1.0,1.0,1.0);
