@@ -123,7 +123,8 @@ void LaserSound()
 {
     //Buffer holds sound info
     ALuint alBuffer;
-    alBuffer = alutCreateBufferFromFile("./sounds/test.wav");
+    alBuffer = alutCreateBufferFromFile("test.wav");
+	    //alBuffer = alutCreateBufferFromFile("./sounds/test.wav");
 
     //Source refers to sound
     ALuint alSource;
@@ -151,7 +152,8 @@ void BoosterSound()
 {
     //Buffer holds sound info
     ALuint alBuffer;
-    alBuffer = alutCreateBufferFromFile("./sounds/test.wav");
+    alBuffer = alutCreateBufferFromFile("test.wav");  
+	//alBuffer = alutCreateBufferFromFile("./sounds/test.wav");
 
     //Source refers to sound
     ALuint alSource;
@@ -166,11 +168,11 @@ void BoosterSound()
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
     if (alGetError() != AL_NO_ERROR) {
 	printf("Error: booster sound\n");
-	alDeleteSources(1,&alSource);
+	//alDeleteSources(1,&alSource);
 	alDeleteBuffers(1,&alBuffer);
-    alGenSources(1, &alSource);
-    alSourcei(alSource, AL_BUFFER, alBuffer);
-    alBuffer = alutCreateBufferFromFile("./sounds/test.wav");
+    //alGenSources(1, &alSource);
+    //alSourcei(alSource, AL_BUFFER, alBuffer);
+    alSourcePlay(alSource);
     }
     else { 
 	alSourcePlay(alSource);
