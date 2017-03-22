@@ -205,18 +205,88 @@ MovableObject::MovableObject()
 //	}
 //};
 
-//void Ship::move() override {
-//    printf("The ship is moving!\n");
-//}
-//
-//bool Ship::collidesWith() {
-//    printf("The ship is colliding!\n");
-//    return true;
-//}
-//
-//void Ship::draw() override {
-//    printf("Drawing the ship!\n");
-//}
+Ship2::Ship2()
+{
+	// Cockpit
+	collidables[0].width = 25;
+	collidables[0].height = 25;
+
+	// Left wing
+	collidables[1].width = 20;
+	collidables[1].height = 20;
+
+	// Right wing
+	collidables[2].width = 20;
+	collidables[2].height = 20;
+
+	// Nose
+	collidables[3].width = 20;
+	collidables[3].height = 20;
+
+	// Nose Cone
+	collidables[4].width = 20;
+	collidables[4].height = 20;
+
+	shape.width = collidables[0].width + collidables[1].width + collidables[2].width;
+	shape.height = collidables[0].height + collidables[3].height + collidables[4].height;
+	// Figure out how to set positions
+}
+
+void Ship2::move()
+{
+    printf("The ship is moving!\n");
+}
+
+bool Ship2::collidesWith()
+{
+    printf("The ship is colliding!\n");
+    return true;
+}
+
+void Ship2::draw()
+{
+    //draw ship box
+    glColor3ub(0,0,255);
+    glPushMatrix();
+    glTranslatef(pos[0], pos[1], 0);
+    glBegin(GL_QUADS);
+
+//    // Coords using center pos
+//    glVertex2i(-shape.width,-shape.height);
+//    glVertex2i(-shape.width, shape.height);
+//    glVertex2i(shape.width, shape.height);
+//    glVertex2i(shape.width, -shape.height);
+
+    // Coords using (0,0) pos
+    glVertex2i(0,0);
+    glVertex2i(0, shape.height);
+    glVertex2i(shape.width, shape.height);
+    glVertex2i(shape.width, 0);
+
+
+
+    glEnd();
+    glPopMatrix();
+
+    printf("Drawing the ship!\n");
+}
+
+void Ship2::drawRect()
+{
+    //draw platform
+    glColor3ub(255,165,0);
+    glPushMatrix();
+    glTranslatef(pos[0], pos[1], 0);
+    glBegin(GL_QUADS);
+
+    glVertex2i(-shape.width,-shape.height);
+    glVertex2i(-shape.width, shape.height);
+    glVertex2i(shape.width, shape.height);
+    glVertex2i(shape.width, -shape.height);
+
+    glEnd();
+    glPopMatrix();
+}
 
 
 //class Enemy : public MovableObject {
@@ -386,15 +456,20 @@ void Platform::draw()
     glTranslatef(pos[0], pos[1], 0);
     glBegin(GL_QUADS);
 
-    glVertex2i(-shape.width,-shape.height);
-    glVertex2i(-shape.width, shape.height);
+//    // Coords using center pos
+//    glVertex2i(-shape.width,-shape.height);
+//    glVertex2i(-shape.width, shape.height);
+//    glVertex2i(shape.width, shape.height);
+//    glVertex2i(shape.width, -shape.height);
+
+    // Coords using (0,0) pos
+    glVertex2i(0,0);
+    glVertex2i(0, shape.height);
     glVertex2i(shape.width, shape.height);
-    glVertex2i(shape.width, -shape.height);
+    glVertex2i(shape.width, 0);
 
     glEnd();
     glPopMatrix();
-
-    printf("Drawing the platform!\n");
 }
 
 //	class Level {
@@ -481,14 +556,8 @@ void Platform::draw()
 	    //ast.move();
 	    //ast.draw();
 
-	    Platform plat;
+	    //Platform plat;
 	    //plat.draw();
-	    printf("%f, ", plat.shape.height);
-	    printf("%f\n", plat.shape.width);
-	    plat.shape.height = 60.0;
-	    plat.shape.width = 30.0;
-	    printf("%f, ", plat.shape.height);
-	    printf("%f\n", plat.shape.width);
 
 	    //Level level1((char*)"This is a test");
 	    //level1.enemies[0] = e1;

@@ -23,34 +23,71 @@ struct Shape {
 
 class Object
 {
-	public:
+	protected:
 		Vec pos;
 		Shape shape;
 
+	public:
+		// Constructor/Destructor
 		Object();
 		~Object();
+
+		// Setters
+		void setPosX(float x) {pos[0]=x;}
+		void setPosY(float y) {pos[1]=y;}
+		void setWidth(float w) {shape.width=w;}
+		void setHeight(float h) {shape.height=h;}
+		void setRadius(float r) {shape.radius=r;}
+
+		// Getters
+		float getPosX() {return pos[0];}
+		float getPosY() {return pos[1];}
+		float getWidth() {return shape.width;}
+		float getHeight() {return shape.height;}
+		float getRadius() {return shape.radius;}
+
+		// Pure virtual functions
 		virtual void draw() = 0;
 };
 
 class MovableObject : public Object
 {
-	private:
+	protected:
 		Vec vel;
 
 	public:
+		// Constructor
 		MovableObject();
+
+		// Setters
+		void setVelX(float x) {vel[0]=x;}
+		void setVelY(float y) {vel[1]=y;}
+
+		// Getters
+		float getVelX() {return vel[0];}
+		float getVelY() {return vel[1];}
+
+		// Pure virtual functions
 		virtual void move() = 0;
 };
 
-//class Ship : public MovableObject {
-//	public:
-//		void move();
-//		bool collidesWith();
-//		void draw();
-//};
-//
+// Rename to Ship when integrating into rocketlander.cpp
+class Ship2 : public MovableObject {
+	private:
+		Shape collidables[5];
+	public:
+		// Constructor
+		Ship2();
+
+		void move();
+		bool collidesWith();
+		void draw();
+		void drawRect();
+		void drawTri();
+};
+
 //class Enemy : public MovableObject {
-//	private:
+//	protected:
 //		int health;
 //
 //	public:
@@ -60,7 +97,7 @@ class MovableObject : public Object
 //};
 //
 //class Chaser : public Enemy {
-//	private:
+//	protected:
 //		Ship * ship;
 //
 //	public:
@@ -70,7 +107,7 @@ class MovableObject : public Object
 //};
 //
 //class Circler : public Enemy {
-//	private:
+//	protected:
 //		Ship * ship;
 //
 //	public:
@@ -80,6 +117,7 @@ class MovableObject : public Object
 //};
 //
 class Asteroid2 : public MovableObject {
+//class Asteroid : public MovableObject {
 	public:
 		void move();
 		void draw();
@@ -93,7 +131,7 @@ class Platform : public Object
 };
 
 //class Level {
-//	private:
+//	protected:
 //		float gravity;
 //		float time;
 //		int score;
