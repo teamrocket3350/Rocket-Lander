@@ -96,3 +96,85 @@ int main() {
     return 0;
 }
 */
+
+Level::Level(char levelFile[])
+{
+        score = 0;
+        loadLevel(levelFile);
+
+        // Keep track of number of enemies/asteroids (use in add/remove funcs)
+        enemyCount = 0; 
+        asteroidCount = 0;
+        platformCount = 0;
+}
+
+void Level::loadLevel(char levelFile[]) // Reads file and contains switch case to load objects
+{
+    printf("%s\n", levelFile);
+}
+
+void Level::moveObjects()  // Calls move() for all MovableObject (ship/enemies/asteroids)
+{
+
+}
+
+void Level::addChaser(float posx, float posy, int health)
+{
+
+}
+
+void Level::addCircler(float posx, float posy, int health)
+{
+
+}
+
+void Level::removeEnemy(int index)
+{
+
+}
+
+void Level::addAsteroid(float posx, float posy, float velx, float vely, float radius)
+{
+
+}
+
+void Level::removeAsteroid(int index)
+{
+
+}
+
+void Level::addPlatform(float posx, float posy, float width, float height)
+{
+
+}
+
+void Level::addGoalPlatform(float posx, float posy, float width, float height)
+{
+
+}
+
+void Level::addRefuelPlatform(float posx, float posy, float width, float height)
+{
+
+}
+
+int Level::calculateFinalScore()
+{
+    return 0;
+} // ?
+
+bool Level::objectiveComplete()  // Check if objective has been complete
+{
+    return false;
+}
+
+void Level::init_level()  // Run any initialization code
+{
+
+}
+
+void Level::runCycle()  // Run a single cycle of the game
+{
+
+}
+
