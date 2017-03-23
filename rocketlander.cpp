@@ -1,30 +1,8 @@
 //3350 Spring 2017
 //
-//program: asteroids.cpp
-//author:  Gordon Griesel
-//date:    2014
-//mod spring 2015: added constructors
-//
-//This program is a game starting point for 335
-//
-// Possible requirements:
-// ----------------------
-// welcome screen
-// menu
-// multiple simultaneous key-press
-// show exhaust for thrusting
-// move the asteroids
-// collision detection for bullet on asteroid
-// collision detection for asteroid on ship
-// control of bullet launch point
-// life span for each bullet
-// cleanup the bullets that miss a target
-// split asteroids into pieces when blasted
-// random generation of new asteroids
-// score keeping
-// levels of difficulty
-// sound
-// use of textures
+//program: rocketlander.cpp
+//author: Team Rocket 
+//date:    2017
 // 
 //
 #include <iostream>
@@ -97,14 +75,7 @@ int abrahamMenu = 0;
 int nick_menu = 0;
 int pat_menu = 0;
 int ramon_menu = 0;
-/*
-// Added shape to detect collisions
-struct Shape {
-float width, height;
-float radius;
-Vec center;
-};
-*/
+
 struct Ship {
     Vec dir;
     Vec pos;
@@ -130,11 +101,6 @@ struct Ship {
     }
 };
 
-struct Platform {
-	Shape s;
-	float[3] color;
-}
-
 struct Bullet {
     Vec pos;
     Vec vel;
@@ -148,7 +114,6 @@ struct Asteroid {
     Vec vel;
     int nverts;
     Shape s;
-    //Flt radius;
     Vec vert[8];
     float angle;
     float rotate;

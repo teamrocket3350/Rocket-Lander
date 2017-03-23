@@ -17,13 +17,22 @@
 #include <sys/stat.h>
 #include </usr/include/AL/alut.h>
 
-struct Global {
-    ALuint alBufferLaser, alBufferBooster;
-    ALuint alSourceLaser, alSourceBooster;
-} g;
 
+//#include "ppm.h"
 
+/*
+   Ppmimage *forestImage=NULL;
+   GLuint forestTexture;
+   int forest=1;
+   forestImage	= ppm6GetImage("./images/forest.ppm");
+   glGenTextures(1, &forestTexture);
 
+   glBindTexture(GL_TEXTURE_2D, forestTexture);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+   glTexImage2D(GL_TEXTURE_2D, 0,3, forestImage-> width, forestImage->height,
+   0, GL_RGB, GL_UNSIGNED_BYTE, forestImage->data);
+   */
 
 /**********UPGRADE MENUS**********/
 void UpgradeMenu(int xres,int yres,Rect r)
@@ -106,105 +115,78 @@ void startUpSound()
     alListener3f(AL_POSITION, 0,0,0);
     alListenerfv(AL_ORIENTATION,vec);
     alListenerf(AL_GAIN, 1);
-    g.alBufferLaser = alutCreateBufferFromFile("test.wav");
-    //g.alBufferLaser = alutCreateBufferFromFile("./sounds/laser.wav");
-    g.alBufferBooster = alutCreateBufferFromFile("test.wav");
-    //g.alBufferLaser = alutCreateBufferFromFile("./sounds/booster.wav");
+}
 
-    //Generate source and store into buffer Laser
-    alGenSources(1, &g.alSourceLaser);
-    alSourcei(g.alSourceLaser, AL_BUFFER, g.alBufferLaser);
+
+//when space is hit, shoot bullet when < MAX_BULLLETS
+void LaserSound()
+{
+    //Buffer holds sound info
+    ALuint alBuffer;
+    alBuffer = alutCreateBufferFromFile("test.wav");
+    //alBuffer = alutCreateBufferFromFile("./sounds/test.wav");
+
+    //Source refers to sound
+    ALuint alSource;
+
+    //Generate a source
+    alGenSources(1, &alSource);
+    alSourcei(alSource, AL_BUFFER, alBuffer);
+
     //Set volume and pitch to normal, no looping
-    alSourcef(g.alSourceLaser, AL_GAIN, 1);
-    alSourcef(g.alSourceLaser, AL_PITCH,1);
-    alSourcei(g.alSourceLaser, AL_LOOPING, AL_FALSE);
+    alSourcef(alSource, AL_GAIN, 1);
+    alSourcef(alSource, AL_PITCH,1);
+    alSourcei(alSource, AL_LOOPING, AL_FALSE);
     if (alGetError() != AL_NO_ERROR) {
 	printf("ERror: laser sound\n");
+	alDeleteSources(1,&alSource);
+	alDeleteBuffers(1,&alBuffer);
+	alSourceRewind(alSource);
     }
-    //Generate source and store into buffer Booster
-    alGenSources(1, &g.alSourceBooster);
-    alSourcei(g.alSourceBooster, AL_BUFFER, g.alBufferBooster);
+    else { 
+	alSourcePlay(alSource);
+    }
+}
+
+void BoosterSound()
+{
+    //Buffer holds sound info
+    ALuint alBuffer;
+    alBuffer = alutCreateBufferFromFile("test.wav");  
+    //alBuffer = alutCreateBufferFromFile("./sounds/test.wav");
+
+    //Source refers to sound
+    ALuint alSource;
+
+    //Generate a source
+    alGenSources(1, &alSource);
+    alSourcei(alSource, AL_BUFFER, alBuffer);
+
     //Set volume and pitch to normal, no looping
-    alSourcef(g.alSourceBooster, AL_GAIN, 5);
-    alSourcef(g.alSourceBooster, AL_PITCH,5);
-    alSourcei(g.alSourceBooster, AL_LOOPING, AL_FALSE);
+    alSourcef(alSource, AL_GAIN, 5);
+    alSourcef(alSource, AL_PITCH, 6);
+    alSourcei(alSource, AL_LOOPING, AL_FALSE);
     if (alGetError() != AL_NO_ERROR) {
-	printf("ERror: booster sound\n");
+	printf("Error: booster sound\n");
+	alDeleteSources(1,&alSource);
+	alDeleteBuffers(1,&alBuffer);
+	alSourceRewind(alSource);
+    }
+    else { 
+	alSourcePlay(alSource);
     }
 }
 
-void playSound(ALuint source)
-{
-    alSourcePlay(source);
-}
-/*
-//when space is hit, shoot bullet when < MAX_BULLLETS
-void LaserSound(ALuint alSource)
-{
-//Buffer holds sound info
-ALuint alBuffer;
-alBuffer = alutCreateBufferFromFile("test.wav");
-//alBuffer = alutCreateBufferFromFile("./sounds/laser.wav");
-
-//Source refers to sound
-//ALuint alSource;
-
-//Generate a source
-alGenSources(1, &alSource);
-alSourcei(alSource, AL_BUFFER, alBuffer);
-
-//Set volume and pitch to normal, no looping
-alSourcef(alSource, AL_GAIN, 1);
-alSourcef(alSource, AL_PITCH,1);
-alSourcei(alSource, AL_LOOPING, AL_FALSE);
-if (alGetError() != AL_NO_ERROR) {
-printf("ERror: laser sound\n");
-alDeleteSources(1,&alSource);
-alDeleteBuffers(1,&alBuffer);
-alSourceRewind(alSource);
-}
-else { 
-alSourcePlay(alSource);
-}
-}
-
-void BoosterSound(ALuint alSource)
-{
-//Buffer holds sound info
-ALuint alBuffer;
-alBuffer = alutCreateBufferFromFile("test.wav");  
-//alBuffer = alutCreateBufferFromFile("./sounds/booster.wav");
-
-//Source refers to sound
-//ALuint alSource;
-
-//Generate a source
-alGenSources(1, &alSource);
-alSourcei(alSource, AL_BUFFER, alBuffer);
-
-//Set volume and pitch to normal, no looping
-alSourcef(alSource, AL_GAIN, 3);
-alSourcef(alSource, AL_PITCH, 3);
-alSourcei(alSource, AL_LOOPING, AL_FALSE);
-if (alGetError() != AL_NO_ERROR) {
-printf("Error: booster sound\n");
-alDeleteSources(1,&alSource);
-alDeleteBuffers(1,&alBuffer);
-alGetError();
-}
-alSourcePlay(alSource);
-}
-*/
 // add extern void cleanSound to main
 void cleanSound()
 {
+    ALuint alSource;
+    ALuint alBuffer;
     //Cleanup
     //delete the source
-    alDeleteSources(1,&g.alSourceLaser);
-    alDeleteSources(1,&g.alSourceBooster);
+    alDeleteSources(1,&alSource);
     //delete buffer
-    alDeleteBuffers(1,&g.alBufferLaser);   
-    alDeleteBuffers(1,&g.alBufferBooster);   
+    alDeleteBuffers(1,&alBuffer);   
     //close out openal
     //get active context
     ALCcontext *Context = alcGetCurrentContext();
