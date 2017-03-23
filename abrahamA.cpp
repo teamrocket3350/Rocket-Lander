@@ -88,7 +88,7 @@ void save(int level, int ship)
 		save << ship;
 	save.close();
 }
-/*
+
 int main() {
     int level, ship;
     level = loadLevel();
@@ -96,7 +96,7 @@ int main() {
     return 0;
 }
 
-
+/*
 Level::Level(char levelFile[])
 {
         score = 0;
