@@ -15,6 +15,7 @@
 #include<GL/glx.h>
 #include"log.h"
 #include"fonts.h"
+#include "nicholasP.h"
 
 void menuAbraham(int xres, int yres, Rect r);
 
