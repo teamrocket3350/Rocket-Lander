@@ -95,7 +95,7 @@ int main() {
     ship = loadShip();
     return 0;
 }
-*/
+
 
 Level::Level(char levelFile[])
 {
@@ -178,3 +178,4 @@ void Level::runCycle()  // Run a single cycle of the game
 
 }
 
+*/
