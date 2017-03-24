@@ -1,5 +1,8 @@
 # Rocket-Lander
 
+Don't forget to use K&R indent style!
+https://en.wikipedia.org/wiki/Indent_style#K.26R
+
 Breakdown:
 ------------------------------------------------
 Enemy AI & Obstacles            | Ramon
