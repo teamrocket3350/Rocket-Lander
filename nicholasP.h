@@ -1,3 +1,6 @@
+#ifndef nicholasP
+#define nicholasP
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -51,8 +54,9 @@ class Object
 		float getHeight() {return shape.height;}
 		float getRadius() {return shape.radius;}
 
+		void draw();
 		// Pure virtual functions
-		virtual void draw() = 0;
+		//virtual void draw() = 0;
 };
 
 class MovableObject : public Object
@@ -72,8 +76,9 @@ class MovableObject : public Object
 		float getVelX() {return vel[0];}
 		float getVelY() {return vel[1];}
 
+		void move();
 		// Pure virtual functions
-		virtual void move() = 0;
+		//virtual void move() = 0;
 };
 
 // Rename to Ship when integrating into rocketlander.cpp
@@ -101,10 +106,11 @@ class Ship2 : public MovableObject {
 		Ship2();
 
 		void move();
-		bool collidesWith();
+		bool collidesWith(Object);
 		void draw();
 		void drawRect();
 		void drawTri();
+		//void drawTri(Shape);
 
 		bool buyBooster1();
 		bool buyBooster2();
@@ -134,8 +140,7 @@ class Chaser : public Enemy {
 		Ship2 * ship;
 
 	public:
-		Chaser();
-		//Chaser(*Ship);
+		//Chaser(Ship*);
 		void move();
 		void draw();
 };
@@ -145,8 +150,7 @@ class Circler : public Enemy {
 		Ship2 * ship;
 
 	public:
-		Circler();
-		//Circler(*Ship);
+		//Circler(Ship*);
 		void move();
 		void draw();
 };
@@ -160,12 +164,10 @@ class Asteroid2 : public MovableObject {
 
 class Platform : public Object
 {
-    private:
-	bool isGoal;
-	bool isRefuel;
     public:
-	Platform();
 	void draw();
 };
 
 void drawNicholasMenu(int xres, int yres, Rect r);
+
+#endif
