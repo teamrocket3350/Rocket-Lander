@@ -153,7 +153,7 @@ void startUpSound()
     alListenerf(AL_GAIN, 1);
 }
 //when space is hit, shoot bullet when < MAX_BULLLETS
-void LaserSound(ALuint alSource)
+void LaserSound()
 {
     //Buffer holds sound info
     ALuint alBuffer;
@@ -161,7 +161,7 @@ void LaserSound(ALuint alSource)
     //alBuffer = alutCreateBufferFromFile("./sounds/laser.wav");
 
     //Source refers to sound
-    //ALuint alSource;
+    ALuint alSource;
 
     //Generate a source
     alGenSources(1, &alSource);
@@ -182,7 +182,7 @@ void LaserSound(ALuint alSource)
     }
 }
 
-void BoosterSound(ALuint alSource)
+void BoosterSound()
 {
     //Buffer holds sound info
     ALuint alBuffer;
@@ -190,7 +190,7 @@ void BoosterSound(ALuint alSource)
     //alBuffer = alutCreateBufferFromFile("./sounds/booster.wav");
 
     //Source refers to sound
-    //ALuint alSource;
+    ALuint alSource;
 
     //Generate a source
     alGenSources(1, &alSource);
