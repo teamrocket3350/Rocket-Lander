@@ -416,7 +416,7 @@ void check_mouse(XEvent *e, Game *g)
 		timeCopy(&g->bulletTimer, &bt);
 		//shoot a bullet...
 		if (g->nbullets < MAX_BULLETS) {
-		    //LaserSound();
+		    LaserSound();
 		    Bullet *b = &g->barr[g->nbullets];
 		    timeCopy(&b->time, &bt);
 		    b->pos[0] = g->ship.pos[0];
@@ -765,7 +765,7 @@ void physics(Game *g)
 	}
 	if (keys[XK_Up]) {
 	    //apply thrust
-	    //BoosterSound();	//BoosterSound
+	    BoosterSound();	//BoosterSound
 	    //convert ship angle to radians
 	    Flt rad = ((g->ship.angle+90.0) / 360.0f) * PI * 2.0;
 	    //convert angle to a vector
@@ -790,7 +790,7 @@ void physics(Game *g)
 	    if (ts > 0.1) {
 		timeCopy(&g->bulletTimer, &bt);
 		if (g->nbullets < MAX_BULLETS) {
-		    //LaserSound();
+		    LaserSound();
 		    //shoot a bullet...
 		    //Bullet *b = new Bullet;
 		    Bullet *b = &g->barr[g->nbullets];
