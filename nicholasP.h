@@ -101,6 +101,9 @@ class Ship2 : public MovableObject {
 		bool haveDoubleShot;
 		bool haveTripleShot;
 
+		bool rectCollidesWith(Shape, Object, float, float);
+		bool triCollidesWith(Shape, Object, float, float);
+
 	public:
 		// Constructor
 		Ship2();
