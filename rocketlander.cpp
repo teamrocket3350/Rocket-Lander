@@ -608,6 +608,10 @@ void physics(Game *g)
     //Update ship position
     g->ship.pos[0] += g->ship.vel[0];
     g->ship.pos[1] += g->ship.vel[1];
+	// TODO use similar physics to original ship?
+	g->ship2.setPosX(g->ship.pos[0]-(g->ship2.getWidth()/2));
+	g->ship2.setPosY(g->ship.pos[1]-10);
+	
 
     //	//check for collision with boxes...
     //	Shape *s;
