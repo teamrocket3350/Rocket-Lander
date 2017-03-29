@@ -20,7 +20,7 @@
 struct Global {
     ALuint alBufferLaser, alBufferBooster;
     ALuint alSourceLaser, alSourceBooster;
-} g;
+} p;
 
 /**********UPGRADE MENUS**********/
 void UpgradeMenu(int xres,int yres,Rect r)
@@ -166,11 +166,11 @@ void cleanSound()
 {
     //Cleanup
     //delete the source
-    alDeleteSources(1,&g.alSourceLaser);
-    alDeleteSources(1,&g.alSourceBooster);
+    alDeleteSources(1,&p.alSourceLaser);
+    alDeleteSources(1,&p.alSourceBooster);
     //delete buffer
-    alDeleteBuffers(1,&g.alBufferLaser);   
-    alDeleteBuffers(1,&g.alBufferBooster);   
+    alDeleteBuffers(1,&p.alBufferLaser);   
+    alDeleteBuffers(1,&p.alBufferBooster);   
     //close out openal
     //get active context
     ALCcontext *Context = alcGetCurrentContext();
@@ -199,28 +199,28 @@ void startUpSound()
     alListener3f(AL_POSITION, 0,0,0);
     alListenerfv(AL_ORIENTATION,vec);
     alListenerf(AL_GAIN, 1);
-    g.alBufferLaser = alutCreateBufferFromFile("test.wav");
-    //g.alBufferLaser = alutCreateBufferFromFile("./sounds/laser.wav");
-    g.alBufferBooster = alutCreateBufferFromFile("test.wav");
-    //g.alBufferLaser = alutCreateBufferFromFile("./sounds/booster.wav");
+    p.alBufferLaser = alutCreateBufferFromFile("test.wav");
+    //p.alBufferLaser = alutCreateBufferFromFile("./sounds/laser.wav");
+    p.alBufferBooster = alutCreateBufferFromFile("test.wav");
+    //p.alBufferLaser = alutCreateBufferFromFile("./sounds/booster.wav");
 
     //Generate source and store into buffer Laser
-    alGenSources(1, &g.alSourceLaser);
-    alSourcei(g.alSourceLaser, AL_BUFFER, g.alBufferLaser);
+    alGenSources(1, &p.alSourceLaser);
+    alSourcei(p.alSourceLaser, AL_BUFFER, p.alBufferLaser);
     //Set volume and pitch to normal, no looping
-    alSourcef(g.alSourceLaser, AL_GAIN, 1);
-    alSourcef(g.alSourceLaser, AL_PITCH,1);
-    alSourcei(g.alSourceLaser, AL_LOOPING, AL_FALSE);
+    alSourcef(p.alSourceLaser, AL_GAIN, 1);
+    alSourcef(p.alSourceLaser, AL_PITCH,1);
+    alSourcei(p.alSourceLaser, AL_LOOPING, AL_FALSE);
     if (alGetError() != AL_NO_ERROR) {
 	printf("ERror: laser sound\n");
     }
     //Generate source and store into buffer Booster
-    alGenSources(1, &g.alSourceBooster);
-    alSourcei(g.alSourceBooster, AL_BUFFER, g.alBufferBooster);
+    alGenSources(1, &p.alSourceBooster);
+    alSourcei(p.alSourceBooster, AL_BUFFER, p.alBufferBooster);
     //Set volume and pitch to normal, no looping
-    alSourcef(g.alSourceBooster, AL_GAIN, 5);
-    alSourcef(g.alSourceBooster, AL_PITCH,5);
-    alSourcei(g.alSourceBooster, AL_LOOPING, AL_FALSE);
+    alSourcef(p.alSourceBooster, AL_GAIN, 5);
+    alSourcef(p.alSourceBooster, AL_PITCH,5);
+    alSourcei(p.alSourceBooster, AL_LOOPING, AL_FALSE);
     if (alGetError() != AL_NO_ERROR) {
 	printf("ERror: booster sound\n");
     }
@@ -235,11 +235,11 @@ void cleanSound()
 {
     //Cleanup
     //delete the source
-    alDeleteSources(1,&g.alSourceLaser);
-    alDeleteSources(1,&g.alSourceBooster);
+    alDeleteSources(1,&p.alSourceLaser);
+    alDeleteSources(1,&p.alSourceBooster);
     //delete buffer
-    alDeleteBuffers(1,&g.alBufferLaser);   
-    alDeleteBuffers(1,&g.alBufferBooster);   
+    alDeleteBuffers(1,&p.alBufferLaser);   
+    alDeleteBuffers(1,&p.alBufferBooster);   
     //close out openal
     //get active context
     ALCcontext *Context = alcGetCurrentContext();

@@ -422,7 +422,8 @@ void show_mouse_cursor(const int onoff)
 //		timeCopy(&g->bulletTimer, &bt);
 //		//shoot a bullet...
 //		if (g->nbullets < MAX_BULLETS) {
-//		    LaserSound();
+//		    LaserSound();	// Laser
+//	    	    // playSound(p.alSourceLaser);	// Laser
 //		    Bullet *b = &g->barr[g->nbullets];
 //		    timeCopy(&b->time, &bt);
 //		    b->pos[0] = g->ship.pos[0];
@@ -772,6 +773,7 @@ void physics(Game *g)
 	if (keys[XK_Up]) {
 	    //apply thrust
 	    BoosterSound();	//BoosterSound
+	    //playSound(p.alSourceBooster);	//Booster
 	    //convert ship angle to radians
 	    Flt rad = ((g->ship.angle+90.0) / 360.0f) * PI * 2.0;
 	    //convert angle to a vector
@@ -796,7 +798,8 @@ void physics(Game *g)
 	    if (ts > 0.1) {
 		timeCopy(&g->bulletTimer, &bt);
 		if (g->nbullets < MAX_BULLETS) {
-		    LaserSound();
+		    LaserSound();	// Laser
+		    //playSound(p.alSourceLaser);	// Laser
 		    //shoot a bullet...
 		    //Bullet *b = new Bullet;
 		    Bullet *b = &g->barr[g->nbullets];
@@ -841,8 +844,8 @@ void physics(Game *g)
 	    r.left = 10;
 	    r.center = 0;
 	    ggprint8b(&r, 16, 0x00ff0000, "Rocket Lander");
-//	    ggprint8b(&r, 16, 0x00ffff00, "n bullets: %i", g->nbullets);
-//	    ggprint8b(&r, 16, 0x00ffff00, "n asteroids: %i", g->nasteroids);
+	    //	    ggprint8b(&r, 16, 0x00ffff00, "n bullets: %i", g->nbullets);
+	    //	    ggprint8b(&r, 16, 0x00ffff00, "n asteroids: %i", g->nasteroids);
 	    //-------------------------------------------------------------------------
 
 	    g->ship2.draw();
