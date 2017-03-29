@@ -611,6 +611,8 @@ void physics(Game *g)
 	// TODO use similar physics to original ship?
 	g->ship2.setPosX(g->ship.pos[0]-(g->ship2.getWidth()/2));
 	g->ship2.setPosY(g->ship.pos[1]-10);
+	g->ship2.collidesWith(g->plat[0]);
+	g->ship2.collidesWith(g->plat[1]);
 	
 
     //	//check for collision with boxes...
