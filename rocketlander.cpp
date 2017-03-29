@@ -19,8 +19,9 @@
 #include <GL/glx.h>
 #include "log.h"
 #include "fonts.h"
-#include "abrahamA.h"
+
 #include "nicholasP.h"
+#include "abrahamA.h"
 #include "patrickE.h"
 #include "ramonR.h"
 
@@ -68,7 +69,6 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 // Patrick's extern
 extern void startUpSound();
 extern void cleanSound();
-
 
 int xres=1250, yres=900;
 int abrahamMenu = 0;
@@ -127,30 +127,37 @@ struct Asteroid {
 };
 
 struct Game {
+
+
     Ship ship;
+    Ship2 ship2; // Nick's ship class
     Asteroid *ahead;
     Bullet *barr;
     int nasteroids;
     int nbullets;
     struct timespec bulletTimer;
     struct timespec mouseThrustTimer;
-    Shape platforms[2];
+    //Shape platforms[2];
+    Platform plat[2]; // Nick's platform class
     bool mouseThrustOn;
     Game() {
 	ahead = NULL;
 	barr = new Bullet[MAX_BULLETS];
 	nasteroids = 0;
 	nbullets = 0;
-	// platform 1
-	platforms[0].width = 50;
-	platforms[0].height = 5;
-	platforms[0].center[0] = 60;
-	platforms[0].center[1] = 0 + platforms[0].height;
-	// platform 2
-	platforms[1].width = 50;
-	platforms[1].height = 5;
-	platforms[1].center[0] = 1000;
-	platforms[1].center[1] = 750;
+
+	ship2.setPosX(23);
+	ship2.setPosY(10);
+
+	plat[0].setPosX(10);
+	plat[0].setPosY(0);
+	plat[0].setWidth(100);
+	plat[0].setHeight(10);
+
+	plat[1].setPosX(950);
+	plat[1].setPosY(740);
+	plat[1].setWidth(100);
+	plat[1].setHeight(10);
 
 	mouseThrustOn = false;
     }
@@ -167,7 +174,7 @@ void initXWindows(void);
 void init_opengl(void);
 void cleanupXWindows(void);
 void check_resize(XEvent *e);
-void check_mouse(XEvent *e, Game *game);
+//void check_mouse(XEvent *e, Game *game);
 int check_keys(XEvent *e);
 void init(Game *g);
 void init_sounds(void);
@@ -175,7 +182,6 @@ void physics(Game *game);
 void render(Game *game);
 void set_mouse_position(int x, int y);
 void show_mouse_cursor(const int onoff);
-
 
 int main(void)
 {
@@ -195,7 +201,7 @@ int main(void)
 	    XEvent e;
 	    XNextEvent(dpy, &e);
 	    check_resize(&e);
-	    check_mouse(&e, &game);
+	    //check_mouse(&e, &game);
 	    done = check_keys(&e);
 	}
 	clock_gettime(CLOCK_REALTIME, &timeCurrent);
@@ -393,103 +399,103 @@ void show_mouse_cursor(const int onoff)
     //(thus do only use ONCE XDefineCursor and then XUndefineCursor):
 }
 
-void check_mouse(XEvent *e, Game *g)
-{
-    //Did the mouse move?
-    //Was a mouse button clicked?
-    static int savex = 0;
-    static int savey = 0;
-    //
-    static int ct=0;
-    //std::cout << "m" << std::endl << std::flush;
-    if (e->type == ButtonRelease) {
-	return;
-    }
-    if (e->type == ButtonPress) {
-	if (e->xbutton.button==1) {
-	    //Left button is down
-	    //a little time between each bullet
-	    struct timespec bt;
-	    clock_gettime(CLOCK_REALTIME, &bt);
-	    double ts = timeDiff(&g->bulletTimer, &bt);
-	    if (ts > 0.1) {
-		timeCopy(&g->bulletTimer, &bt);
-		//shoot a bullet...
-		if (g->nbullets < MAX_BULLETS) {
-		    LaserSound();
-		    Bullet *b = &g->barr[g->nbullets];
-		    timeCopy(&b->time, &bt);
-		    b->pos[0] = g->ship.pos[0];
-		    b->pos[1] = g->ship.pos[1];
-		    b->vel[0] = g->ship.vel[0];
-		    b->vel[1] = g->ship.vel[1];
-		    //convert ship angle to radians
-		    Flt rad = ((g->ship.angle+90.0) / 360.0f) * PI * 2.0;
-		    //convert angle to a vector
-		    Flt xdir = cos(rad);
-		    Flt ydir = sin(rad);
-		    b->pos[0] += xdir*20.0f;
-		    b->pos[1] += ydir*20.0f;
-		    b->vel[0] += xdir*6.0f + rnd()*0.1;
-		    b->vel[1] += ydir*6.0f + rnd()*0.1;
-		    b->color[0] = 1.0f;
-		    b->color[1] = 1.0f;
-		    b->color[2] = 1.0f;
-		    g->nbullets++;
-		}
-	    }
-	}
-	if (e->xbutton.button==3) {
-	    //Right button is down
-	}
-    }
-    //keys[XK_Up] = 0;
-    if (savex != e->xbutton.x || savey != e->xbutton.y) {
-	//Mouse moved
-	int xdiff = savex - e->xbutton.x;
-	int ydiff = savey - e->xbutton.y;
-	if (++ct < 10)
-	    return;		
-	//std::cout << "savex: " << savex << std::endl << std::flush;
-	//std::cout << "e->xbutton.x: " << e->xbutton.x << std::endl <<
-	//std::flush;
-	if (xdiff > 0) {
-	    //std::cout << "xdiff: " << xdiff << std::endl << std::flush;
-	    g->ship.angle += 0.05f * (float)xdiff;
-	    if (g->ship.angle >= 360.0f)
-		g->ship.angle -= 360.0f;
-	}
-	else if (xdiff < 0) {
-	    //std::cout << "xdiff: " << xdiff << std::endl << std::flush;
-	    g->ship.angle += 0.05f * (float)xdiff;
-	    if (g->ship.angle < 0.0f)
-		g->ship.angle += 360.0f;
-	}
-	if (ydiff > 0) {
-	    //apply thrust
-	    //convert ship angle to radians
-	    Flt rad = ((g->ship.angle+90.0) / 360.0f) * PI * 2.0;
-	    //convert angle to a vector
-	    Flt xdir = cos(rad);
-	    Flt ydir = sin(rad);
-	    g->ship.vel[0] += xdir * (float)ydiff * 0.01f;
-	    g->ship.vel[1] += ydir * (float)ydiff * 0.01f;
-	    Flt speed = sqrt(g->ship.vel[0]*g->ship.vel[0]+
-		    g->ship.vel[1]*g->ship.vel[1]);
-	    if (speed > 10.0f) {
-		speed = 10.0f;
-		normalize(g->ship.vel);
-		g->ship.vel[0] *= speed;
-		g->ship.vel[1] *= speed;
-	    }
-	    g->mouseThrustOn = true;
-	    clock_gettime(CLOCK_REALTIME, &g->mouseThrustTimer);
-	}
-	set_mouse_position(100,100);
-	savex=100;
-	savey=100;
-    }
-}
+//void check_mouse(XEvent *e, Game *g)
+//{
+//    //Did the mouse move?
+//    //Was a mouse button clicked?
+//    static int savex = 0;
+//    static int savey = 0;
+//    //
+//    static int ct=0;
+//    //std::cout << "m" << std::endl << std::flush;
+//    if (e->type == ButtonRelease) {
+//	return;
+//    }
+//    if (e->type == ButtonPress) {
+//	if (e->xbutton.button==1) {
+//	    //Left button is down
+//	    //a little time between each bullet
+//	    struct timespec bt;
+//	    clock_gettime(CLOCK_REALTIME, &bt);
+//	    double ts = timeDiff(&g->bulletTimer, &bt);
+//	    if (ts > 0.1) {
+//		timeCopy(&g->bulletTimer, &bt);
+//		//shoot a bullet...
+//		if (g->nbullets < MAX_BULLETS) {
+//		    LaserSound();
+//		    Bullet *b = &g->barr[g->nbullets];
+//		    timeCopy(&b->time, &bt);
+//		    b->pos[0] = g->ship.pos[0];
+//		    b->pos[1] = g->ship.pos[1];
+//		    b->vel[0] = g->ship.vel[0];
+//		    b->vel[1] = g->ship.vel[1];
+//		    //convert ship angle to radians
+//		    Flt rad = ((g->ship.angle+90.0) / 360.0f) * PI * 2.0;
+//		    //convert angle to a vector
+//		    Flt xdir = cos(rad);
+//		    Flt ydir = sin(rad);
+//		    b->pos[0] += xdir*20.0f;
+//		    b->pos[1] += ydir*20.0f;
+//		    b->vel[0] += xdir*6.0f + rnd()*0.1;
+//		    b->vel[1] += ydir*6.0f + rnd()*0.1;
+//		    b->color[0] = 1.0f;
+//		    b->color[1] = 1.0f;
+//		    b->color[2] = 1.0f;
+//		    g->nbullets++;
+//		}
+//	    }
+//	}
+//	if (e->xbutton.button==3) {
+//	    //Right button is down
+//	}
+//    }
+//    //keys[XK_Up] = 0;
+//    if (savex != e->xbutton.x || savey != e->xbutton.y) {
+//	//Mouse moved
+//	int xdiff = savex - e->xbutton.x;
+//	int ydiff = savey - e->xbutton.y;
+//	if (++ct < 10)
+//	    return;		
+//	//std::cout << "savex: " << savex << std::endl << std::flush;
+//	//std::cout << "e->xbutton.x: " << e->xbutton.x << std::endl <<
+//	//std::flush;
+//	if (xdiff > 0) {
+//	    //std::cout << "xdiff: " << xdiff << std::endl << std::flush;
+//	    g->ship.angle += 0.05f * (float)xdiff;
+//	    if (g->ship.angle >= 360.0f)
+//		g->ship.angle -= 360.0f;
+//	}
+//	else if (xdiff < 0) {
+//	    //std::cout << "xdiff: " << xdiff << std::endl << std::flush;
+//	    g->ship.angle += 0.05f * (float)xdiff;
+//	    if (g->ship.angle < 0.0f)
+//		g->ship.angle += 360.0f;
+//	}
+//	if (ydiff > 0) {
+//	    //apply thrust
+//	    //convert ship angle to radians
+//	    Flt rad = ((g->ship.angle+90.0) / 360.0f) * PI * 2.0;
+//	    //convert angle to a vector
+//	    Flt xdir = cos(rad);
+//	    Flt ydir = sin(rad);
+//	    g->ship.vel[0] += xdir * (float)ydiff * 0.01f;
+//	    g->ship.vel[1] += ydir * (float)ydiff * 0.01f;
+//	    Flt speed = sqrt(g->ship.vel[0]*g->ship.vel[0]+
+//		    g->ship.vel[1]*g->ship.vel[1]);
+//	    if (speed > 10.0f) {
+//		speed = 10.0f;
+//		normalize(g->ship.vel);
+//		g->ship.vel[0] *= speed;
+//		g->ship.vel[1] *= speed;
+//	    }
+//	    g->mouseThrustOn = true;
+//	    clock_gettime(CLOCK_REALTIME, &g->mouseThrustTimer);
+//	}
+//	set_mouse_position(100,100);
+//	savex=100;
+//	savey=100;
+//    }
+//}
 
 int check_keys(XEvent *e)
 {
@@ -834,33 +840,14 @@ void physics(Game *g)
 	    r.bot = yres - 20;
 	    r.left = 10;
 	    r.center = 0;
-	    ggprint8b(&r, 16, 0x00ff0000, "cs335 - Asteroids");
-	    ggprint8b(&r, 16, 0x00ffff00, "n bullets: %i", g->nbullets);
-	    ggprint8b(&r, 16, 0x00ffff00, "n asteroids: %i", g->nasteroids);
+	    ggprint8b(&r, 16, 0x00ff0000, "Rocket Lander");
+//	    ggprint8b(&r, 16, 0x00ffff00, "n bullets: %i", g->nbullets);
+//	    ggprint8b(&r, 16, 0x00ffff00, "n asteroids: %i", g->nasteroids);
 	    //-------------------------------------------------------------------------
 
-	    //Draw shapes...
-	    Shape *s;
-	    float w, h;
-	    //draw platform
-	    for (int i=0; i < 2; i++) {
-		glColor3ub(90,140,90);
-		s = &g->platforms[i];
-		//std::cout << "X: " << s->center[0]
-		//<< " Y: " << s->center[1] << std::endl;
-		glPushMatrix();
-		glTranslatef(s->center[0], s->center[1], 0);
-		//glTranslatef(s->center[0], s->center[1], s->center[0]);
-		w = s->width;
-		h = s->height;
-		glBegin(GL_QUADS);
-		glVertex2i(-w,-h);
-		glVertex2i(-w, h);
-		glVertex2i( w, h);
-		glVertex2i( w,-h);
-		glEnd();
-		glPopMatrix();
-	    }
+	    g->ship2.draw();
+	    g->plat[0].draw();
+	    g->plat[1].draw();
 
 	    //Draw the ship
 	    glColor3fv(g->ship.color);
