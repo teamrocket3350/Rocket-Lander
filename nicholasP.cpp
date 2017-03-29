@@ -44,32 +44,27 @@ MovableObject::MovableObject()
 Ship2::Ship2()
 {
 	// Cockpit
-	collidables[0].width = 25;
-	collidables[0].height = 25;
+	collidables[0].width = 26;
+	collidables[0].height = 26;
 
 	// Left wing
-	collidables[1].width = 25;
-	collidables[1].height = 25;
-	//        collidables[1].width = 20;
-	//        collidables[1].height = 20;
+	collidables[1].base = 40;
+	collidables[1].height = 26;
 
 	// Right wing
-	collidables[2].width = 25;
-	collidables[2].height = 25;
-	//        collidables[2].width = 20;
-	//        collidables[2].height = 20;
+	collidables[2].base = 40;
+	collidables[2].height = 26;
 
 	// Nose
 	collidables[3].width = 20;
 	collidables[3].height = 20;
 
 	// Nose Cone
-	collidables[4].base = 25;
+	collidables[4].base = 26;
 	collidables[4].height = 20;
 
-	shape.width = collidables[0].width + collidables[1].width + collidables[2].width;
+	shape.width = collidables[0].width + collidables[1].base*.5 + collidables[2].base*.5;
 	shape.height = collidables[0].height + collidables[3].height + collidables[4].height;
-	// Figure out how to set positions
 
 	fuel = 100;
 }
@@ -125,6 +120,7 @@ bool Ship2::rectCollidesWith(Shape collidable, Object ob, float x, float y)
 bool Ship2::triCollidesWith(Shape collidable, Object ob, float x, float y)
 {
 	if (ob.getWidth() > 0) {			// rectangle
+		// TODO work on tri - rectangle collision
 		if (false) {
 			printf("Triangle collide with rectangle\n");
 		}
@@ -149,8 +145,21 @@ void Ship2::draw()
 	glBegin(GL_TRIANGLES);
 
 	glVertex2i(0,0);
-	glVertex2i(collidables[1].width, 0);
-	glVertex2i(collidables[1].width, collidables[1].height);
+	glVertex2i(collidables[1].base, 0);
+	glVertex2i(collidables[1].base*.5, collidables[1].height);
+
+	glEnd();
+	glPopMatrix();
+	////////////////////////
+	// draw right wing
+	glColor3ub(0,0,255);
+	glPushMatrix();
+	glTranslatef(pos[0]+collidables[0].width, pos[1], 0);
+	glBegin(GL_TRIANGLES);
+
+	glVertex2i(0,0);
+	glVertex2i(collidables[2].base, 0);
+	glVertex2i(collidables[2].base*.5, collidables[2].height);
 
 	glEnd();
 	glPopMatrix();
@@ -158,7 +167,7 @@ void Ship2::draw()
 	//draw cockpit box
 	glColor3ub(255,0,0);
 	glPushMatrix();
-	glTranslatef(pos[0]+collidables[0].width, pos[1], 0);
+	glTranslatef(pos[0]+collidables[1].base*.5, pos[1], 0);
 	glBegin(GL_QUADS);
 
 	glVertex2i(0,0);
@@ -169,24 +178,11 @@ void Ship2::draw()
 	glEnd();
 	glPopMatrix();
 	////////////////////////
-	// draw right wing
-	glColor3ub(0,0,255);
-	glPushMatrix();
-	glTranslatef(pos[0]+collidables[0].width+
-			collidables[1].width, pos[1], 0);
-	glBegin(GL_TRIANGLES);
 
-	glVertex2i(0,0);
-	glVertex2i(0, collidables[2].height);
-	glVertex2i(collidables[2].width, 0);
-
-	glEnd();
-	glPopMatrix();
-	////////////////////////
 	//draw nose box
 	glColor3ub(255,0,0);
 	glPushMatrix();
-	glTranslatef(pos[0]+collidables[0].width+3, pos[1]+collidables[0].height, 0);
+	glTranslatef(pos[0]+collidables[1].base*.5+3, pos[1]+collidables[0].height, 0);
 	glBegin(GL_QUADS);
 
 	glVertex2i(0,0);
@@ -200,7 +196,7 @@ void Ship2::draw()
 	// draw nose cone
 	glColor3ub(0,0,255);
 	glPushMatrix();
-	glTranslatef(pos[0]+collidables[1].width, pos[1]+collidables[0].height+
+	glTranslatef(pos[0]+collidables[1].base*.5, pos[1]+collidables[0].height+
 			collidables[3].height, 0);
 	glBegin(GL_TRIANGLES);
 
