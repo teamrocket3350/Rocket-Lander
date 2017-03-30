@@ -29,10 +29,21 @@ struct Shape {
     Vec center; // Remove after integrate with rocketlander.cpp
 };
 
+struct Point {
+	float x;
+	float y;
+};
+
+struct Line {
+	Point p1;
+	Point p2;
+};
+
 class Object
 {
 	protected:
 		Vec pos;
+		float rot; // rotation
 		Shape shape;
 
 	public:
@@ -43,6 +54,7 @@ class Object
 		// Setters
 		void setPosX(float x) {pos[0]=x;}
 		void setPosY(float y) {pos[1]=y;}
+		void setRot(float r) {rot=r;}
 		void setWidth(float w) {shape.width=w;}
 		void setHeight(float h) {shape.height=h;}
 		void setRadius(float r) {shape.radius=r;}
@@ -50,6 +62,7 @@ class Object
 		// Getters
 		float getPosX() {return pos[0];}
 		float getPosY() {return pos[1];}
+		float getRot() {return rot;}
 		float getWidth() {return shape.width;}
 		float getHeight() {return shape.height;}
 		float getRadius() {return shape.radius;}
@@ -101,6 +114,8 @@ class Ship2 : public MovableObject {
 		bool haveDoubleShot;
 		bool haveTripleShot;
 
+		bool linesIntersect(Line, Line);
+		Point* getRectPointArray(float, float, float, float, float);
 		bool rectCollidesWith(Shape, Object, float, float);
 		bool triCollidesWith(Shape, Object, float, float);
 
