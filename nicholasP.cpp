@@ -82,6 +82,7 @@ bool Ship2::collidesWith(Object ob)
 	// Triangle w/ rectangle 	// Ship w/ platform
 	// Triangle w/ circle 		// Ship w/ asteroid
 
+	// Use line-line collision testing for all shapes except cirlce
 	if (
 			triCollidesWith(collidables[1], ob, pos[0], pos[1]) || // left wing
 			rectCollidesWith(collidables[0], ob, pos[0]+collidables[0].width, pos[1]) || //cockpit
@@ -96,29 +97,82 @@ bool Ship2::collidesWith(Object ob)
 	}
 }
 
+bool Ship2::linesIntersect(Line l1, Line l2)
+{
+	if (l1.p1.x <= l2.p2.x && 
+		l1.p2.x >= l2.p1.x &&
+		l1.p1.y <= l2.p2.y &&
+		l1.p2.y >= l2.p1.y) {
+		return true;
+	}
+	return false;
+}
+
+Point * Ship2::getRectPointArray(float x, float y, float rot, float width, float height)
+{
+	// p2 -> p3 
+	// ^     |
+	// |     V
+	// p1 <- p4
+
+	Point * pts = new Point[4];
+	rot = rot; // temp
+
+	//TODO calculate with rotation
+	pts[0].x = x;
+	pts[0].y = y;
+
+	pts[1].x = x;
+	pts[1].y = y+height;
+
+	pts[2].x = x+width;
+	pts[2].y = y+height;
+
+	pts[3].x = x+width;
+	pts[3].y = y;
+
+	return pts;
+}
+
+// x, y are offsets from 0,0
 bool Ship2::rectCollidesWith(Shape collidable, Object ob, float x, float y)
 {
+	bool collides = false;
 	if (ob.getWidth() > 0) {			// rectangle
-		// Rectangle collide with rectangle
-		if (x < ob.getPosX() + ob.getWidth()		&&
-				x + collidable.width > ob.getPosX()	&&
-				y < ob.getPosY() + ob.getHeight()	&&
-				collidable.height + y > ob.getPosY()
-			) {
-			printf("Rectangle collide with rectangle\n");
-			return true;
+		Point * pts1 = getRectPointArray(x, y, rot, collidable.width, collidable.height);
+		Point * pts2 = getRectPointArray(ob.getPosX(), ob.getPosY(), ob.getRot(), ob.getWidth(), ob.getHeight());
+		Line l1;
+		Line l2;
+		// Check each line in ship against 4 lines in rectangle 
+		for (int i=0; i<4; i++) {
+			l1.p1 = pts1[i];
+			l1.p2 = pts1[(i+1)%4];
+			for (int i2=0; i2<4; i2++) {
+				l2.p1 = pts2[i2];
+				l2.p2 = pts2[(i2+1)%4];
+				if (linesIntersect(l1, l2)) {
+					printf("Rectangle collide with rectangle\n");
+					collides = true;
+					break;
+				}
+			}
 		}
+		delete [] pts1;
+		delete [] pts2;
 	} else if (ob.getRadius() > 0) { 		// circle
 		// Rectangle collide with circle
 		printf("Rectangle collide with circle\n");
 	} else {
 		printf("The object has no shape\n");
 	}
-	return false;
+	return collides;
 }
 
 bool Ship2::triCollidesWith(Shape collidable, Object ob, float x, float y)
 {
+	collidable = collidable; // temp
+	x = x; // temp
+	y = y; // temp
 	if (ob.getWidth() > 0) {			// rectangle
 		// TODO work on tri - rectangle collision
 		if (false) {
