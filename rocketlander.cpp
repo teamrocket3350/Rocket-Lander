@@ -66,9 +66,16 @@ extern void drawnicholasMenu(int xres, int yres, Rect r);
 extern void timeCopy(struct timespec *dest, struct timespec *source);
 //-----------------------------------------------------------------------------
 
-// Patrick's extern
+// Patrick's extern-------------------------------------------------
 extern void startUpSound();
 extern void cleanSound();
+extern struct Global {
+    ALuint alBufferLaser, alBufferBooster, alBufferAstroid, alBufferVictory,
+	   alBufferCollide;
+    ALuint alSourceLaser, alSourceBooster, alSourceAstroid, alSourceVictory,
+	   alSourceCollide;
+}p;
+//------------------------------------------------------------------
 
 int xres=1250, yres=900;
 int abrahamMenu = 0;
@@ -165,7 +172,6 @@ struct Game {
 	delete [] barr;
     }
 };
-
 
 int keys[65536];
 
@@ -608,12 +614,12 @@ void physics(Game *g)
     //Update ship position
     g->ship.pos[0] += g->ship.vel[0];
     g->ship.pos[1] += g->ship.vel[1];
-	// TODO use similar physics to original ship?
-	g->ship2.setPosX(g->ship.pos[0]-(g->ship2.getWidth()/2));
-	g->ship2.setPosY(g->ship.pos[1]-10);
-	g->ship2.collidesWith(g->plat[0]);
-	g->ship2.collidesWith(g->plat[1]);
-	
+    // TODO use similar physics to original ship?
+    g->ship2.setPosX(g->ship.pos[0]-(g->ship2.getWidth()/2));
+    g->ship2.setPosY(g->ship.pos[1]-10);
+    g->ship2.collidesWith(g->plat[0]);
+    g->ship2.collidesWith(g->plat[1]);
+
 
     //	//check for collision with boxes...
     //	Shape *s;
@@ -778,8 +784,8 @@ void physics(Game *g)
 	}
 	if (keys[XK_Up]) {
 	    //apply thrust
-	    BoosterSound();	//BoosterSound
-	    //playSound(p.alSourceBooster);	//Booster
+	    //BoosterSound();	//BoosterSound
+	    playSound(p.alSourceBooster);	//Booster
 	    //convert ship angle to radians
 	    Flt rad = ((g->ship.angle+90.0) / 360.0f) * PI * 2.0;
 	    //convert angle to a vector
@@ -804,8 +810,8 @@ void physics(Game *g)
 	    if (ts > 0.1) {
 		timeCopy(&g->bulletTimer, &bt);
 		if (g->nbullets < MAX_BULLETS) {
-		    LaserSound();	// Laser
-		    //playSound(p.alSourceLaser);	// Laser
+		    //LaserSound();	// Laser
+		    playSound(p.alSourceLaser);	// Laser
 		    //shoot a bullet...
 		    //Bullet *b = new Bullet;
 		    Bullet *b = &g->barr[g->nbullets];
