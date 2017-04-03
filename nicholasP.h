@@ -116,6 +116,7 @@ class Ship2 : public MovableObject {
 
 		bool linesIntersect(Line, Line);
 		Point* getRectPointArray(float, float, float, float, float);
+		Point* getTriPointArray(float, float, float, float, float);
 		bool rectCollidesWith(Shape, Object, float, float);
 		bool triCollidesWith(Shape, Object, float, float);
 

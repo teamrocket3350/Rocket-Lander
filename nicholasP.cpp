@@ -14,6 +14,9 @@
 #include "fonts.h"
 #include "nicholasP.h"
 
+#define PI 3.14159265
+int tempcount = 0;
+
 Object::Object()
 {
 	pos[0] = 0;
@@ -48,11 +51,13 @@ Ship2::Ship2()
 	collidables[0].height = 26;
 
 	// Left wing
-	collidables[1].base = 40;
+	//collidables[1].base = 40;
+	collidables[1].base = 26;
 	collidables[1].height = 26;
 
 	// Right wing
-	collidables[2].base = 40;
+	//collidables[2].base = 40;
+	collidables[2].base = 26;
 	collidables[2].height = 26;
 
 	// Nose
@@ -79,17 +84,20 @@ bool Ship2::collidesWith(Object ob)
 	// TODO Collision types:
 	// ^Rectangle w/ Rectangle 	// Ship w/ platform
 	// Rectangle w/ circle 		// Ship w/ asteroid
-	// Triangle w/ rectangle 	// Ship w/ platform
+	// ^Triangle w/ rectangle 	// Ship w/ platform
 	// Triangle w/ circle 		// Ship w/ asteroid
 
 	// Use line-line collision testing for all shapes except cirlce
 	if (
 			triCollidesWith(collidables[1], ob, pos[0], pos[1]) || // left wing
-			rectCollidesWith(collidables[0], ob, pos[0]+collidables[0].width, pos[1]) || //cockpit
-			triCollidesWith(collidables[2], ob, pos[0]+collidables[0].width+
-				collidables[1].width, pos[1]) || // right wing
-			rectCollidesWith(collidables[3], ob, pos[0]+collidables[0].width+3, pos[1]+collidables[0].height) || // nose box
-			triCollidesWith(collidables[4], ob, pos[0]+collidables[1].width, pos[1]+collidables[0].height+collidables[3].height) // nose cone
+			//rectCollidesWith(collidables[0], ob, pos[0]+collidables[0].width, pos[1]) || //cockpit
+			rectCollidesWith(collidables[0], ob, pos[0]+(collidables[1].base*.5), pos[1]) || //cockpit
+			//triCollidesWith(collidables[2], ob, pos[0]+collidables[0].width+
+		    //	collidables[1].base, pos[1]) || // right wing
+			triCollidesWith(collidables[2], ob, pos[0]+collidables[1].base, pos[1]) || // right wing
+			rectCollidesWith(collidables[3], ob, pos[0]+(collidables[1].base*.5)+3, pos[1]+collidables[0].height) || // nose box
+			//rectCollidesWith(collidables[3], ob, pos[0]+collidables[0].width+3, pos[1]+collidables[0].height) || // nose box
+			triCollidesWith(collidables[4], ob, pos[0]+(collidables[1].base*.5), pos[1]+collidables[0].height+collidables[3].height) // nose cone
 	   ) {
 		return true;
 	} else {
@@ -115,10 +123,9 @@ Point * Ship2::getRectPointArray(float x, float y, float rot, float width, float
 	// |     V
 	// p1 <- p4
 
+	//TODO p3->p4 not checked?
 	Point * pts = new Point[4];
-	rot = rot; // temp
 
-	//TODO calculate with rotation
 	pts[0].x = x;
 	pts[0].y = y;
 
@@ -130,6 +137,70 @@ Point * Ship2::getRectPointArray(float x, float y, float rot, float width, float
 
 	pts[3].x = x+width;
 	pts[3].y = y;
+
+	// Convert rotation from degrees to radians
+	float rad = rot * (PI/180);
+
+	// Pivot points
+	float pivx = pos[0]+(shape.width*.5);
+	float pivy = pos[1]+(shape.height*.5);
+
+	// Rotate points
+	float xnew;
+	float ynew;
+	for (int i=0; i<4; i++) {
+		pts[i].x -= pivx;
+		pts[i].y -= pivy;
+
+		xnew = pts[i].x * cos(rad) - pts[i].y * sin(rad);
+		ynew = pts[i].x * sin(rad) + pts[i].y * cos(rad);
+
+		pts[i].x = xnew + pivx;
+		pts[i].y = ynew + pivy;
+	}
+
+	return pts;
+}
+
+Point * Ship2::getTriPointArray(float x, float y, float rot, float base, float height)
+{
+	//    p2  
+	// ^     |
+	// |     V
+	// p1 <- p3
+
+	//TODO p2->p3 not checked?
+	Point * pts = new Point[3];
+
+	pts[0].x = x;
+	pts[0].y = y;
+
+	pts[1].x = x+(base*.5);
+	pts[1].y = y+height;
+
+	pts[2].x = x+base;
+	pts[2].y = y;
+
+	// Convert rotation from degrees to radians
+	float rad = rot * (PI/180);
+
+	// Pivot points
+	float pivx = pos[0]+(shape.width*.5);
+	float pivy = pos[1]+(shape.height*.5);
+
+	// Rotate points
+	float xnew;
+	float ynew;
+	for (int i=0; i<3; i++) {
+		pts[i].x -= pivx;
+		pts[i].y -= pivy;
+
+		xnew = pts[i].x * cos(rad) - pts[i].y * sin(rad);
+		ynew = pts[i].x * sin(rad) + pts[i].y * cos(rad);
+
+		pts[i].x = xnew + pivx;
+		pts[i].y = ynew + pivy;
+	}
 
 	return pts;
 }
@@ -151,7 +222,7 @@ bool Ship2::rectCollidesWith(Shape collidable, Object ob, float x, float y)
 				l2.p1 = pts2[i2];
 				l2.p2 = pts2[(i2+1)%4];
 				if (linesIntersect(l1, l2)) {
-					printf("Rectangle collide with rectangle\n");
+					printf("%i. Rectangle collide with rectangle\n", tempcount++);
 					collides = true;
 					break;
 				}
@@ -170,96 +241,132 @@ bool Ship2::rectCollidesWith(Shape collidable, Object ob, float x, float y)
 
 bool Ship2::triCollidesWith(Shape collidable, Object ob, float x, float y)
 {
-	collidable = collidable; // temp
-	x = x; // temp
-	y = y; // temp
+	bool collides = false;
 	if (ob.getWidth() > 0) {			// rectangle
-		// TODO work on tri - rectangle collision
-		if (false) {
-			printf("Triangle collide with rectangle\n");
+		Point * pts1 = getTriPointArray(x, y, rot, collidable.base, collidable.height);
+		Point * pts2 = getRectPointArray(ob.getPosX(), ob.getPosY(), ob.getRot(), ob.getWidth(), ob.getHeight());
+		Line l1;
+		Line l2;
+		// Check each line in ship against 3 lines in triangle
+		for (int i=0; i<3; i++) {
+			l1.p1 = pts1[i];
+			l1.p2 = pts1[(i+1)%3];
+			for (int i2=0; i2<4; i2++) {
+				l2.p1 = pts2[i2];
+				l2.p2 = pts2[(i2+1)%4];
+				if (linesIntersect(l1, l2)) {
+					printf("%i. Triangle collide with rectangle\n", tempcount++);
+					collides = true;
+					break;
+				}
+			}
 		}
+		delete [] pts1;
+		delete [] pts2;
 	} else if (ob.getRadius() > 0) { 		// circle
 		printf("Triangle collide with circle\n");
 	} else {
 		printf("The object has no shape\n");
 	}
-	return false;
+	return collides;
 }
 
 void Ship2::draw()
 {
+	Point * pts;
 	// The area for the ship image
-	drawRect();
-
-	// Visualization of the collision shapes
-	// draw left wing
-	glColor3ub(0,0,255);
+	pts = getRectPointArray(pos[0], pos[1], rot, shape.width, shape.height);
+	glColor3ub(111,111,111);
 	glPushMatrix();
-	glTranslatef(pos[0], pos[1], 0);
-	glBegin(GL_TRIANGLES);
+	glBegin(GL_QUADS);
 
-	glVertex2i(0,0);
-	glVertex2i(collidables[1].base, 0);
-	glVertex2i(collidables[1].base*.5, collidables[1].height);
+	glVertex2i(pts[0].x, pts[0].y);
+	glVertex2i(pts[1].x, pts[1].y);
+	glVertex2i(pts[2].x, pts[2].y);
+	glVertex2i(pts[3].x, pts[3].y);
 
 	glEnd();
 	glPopMatrix();
+	delete [] pts;
+	pts = NULL;
+	////////////////////////
+	// Visualization of the collision shapes
+	//draw cockpit box
+	pts = getRectPointArray(pos[0]+(collidables[1].base*.5), pos[1], rot, collidables[0].width, collidables[0].height);
+	glColor3ub(255,0,0);
+	glPushMatrix();
+	glBegin(GL_QUADS);
+
+	glVertex2i(pts[0].x, pts[0].y);
+	glVertex2i(pts[1].x, pts[1].y);
+	glVertex2i(pts[2].x, pts[2].y);
+	glVertex2i(pts[3].x, pts[3].y);
+
+	glEnd();
+	glPopMatrix();
+	delete [] pts;
+	pts = NULL;
+	////////////////////////
+	// draw left wing
+	pts = getTriPointArray(pos[0], pos[1], rot, collidables[1].base, collidables[1].height);
+	glColor3ub(0,0,255);
+	glPushMatrix();
+	glBegin(GL_TRIANGLES);
+
+	glVertex2i(pts[0].x, pts[0].y);
+	glVertex2i(pts[1].x, pts[1].y);
+	glVertex2i(pts[2].x, pts[2].y);
+
+	glEnd();
+	glPopMatrix();
+	delete [] pts;
+	pts = NULL;
 	////////////////////////
 	// draw right wing
+	pts = getTriPointArray(pos[0]+collidables[1].base, pos[1], rot, collidables[2].base, collidables[2].height);
 	glColor3ub(0,0,255);
 	glPushMatrix();
-	glTranslatef(pos[0]+collidables[0].width, pos[1], 0);
 	glBegin(GL_TRIANGLES);
 
-	glVertex2i(0,0);
-	glVertex2i(collidables[2].base, 0);
-	glVertex2i(collidables[2].base*.5, collidables[2].height);
+	glVertex2i(pts[0].x, pts[0].y);
+	glVertex2i(pts[1].x, pts[1].y);
+	glVertex2i(pts[2].x, pts[2].y);
 
 	glEnd();
 	glPopMatrix();
+	delete [] pts;
+	pts = NULL;
 	////////////////////////
-	//draw cockpit box
-	glColor3ub(255,0,0);
-	glPushMatrix();
-	glTranslatef(pos[0]+collidables[1].base*.5, pos[1], 0);
-	glBegin(GL_QUADS);
-
-	glVertex2i(0,0);
-	glVertex2i(0, collidables[0].height);
-	glVertex2i(collidables[0].width, collidables[0].height);
-	glVertex2i(collidables[0].width, 0);
-
-	glEnd();
-	glPopMatrix();
-	////////////////////////
-
 	//draw nose box
+	pts = getRectPointArray(pos[0]+(collidables[1].base*.5)+3, pos[1]+collidables[0].height, rot, collidables[3].width, collidables[3].height);
 	glColor3ub(255,0,0);
 	glPushMatrix();
-	glTranslatef(pos[0]+collidables[1].base*.5+3, pos[1]+collidables[0].height, 0);
 	glBegin(GL_QUADS);
 
-	glVertex2i(0,0);
-	glVertex2i(0, collidables[3].height);
-	glVertex2i(collidables[3].width, collidables[3].height);
-	glVertex2i(collidables[3].width, 0);
+	glVertex2i(pts[0].x, pts[0].y);
+	glVertex2i(pts[1].x, pts[1].y);
+	glVertex2i(pts[2].x, pts[2].y);
+	glVertex2i(pts[3].x, pts[3].y);
 
 	glEnd();
 	glPopMatrix();
+	delete [] pts;
+	pts = NULL;
 	////////////////////////
 	// draw nose cone
+	pts = getTriPointArray(pos[0]+(collidables[1].base*.5), pos[1]+collidables[0].height+collidables[3].height, rot, collidables[4].base, collidables[4].height);
 	glColor3ub(0,0,255);
 	glPushMatrix();
-	glTranslatef(pos[0]+collidables[1].base*.5, pos[1]+collidables[0].height+
-			collidables[3].height, 0);
 	glBegin(GL_TRIANGLES);
 
-	glVertex2i(0,0);
-	glVertex2i(collidables[4].base, 0);
-	glVertex2i(collidables[4].base*.5, collidables[4].height);
+	glVertex2i(pts[0].x, pts[0].y);
+	glVertex2i(pts[1].x, pts[1].y);
+	glVertex2i(pts[2].x, pts[2].y);
 
 	glEnd();
 	glPopMatrix();
+	delete [] pts;
+	pts = NULL;
 }
 
 void Ship2::drawRect()

@@ -80,6 +80,7 @@ extern struct Global {
 int xres=1250, yres=900;
 int abrahamMenu = 0;
 int nick_menu = 0;
+int renderShip = 1;
 int pat_menu = 0;
 int ramon_menu = 0;
 
@@ -95,7 +96,7 @@ struct Ship {
     Ship() {
 	VecZero(dir);
 	pos[0] = 60;
-	pos[1] = 20;
+	pos[1] = 25;
 	pos[2] = 0.0f;
 	VecZero(vel);
 	angle = 0.0;
@@ -154,7 +155,7 @@ struct Game {
 	nbullets = 0;
 
 	ship2.setPosX(23);
-	ship2.setPosY(10);
+	ship2.setPosY(15);
 
 	plat[0].setPosX(10);
 	plat[0].setPosY(0);
@@ -535,8 +536,9 @@ int check_keys(XEvent *e)
 	case XK_n:
 	    nick_menu = nick_menu ^ 1;
 	    break;
-	case XK_s:
-	    break;
+	case XK_t:
+	    renderShip ^= 1;
+		break;
 	case XK_Down:
 	    break;
 	case XK_equal:
@@ -774,11 +776,13 @@ void physics(Game *g)
 	//check keys pressed now
 	if (keys[XK_Left]) {
 	    g->ship.angle += 4.0;
+		g->ship2.setRot(g->ship2.getRot()+4.0);
 	    if (g->ship.angle >= 360.0f)
 		g->ship.angle -= 360.0f;
 	}
 	if (keys[XK_Right]) {
 	    g->ship.angle -= 4.0;
+		g->ship2.setRot(g->ship2.getRot()-4.0);
 	    if (g->ship.angle < 0.0f)
 		g->ship.angle += 360.0f;
 	}
@@ -864,49 +868,51 @@ void physics(Game *g)
 	    g->plat[0].draw();
 	    g->plat[1].draw();
 
-	    //Draw the ship
-	    glColor3fv(g->ship.color);
-	    glPushMatrix();
-	    glTranslatef(g->ship.pos[0], g->ship.pos[1], g->ship.pos[2]);
-	    //float angle = atan2(ship.dir[1], ship.dir[0]);
-	    glRotatef(g->ship.angle, 0.0f, 0.0f, 1.0f);
-	    glBegin(GL_TRIANGLES);
-	    glVertex2f(-10.0f, -10.0f);
-	    glVertex2f(  0.0f, 20.0f);
-	    glVertex2f( 10.0f, -10.0f);
-	    glVertex2f(-12.0f, -10.0f);
-	    glVertex2f(  0.0f, 20.0f);
-	    glVertex2f(  0.0f, -6.0f);
-	    glVertex2f(  0.0f, -6.0f);
-	    glVertex2f(  0.0f, 20.0f);
-	    glVertex2f( 12.0f, -10.0f);
-	    glEnd();
-	    glColor3f(1.0f, 0.0f, 0.0f);
-	    glBegin(GL_POINTS);
-	    glVertex2f(0.0f, 0.0f);
-	    glEnd();
-	    glPopMatrix();
-	    if (keys[XK_Up] || g->mouseThrustOn) {
-		int i;
-		//draw thrust
-		Flt rad = ((g->ship.angle+90.0) / 360.0f) * PI * 2.0;
-		//convert angle to a vector
-		Flt xdir = cos(rad);
-		Flt ydir = sin(rad);
-		Flt xs,ys,xe,ye,r;
-		glBegin(GL_LINES);
-		for (i=0; i<16; i++) {
-		    xs = -xdir * 11.0f + rnd() * 4.0 - 2.0;
-		    ys = -ydir * 11.0f + rnd() * 4.0 - 2.0;
-		    r = rnd()*40.0+40.0;
-		    xe = -xdir * r + rnd() * 18.0 - 9.0;
-		    ye = -ydir * r + rnd() * 18.0 - 9.0;
-		    glColor3f(rnd()*.3+.7, rnd()*.3+.7, 0);
-		    glVertex2f(g->ship.pos[0]+xs,g->ship.pos[1]+ys);
-		    glVertex2f(g->ship.pos[0]+xe,g->ship.pos[1]+ye);
+		if (renderShip) {
+			//Draw the ship
+			glColor3fv(g->ship.color);
+			glPushMatrix();
+			glTranslatef(g->ship.pos[0], g->ship.pos[1], g->ship.pos[2]);
+			//float angle = atan2(ship.dir[1], ship.dir[0]);
+			glRotatef(g->ship.angle, 0.0f, 0.0f, 1.0f);
+			glBegin(GL_TRIANGLES);
+			glVertex2f(-10.0f, -10.0f);
+			glVertex2f(  0.0f, 20.0f);
+			glVertex2f( 10.0f, -10.0f);
+			glVertex2f(-12.0f, -10.0f);
+			glVertex2f(  0.0f, 20.0f);
+			glVertex2f(  0.0f, -6.0f);
+			glVertex2f(  0.0f, -6.0f);
+			glVertex2f(  0.0f, 20.0f);
+			glVertex2f( 12.0f, -10.0f);
+			glEnd();
+			glColor3f(1.0f, 0.0f, 0.0f);
+			glBegin(GL_POINTS);
+			glVertex2f(0.0f, 0.0f);
+			glEnd();
+			glPopMatrix();
+			if (keys[XK_Up] || g->mouseThrustOn) {
+			int i;
+			//draw thrust
+			Flt rad = ((g->ship.angle+90.0) / 360.0f) * PI * 2.0;
+			//convert angle to a vector
+			Flt xdir = cos(rad);
+			Flt ydir = sin(rad);
+			Flt xs,ys,xe,ye,r;
+			glBegin(GL_LINES);
+			for (i=0; i<16; i++) {
+				xs = -xdir * 11.0f + rnd() * 4.0 - 2.0;
+				ys = -ydir * 11.0f + rnd() * 4.0 - 2.0;
+				r = rnd()*40.0+40.0;
+				xe = -xdir * r + rnd() * 18.0 - 9.0;
+				ye = -ydir * r + rnd() * 18.0 - 9.0;
+				glColor3f(rnd()*.3+.7, rnd()*.3+.7, 0);
+				glVertex2f(g->ship.pos[0]+xs,g->ship.pos[1]+ys);
+				glVertex2f(g->ship.pos[0]+xe,g->ship.pos[1]+ye);
+			}
+			glEnd();
+			}
 		}
-		glEnd();
-	    }
 	    //-------------------------------------------------------------------------
 	    //Draw the asteroids
 	    {
