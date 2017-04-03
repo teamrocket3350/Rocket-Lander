@@ -12,10 +12,15 @@
 #include "fonts.h"
 #include "patrickE.h"
 
+//image stuff
+#include "ppm.h"
+
 // sound stuff
 #include <fcntl.h>
 #include <sys/stat.h>
 #include </usr/include/AL/alut.h>
+
+extern int xres,yres;
 
 struct Global {
     ALuint alBufferLaser, alBufferBooster, alBufferAstroid, alBufferVictory,
@@ -23,7 +28,63 @@ struct Global {
     ALuint alSourceLaser, alSourceBooster, alSourceAstroid, alSourceVictory,
 	   alSourceCollide;
 } p;
+/* // Playing with background image
+void startMenu(void)
+{
+    Ppmimage *bgImage= NULL;
+    GLuint bgTexture;
 
+    //OpenGL initialization
+    glClearColor(0.0f, 0.0f, xres, yres);
+    glClearDepth(1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glEnable(GL_COLOR_MATERIAL);
+
+    glShadeModel(GL_SMOOTH);
+    glDisable(GL_LIGHTING);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glEnable(GL_TEXTURE_2D);
+
+    //load the image file into a ppm structure.
+    bgImage = ppm6GetImage("./images/background.jpg");
+
+    //create opengl texture elements
+    glGenTextures(1, &bgTexture);
+    glBindTexture(GL_TEXTURE_2D, bgTexture);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, 3,
+	    bgImage->width, bgImage->height,
+	    0, GL_RGB, GL_UNSIGNED_BYTE, bgImage->data);
+
+    //set the viewing area on screen
+    glViewport(0, 0, xres, yres);
+
+    //clear color buffer
+    glMatrixMode (GL_PROJECTION);
+    glLoadIdentity();
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    //this sets to 2D mode (no perspective)
+    glOrtho(0, xres, 0, yres, -1, 1);
+
+    //screen background
+    glColor3f(0.5f, 0.5f, 0.5f);
+    glBindTexture(GL_TEXTURE_2D, bgTexture);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex2i(0,      0);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex2i(0,      yres);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex2i(xres, yres);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex2i(xres, 0);
+    glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+*/
 /**********UPGRADE MENUS**********/
 void UpgradeMenu(int xres,int yres,Rect r)
 {
@@ -89,7 +150,6 @@ void LaserMenu(int xres,int yres,Rect r)
 }
 
 /**********SOUNDS**********/
-// testing out gordon's sound file
 void startUpSound()
 {
     //Start up
@@ -146,7 +206,7 @@ void startUpSound()
     if (alGetError() != AL_NO_ERROR) {
 	printf("Error: astroid destruction sound\n");
     }
-    
+
     //Generate source and store into buffer Victory
     alGenSources(1, &p.alSourceVictory);
     alSourcei(p.alSourceVictory, AL_BUFFER, p.alBufferVictory);
@@ -157,7 +217,7 @@ void startUpSound()
     if (alGetError() != AL_NO_ERROR) {
 	printf("Error: victory sound\n");
     }
-    
+
     //Generate source and store into buffer Collide
     alGenSources(1, &p.alSourceCollide);
     alSourcei(p.alSourceCollide, AL_BUFFER, p.alBufferCollide);
