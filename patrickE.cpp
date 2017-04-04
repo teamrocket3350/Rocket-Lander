@@ -159,20 +159,20 @@ void startUpSound()
     }
     alGetError();
     //Setup listener
-    float vec[6] = {0.0f,0.0f,1.0f,0.0f,1.0f,0.0f};
+    float vec[6] = {1.0f,1.0f,1.0f,1.0f,1.0f,1.0f};
     alListener3f(AL_POSITION, 0,0,0);
     alListenerfv(AL_ORIENTATION,vec);
     alListenerf(AL_GAIN, 1);
     p.alBufferLaser = alutCreateBufferFromFile("test.wav");
     //p.alBufferLaser = alutCreateBufferFromFile("./sounds/laser.wav");
     //p.alBufferBooster = alutCreateBufferFromFile("test.wav");
-    p.alBufferBooster = alutCreateBufferFromFile("./sounds/booster.wav");
+    p.alBufferBooster = alutCreateBufferFromFile("./sounds/booster.wmv");
     //p.alBufferAstroid = alutCreateBufferFromFile("test.wav");
-    p.alBufferAstroid = alutCreateBufferFromFile("./sounds/astroid.wav");
+    p.alBufferAstroid = alutCreateBufferFromFile("./sounds/astroid.wmv");
     //p.alBufferVictory = alutCreateBufferFromFile("test.wav");
     p.alBufferVictory = alutCreateBufferFromFile("./sounds/victory.wav");
     //p.alBufferCollide = alutCreateBufferFromFile("test.wav");
-    p.alBufferCollide = alutCreateBufferFromFile("./sounds/collide.wav");
+    p.alBufferCollide = alutCreateBufferFromFile("./sounds/collide.wmv");
 
     //Generate source and store into buffer Laser
     alGenSources(1, &p.alSourceLaser);
@@ -189,8 +189,8 @@ void startUpSound()
     alGenSources(1, &p.alSourceBooster);
     alSourcei(p.alSourceBooster, AL_BUFFER, p.alBufferBooster);
     //Set volume and pitch to normal, no looping
-    alSourcef(p.alSourceBooster, AL_GAIN, 5);
-    alSourcef(p.alSourceBooster, AL_PITCH,5);
+    alSourcef(p.alSourceBooster, AL_GAIN, 1.0f);
+    alSourcef(p.alSourceBooster, AL_PITCH,1.0f);
     alSourcei(p.alSourceBooster, AL_LOOPING, AL_FALSE);
     if (alGetError() != AL_NO_ERROR) {
 	printf("Error: booster sound\n");
@@ -248,8 +248,8 @@ void cleanSound()
     alDeleteBuffers(1,&p.alBufferLaser);   
     alDeleteBuffers(1,&p.alBufferBooster);   
     alDeleteBuffers(1,&p.alBufferAstroid);   
-    alDeleteSources(1,&p.alBufferVictory);
-    alDeleteSources(1,&p.alBufferCollide);
+    alDeleteBuffers(1,&p.alBufferVictory);
+    alDeleteBuffers(1,&p.alBufferCollide);
     //close out openal
     //get active context
     ALCcontext *Context = alcGetCurrentContext();
