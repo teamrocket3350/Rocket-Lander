@@ -166,7 +166,7 @@ void startUpSound()
     p.alBufferLaser = alutCreateBufferFromFile("test.wav");
     //p.alBufferLaser = alutCreateBufferFromFile("./sounds/laser.wav");
     //p.alBufferBooster = alutCreateBufferFromFile("test.wav");
-    p.alBufferLaser = alutCreateBufferFromFile("./sounds/booster.wav");
+    p.alBufferBooster = alutCreateBufferFromFile("./sounds/booster.wav");
     //p.alBufferAstroid = alutCreateBufferFromFile("test.wav");
     p.alBufferAstroid = alutCreateBufferFromFile("./sounds/astroid.wav");
     //p.alBufferVictory = alutCreateBufferFromFile("test.wav");
