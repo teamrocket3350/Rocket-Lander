@@ -28,63 +28,49 @@ struct Global {
     ALuint alSourceLaser, alSourceBooster, alSourceAstroid, alSourceVictory,
 	   alSourceCollide;
 } p;
-/* // Playing with background image
+
+// Playing with background image
 void startMenu(void)
 {
     Ppmimage *bgImage= NULL;
     GLuint bgTexture;
 
     //OpenGL initialization
-    glClearColor(0.0f, 0.0f, xres, yres);
-    glClearDepth(1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glEnable(GL_COLOR_MATERIAL);
+    glViewport(0, 0, xres, yres);
+    //Initialize matrices
+    glMatrixMode(GL_PROJECTION); glLoadIdentity();
+    glMatrixMode(GL_MODELVIEW); glLoadIdentity();
+    //This sets 2D mode (no perspective)
+    glOrtho(0, xres, 0, yres, -1, 1);
 
-    glShadeModel(GL_SMOOTH);
     glDisable(GL_LIGHTING);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glEnable(GL_TEXTURE_2D);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_FOG);
+    glDisable(GL_CULL_FACE);
 
-    //load the image file into a ppm structure.
-    bgImage = ppm6GetImage("./images/background.jpg");
+    //Clear the screen
+    glClearColor(0.0, 0.0, 0.0, 1.0);
+    //glClear(GL_COLOR_BUFFER_BIT);
+    //Do this to allow fonts
+    glEnable(GL_TEXTURE_2D);
+    initialize_fonts();
+    //
+    //load the images file into a ppm structure.
+    //
+    bgImage = ppm6GetImage("./images/background.ppm");
 
     //create opengl texture elements
     glGenTextures(1, &bgTexture);
+
     glBindTexture(GL_TEXTURE_2D, bgTexture);
+
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	    bgImage->width, bgImage->height,
 	    0, GL_RGB, GL_UNSIGNED_BYTE, bgImage->data);
-
-    //set the viewing area on screen
-    glViewport(0, 0, xres, yres);
-
-    //clear color buffer
-    glMatrixMode (GL_PROJECTION);
-    glLoadIdentity();
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    //this sets to 2D mode (no perspective)
-    glOrtho(0, xres, 0, yres, -1, 1);
-
-    //screen background
-    glColor3f(0.5f, 0.5f, 0.5f);
-    glBindTexture(GL_TEXTURE_2D, bgTexture);
-    glBegin(GL_QUADS);
-    glTexCoord2f(0.0f, 0.0f);
-    glVertex2i(0,      0);
-    glTexCoord2f(0.0f, 1.0f);
-    glVertex2i(0,      yres);
-    glTexCoord2f(1.0f, 1.0f);
-    glVertex2i(xres, yres);
-    glTexCoord2f(1.0f, 0.0f);
-    glVertex2i(xres, 0);
-    glEnd();
-    glBindTexture(GL_TEXTURE_2D, 0);
 }
-*/
+
 /**********UPGRADE MENUS**********/
 void UpgradeMenu(int xres,int yres,Rect r)
 {

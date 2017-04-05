@@ -4,13 +4,13 @@ LFLAGS = -lrt -lX11 -lGLU -lGL -pthread -lm #-lXrandr
 
 all: rocketlander
 
-rocketlander: rocketlander.cpp log.cpp mytime.cpp \
+rocketlander: rocketlander.cpp log.cpp mytime.cpp ppm.cpp \
     ramonR.cpp ramonR.h \
     abrahamA.cpp abrahamA.h \
     patrickE.cpp patrickE.h \
     nicholasP.cpp nicholasP.h
 	
-	g++ $(CFLAGS) rocketlander.cpp log.cpp mytime.cpp \
+	g++ $(CFLAGS) rocketlander.cpp log.cpp mytime.cpp ppm.cpp\
 	    nicholasP.cpp \
 	    ramonR.cpp \
 	    abrahamA.cpp \
