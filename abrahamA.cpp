@@ -35,27 +35,27 @@ void showCredits(int xres, int yres, Rect r)
 	r.bot = cy + 300;
 	r.left = cx;
 	r.center = 1;
-	ggprint8b(&r,16, 0xffffff, "Game Credits");
+	ggprint40(&r,16, 0xffffff, "Game Credits");
 
 	r.bot = cy + 200;
 	r.left = cx;
 	r.center = 1;
-	ggprint8b(&r,16, 0xffffff, "Abraham Aldana");
+	ggprint16(&r,16, 0xffffff, "Abraham Aldana");
 	
 	r.bot = cy + 150;
 	r.left = cx;
 	r.center = 1;
-	ggprint8b(&r,16, 0xffffff, "Nicholas P");
+	ggprint16(&r,16, 0xffffff, "Nicholas P");
 	
 	r.bot = cy + 100;
 	r.left = cx;
 	r.center = 1;
-	ggprint8b(&r,16, 0xffffff, "Patrick E");
+	ggprint16(&r,16, 0xffffff, "Patrick E");
 	
 	r.bot = cy + 50;
 	r.left = cx;
 	r.center = 1;
-	ggprint8b(&r,16, 0xffffff, "Ramon R");
+	ggprint16(&r,16, 0xffffff, "Ramon R");
 }
 
 int loadLevel()
