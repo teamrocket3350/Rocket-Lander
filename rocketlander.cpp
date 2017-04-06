@@ -78,7 +78,7 @@ extern struct Global {
 //------------------------------------------------------------------
 
 int xres=1250, yres=900;
-int abrahamMenu = 0;
+int credits = 0;
 int nick_menu = 0;
 int renderShip = 1;
 int pat_menu = 0;
@@ -545,8 +545,8 @@ int check_keys(XEvent *e)
 	    break;
 	case XK_minus:
 	    break;
-	case XK_a:
-	    abrahamMenu = abrahamMenu ^ 1;
+	case XK_c:
+	    credits = credits ^ 1;
 	    break;
 	case XK_r:
 	    ramon_menu = ramon_menu ^ 1;
@@ -962,8 +962,8 @@ void physics(Game *g)
 	    }
 
 	    //draw abrahams menu
-	    if (abrahamMenu == 1) {
-		menuAbraham(xres,yres,r);
+	    if (credits == 1) {
+		showCredits(xres,yres,r);
 	    }
 	    // Draw Nick's Menu
 	    if (nick_menu == 1) {
