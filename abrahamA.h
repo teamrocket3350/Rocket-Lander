@@ -17,7 +17,7 @@
 #include"fonts.h"
 #include"nicholasP.h"
 
-void menuAbraham(int xres, int yres, Rect r);
+void showCredits(int xres, int yres, Rect r);
 
 int loadLevel();
 

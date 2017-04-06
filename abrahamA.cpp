@@ -19,24 +19,43 @@
 
 using namespace std;
 
-void menuAbraham(int xres, int yres, Rect r)
+void showCredits(int xres, int yres, Rect r)
 {
-	glColor3f(1.0,1.0,1.0);
+	glColor3f(0.5,0.5,0.5);
 	int cx = xres/2;
 	int cy = yres/2;
 	glBegin(GL_QUADS);
-		glVertex2f(cx-100, cy+100);
-		glVertex2f(cx+100, cy+100);
-		glVertex2f(cx+100, cy-100);
-		glVertex2f(cx-100, cy-100);
+		glVertex2f(cx-620, cy+420);
+		glVertex2f(cx+620, cy+420);
+		glVertex2f(cx+620, cy-420);
+		glVertex2f(cx-620, cy-420);
 	glEnd();
 	glEnable(GL_TEXTURE_2D);
 
-	r.bot = cy + 20;
+	r.bot = cy + 300;
 	r.left = cx;
 	r.center = 1;
-	ggprint8b(&r,16, 0x00000000, "Abraham Menu");
-    
+	ggprint8b(&r,16, 0xffffff, "Game Credits");
+
+	r.bot = cy + 200;
+	r.left = cx;
+	r.center = 1;
+	ggprint8b(&r,16, 0xffffff, "Abraham Aldana");
+	
+	r.bot = cy + 150;
+	r.left = cx;
+	r.center = 1;
+	ggprint8b(&r,16, 0xffffff, "Nicholas P");
+	
+	r.bot = cy + 100;
+	r.left = cx;
+	r.center = 1;
+	ggprint8b(&r,16, 0xffffff, "Patrick E");
+	
+	r.bot = cy + 50;
+	r.left = cx;
+	r.center = 1;
+	ggprint8b(&r,16, 0xffffff, "Ramon R");
 }
 
 int loadLevel()
