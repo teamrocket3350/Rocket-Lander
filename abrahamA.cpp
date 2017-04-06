@@ -21,7 +21,7 @@ using namespace std;
 
 void showCredits(int xres, int yres, Rect r)
 {
-	glColor3f(0.5,0.5,0.5);
+	glColor3f(0.1,0.1,0.1);
 	int cx = xres/2;
 	int cy = yres/2;
 	glBegin(GL_QUADS);
