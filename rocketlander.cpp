@@ -147,6 +147,7 @@ struct Game {
     struct timespec bulletTimer;
     struct timespec mouseThrustTimer;
     //Shape platforms[2];
+	Platform ground[5];
     Platform plat[2]; // Nick's platform class
     bool mouseThrustOn;
     Game() {
@@ -156,11 +157,36 @@ struct Game {
 	nbullets = 0;
 
 	ship2.enableBooster2();
-	ship2.setPosX(23);
+	ship2.setPosX(53);
 	ship2.setPosY(15);
 
-	plat[0].setPosX(10);
-	plat[0].setPosY(0);
+	ground[0].setPosX(0);
+	ground[0].setPosY(0);
+	ground[0].setWidth(365);
+	ground[0].setHeight(50);
+
+	ground[1].setPosX(365);
+	ground[1].setPosY(0);
+	ground[1].setWidth(420);
+	ground[1].setHeight(30);
+
+	ground[2].setPosX(785);
+	ground[2].setPosY(0);
+	ground[2].setWidth(240);
+	ground[2].setHeight(50);
+
+	ground[3].setPosX(1025);
+	ground[3].setPosY(0);
+	ground[3].setWidth(100);
+	ground[3].setHeight(75);
+
+	ground[4].setPosX(1125);
+	ground[4].setPosY(0);
+	ground[4].setWidth(125);
+	ground[4].setHeight(100);
+
+	plat[0].setPosX(100);
+	plat[0].setPosY(600);
 	plat[0].setWidth(100);
 	plat[0].setHeight(10);
 
@@ -523,45 +549,15 @@ void physics(Game *g)
 	g->ship2.addGravity(GRAVITY);
     g->ship2.setPosX(g->ship2.getPosX()+g->ship2.getVelX());
     g->ship2.setPosY(g->ship2.getPosY()+g->ship2.getVelY());
-	// Move this to nicholas.cpp file when fully working
-	if (g->ship2.collidesWith(g->plat[0])) {
-		//float shipCenterX = g->ship2.getposX() + g->ship2.getWidth()*.5;
-		//float shipCenterY = g->ship2.getposY() + g->ship2.getHeight()*.5;
-		//float platCenterX = g->plat[0].getposX() + g->plat[0].getWidth()*.5;
-		//float platCenterY = g->plat[0].getposY() + g->plat[0].getHeight()*.5;
-		if (g->ship2.getPosY() < g->plat[0].getPosY() + g->plat[0].getHeight()) {
-			g->ship2.setPosY(g->plat[0].getPosY() + g->plat[0].getHeight() + 1);
-			g->ship2.setVelX(0); // Temp
-			g->ship2.setVelY(0);
-//		} else if (g->ship2.getPosY() + g->ship2.getHeight() > g->plat[0].getPosY()) {
-//			g->ship2.setPosY(g->plat[0].getPosY() - 1);
-//			g->ship2.setVelY(0);
-		}
-	} else if (g->ship2.collidesWith(g->plat[1])) {
-		if (g->ship2.getPosY() < g->plat[1].getPosY() + g->plat[1].getHeight()) {
-			g->ship2.setPosY(g->plat[1].getPosY() + g->plat[0].getHeight() + 1);
-			g->ship2.setVelX(0); // Temp
-			g->ship2.setVelY(0);
-		}
 
+	// Check for collision with platforms
+	for (int i=0; i<5; i++) {
+		g->ship2.collidesWith(g->ground[i]);
 	}
-
-
-    //	//check for collision with boxes...
-    //	Shape *s;
-    //	for (int i=0; i < 2; i++) {
-    //		s = &g->platforms[i];
-    //		if (g->s.center[1] < s->center[1] + s->height && // top collision
-    //				g->s.center[1] > s->center[1] - s->height && // bottom collision
-    //				g->s.center[0] >= s->center[0] - s->width && // left collision
-    //				g->s.center[0] <= s->center[0] + s->width) { // right collision
-    //			// Update these
-    //			g->s.center[1] = s->center[1] + s->height;
-    //			g->velocity.y = -g->velocity.y * 0.005f;
-    //			g->velocity.x += 0.02f;
-    //		}
-    //	}
-
+	for (int i=0; i<2; i++) {
+		g->ship2.collidesWith(g->plat[i]);
+	}
+	
     //Check for collision with window edges
     if (g->ship.pos[0] < 0.0) {
 	g->ship.pos[0] += (float)xres;
@@ -815,6 +811,13 @@ void physics(Game *g)
 	    //-------------------------------------------------------------------------
 
 	    g->ship2.draw();
+
+		glColor3ub(51,102,0);
+		for (int i=0;i<5;i++) {
+			g->ground[i].draw();
+		}
+
+		glColor3ub(255,165,0);
 	    g->plat[0].draw();
 	    g->plat[1].draw();
 

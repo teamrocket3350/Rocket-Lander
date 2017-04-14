@@ -95,6 +95,11 @@ bool Ship2::collidesWith(Object ob)
 			rectCollidesWith(collidables[3], ob, pos[0]+(collidables[1].base*.5)+3, pos[1]+collidables[0].height) || // nose box
 			triCollidesWith(collidables[4], ob, pos[0]+(collidables[1].base*.5), pos[1]+collidables[0].height+collidables[3].height) // nose cone
 	   ) {
+			if (pos[1] < ob.getPosY() + ob.getHeight()) {
+				pos[1] = ob.getPosY() + ob.getHeight() + 1;
+				vel[0] = 0; // Temp
+				vel[1] = 0;
+			}
 		return true;
 	} else {
 		return false;
@@ -490,7 +495,7 @@ void Asteroid2::draw()
 void Platform::draw()
 {
 	//draw platform
-	glColor3ub(255,165,0);
+	//glColor3ub(255,165,0);
 	glPushMatrix();
 	glTranslatef(pos[0], pos[1], 0);
 	glBegin(GL_QUADS);
