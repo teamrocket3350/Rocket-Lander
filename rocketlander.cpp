@@ -47,7 +47,7 @@ const float gravity = -0.2f;
 #define ALPHA 1
 const int MAX_BULLETS = 11;
 const Flt MINIMUM_ASTEROID_SIZE = 60.0;
-const float GRAVITY = 0.005;
+const float GRAVITY = 0.006;
 
 //X Windows variables
 Display *dpy;
@@ -81,7 +81,7 @@ extern struct Global {
 int xres=1250, yres=900;
 int credits = 0;
 int nick_menu = 0;
-int renderShip = 1;
+int renderShip = 0;
 int pat_menu = 0;
 int ramon_menu = 0;
 
@@ -578,12 +578,12 @@ void physics(Game *g)
     else if (g->ship2.getPosX() > (float)xres) {
 		g->ship2.setPosX(g->ship2.getPosX() - (float)xres);
     }
-    else if (g->ship2.getPosY() < 0.0) {
-		g->ship2.setPosY(g->ship2.getPosY() + (float)yres);
-    }
-    else if (g->ship2.getPosY() > (float)yres) {
-		g->ship2.setPosY(g->ship2.getPosY() - (float)yres);
-    }
+//    else if (g->ship2.getPosY() < 0.0) {
+//		g->ship2.setPosY(g->ship2.getPosY() + (float)yres);
+//    }
+//    else if (g->ship2.getPosY() > (float)yres) {
+//		g->ship2.setPosY(g->ship2.getPosY() - (float)yres);
+//    }
     //
     //
     //Update bullet positions
@@ -752,40 +752,40 @@ void physics(Game *g)
 		g->ship.vel[1] *= speed;
 	    }
 	}
-	if (keys[XK_space]) {
-	    //a little time between each bullet
-	    struct timespec bt;
-	    clock_gettime(CLOCK_REALTIME, &bt);
-	    double ts = timeDiff(&g->bulletTimer, &bt);
-	    if (ts > 0.1) {
-		timeCopy(&g->bulletTimer, &bt);
-		if (g->nbullets < MAX_BULLETS) {
-		    //LaserSound();	// Laser
-		    playSound(p.alSourceLaser);	// Laser
-		    //shoot a bullet...
-		    //Bullet *b = new Bullet;
-		    Bullet *b = &g->barr[g->nbullets];
-		    timeCopy(&b->time, &bt);
-		    b->pos[0] = g->ship.pos[0];
-		    b->pos[1] = g->ship.pos[1];
-		    b->vel[0] = g->ship.vel[0];
-		    b->vel[1] = g->ship.vel[1];
-		    //convert ship angle to radians
-		    Flt rad = ((g->ship.angle+90.0) / 360.0f) * PI * 2.0;
-		    //convert angle to a vector
-		    Flt xdir = cos(rad);
-		    Flt ydir = sin(rad);
-		    b->pos[0] += xdir*20.0f;
-		    b->pos[1] += ydir*20.0f;
-		    b->vel[0] += xdir*6.0f + rnd()*0.1;
-		    b->vel[1] += ydir*6.0f + rnd()*0.1;
-		    b->color[0] = 1.0f;
-		    b->color[1] = 1.0f;
-		    b->color[2] = 1.0f;
-		    g->nbullets++;
-		}
-	    }
-	}
+//	if (keys[XK_space]) {
+//	    //a little time between each bullet
+//	    struct timespec bt;
+//	    clock_gettime(CLOCK_REALTIME, &bt);
+//	    double ts = timeDiff(&g->bulletTimer, &bt);
+//	    if (ts > 0.1) {
+//		timeCopy(&g->bulletTimer, &bt);
+//		if (g->nbullets < MAX_BULLETS) {
+//		    //LaserSound();	// Laser
+//		    playSound(p.alSourceLaser);	// Laser
+//		    //shoot a bullet...
+//		    //Bullet *b = new Bullet;
+//		    Bullet *b = &g->barr[g->nbullets];
+//		    timeCopy(&b->time, &bt);
+//		    b->pos[0] = g->ship.pos[0];
+//		    b->pos[1] = g->ship.pos[1];
+//		    b->vel[0] = g->ship.vel[0];
+//		    b->vel[1] = g->ship.vel[1];
+//		    //convert ship angle to radians
+//		    Flt rad = ((g->ship.angle+90.0) / 360.0f) * PI * 2.0;
+//		    //convert angle to a vector
+//		    Flt xdir = cos(rad);
+//		    Flt ydir = sin(rad);
+//		    b->pos[0] += xdir*20.0f;
+//		    b->pos[1] += ydir*20.0f;
+//		    b->vel[0] += xdir*6.0f + rnd()*0.1;
+//		    b->vel[1] += ydir*6.0f + rnd()*0.1;
+//		    b->color[0] = 1.0f;
+//		    b->color[1] = 1.0f;
+//		    b->color[2] = 1.0f;
+//		    g->nbullets++;
+//		}
+//	    }
+//	}
 	if (g->mouseThrustOn) {
 	    //should thrust be turned off
 	    struct timespec mtt;

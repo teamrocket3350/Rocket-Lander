@@ -95,6 +95,7 @@ bool Ship2::collidesWith(Object ob)
 			rectCollidesWith(collidables[3], ob, pos[0]+(collidables[1].base*.5)+3, pos[1]+collidables[0].height) || // nose box
 			triCollidesWith(collidables[4], ob, pos[0]+(collidables[1].base*.5), pos[1]+collidables[0].height+collidables[3].height) // nose cone
 	   ) {
+			// Place ship above platform
 			if (pos[1] < ob.getPosY() + ob.getHeight()) {
 				pos[1] = ob.getPosY() + ob.getHeight() + 1;
 				vel[0] = 0; // Temp
