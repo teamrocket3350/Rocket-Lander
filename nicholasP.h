@@ -68,8 +68,6 @@ class Object
 		float getRadius() {return shape.radius;}
 
 		void draw();
-		// Pure virtual functions
-		//virtual void draw() = 0;
 };
 
 class MovableObject : public Object
@@ -90,8 +88,6 @@ class MovableObject : public Object
 		float getVelY() {return vel[1];}
 
 		void move();
-		// Pure virtual functions
-		//virtual void move() = 0;
 };
 
 // Rename to Ship when integrating into rocketlander.cpp
@@ -100,19 +96,6 @@ class Ship2 : public MovableObject {
 	private:
 		Shape collidables[5];
 		int fuel;
-
-		// Choose between the 3
-		bool haveBooster1;
-		bool enabledBooster1;
-		bool haveBooster2;
-		bool enabledBooster2;
-		bool haveBooster3;
-		bool enabledBooster3;
-		
-		bool haveLeftStrafe;
-		bool haveRightStrafe;
-		bool haveDoubleShot;
-		bool haveTripleShot;
 
 		bool linesIntersect(Line, Line);
 		Point* getRectPointArray(float, float, float, float, float);
@@ -131,6 +114,19 @@ class Ship2 : public MovableObject {
 		void drawTri();
 		//void drawTri(Shape);
 
+		// Choose between the 3
+		bool haveBooster1;
+		bool enabledBooster1;
+		bool haveBooster2;
+		bool enabledBooster2;
+		bool haveBooster3;
+		bool enabledBooster3;
+		
+		bool haveLeftStrafe;
+		bool haveRightStrafe;
+		bool haveDoubleShot;
+		bool haveTripleShot;
+
 		bool buyBooster1();
 		bool buyBooster2();
 		bool buyBooster3();
@@ -142,6 +138,8 @@ class Ship2 : public MovableObject {
 		void enableBooster1();
 		void enableBooster2();
 		void enableBooster3();
+
+		void addGravity(float);
 };
 
 class Enemy : public MovableObject {

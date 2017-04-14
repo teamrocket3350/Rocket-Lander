@@ -47,6 +47,7 @@ const float gravity = -0.2f;
 #define ALPHA 1
 const int MAX_BULLETS = 11;
 const Flt MINIMUM_ASTEROID_SIZE = 60.0;
+const float GRAVITY = 0.005;
 
 //X Windows variables
 Display *dpy;
@@ -154,6 +155,7 @@ struct Game {
 	nasteroids = 0;
 	nbullets = 0;
 
+	ship2.enableBooster2();
 	ship2.setPosX(23);
 	ship2.setPosY(15);
 
@@ -406,105 +408,6 @@ void show_mouse_cursor(const int onoff)
     //(thus do only use ONCE XDefineCursor and then XUndefineCursor):
 }
 
-//void check_mouse(XEvent *e, Game *g)
-//{
-//    //Did the mouse move?
-//    //Was a mouse button clicked?
-//    static int savex = 0;
-//    static int savey = 0;
-//    //
-//    static int ct=0;
-//    //std::cout << "m" << std::endl << std::flush;
-//    if (e->type == ButtonRelease) {
-//	return;
-//    }
-//    if (e->type == ButtonPress) {
-//	if (e->xbutton.button==1) {
-//	    //Left button is down
-//	    //a little time between each bullet
-//	    struct timespec bt;
-//	    clock_gettime(CLOCK_REALTIME, &bt);
-//	    double ts = timeDiff(&g->bulletTimer, &bt);
-//	    if (ts > 0.1) {
-//		timeCopy(&g->bulletTimer, &bt);
-//		//shoot a bullet...
-//		if (g->nbullets < MAX_BULLETS) {
-//		    LaserSound();	// Laser
-//	    	    // playSound(p.alSourceLaser);	// Laser
-//		    Bullet *b = &g->barr[g->nbullets];
-//		    timeCopy(&b->time, &bt);
-//		    b->pos[0] = g->ship.pos[0];
-//		    b->pos[1] = g->ship.pos[1];
-//		    b->vel[0] = g->ship.vel[0];
-//		    b->vel[1] = g->ship.vel[1];
-//		    //convert ship angle to radians
-//		    Flt rad = ((g->ship.angle+90.0) / 360.0f) * PI * 2.0;
-//		    //convert angle to a vector
-//		    Flt xdir = cos(rad);
-//		    Flt ydir = sin(rad);
-//		    b->pos[0] += xdir*20.0f;
-//		    b->pos[1] += ydir*20.0f;
-//		    b->vel[0] += xdir*6.0f + rnd()*0.1;
-//		    b->vel[1] += ydir*6.0f + rnd()*0.1;
-//		    b->color[0] = 1.0f;
-//		    b->color[1] = 1.0f;
-//		    b->color[2] = 1.0f;
-//		    g->nbullets++;
-//		}
-//	    }
-//	}
-//	if (e->xbutton.button==3) {
-//	    //Right button is down
-//	}
-//    }
-//    //keys[XK_Up] = 0;
-//    if (savex != e->xbutton.x || savey != e->xbutton.y) {
-//	//Mouse moved
-//	int xdiff = savex - e->xbutton.x;
-//	int ydiff = savey - e->xbutton.y;
-//	if (++ct < 10)
-//	    return;		
-//	//std::cout << "savex: " << savex << std::endl << std::flush;
-//	//std::cout << "e->xbutton.x: " << e->xbutton.x << std::endl <<
-//	//std::flush;
-//	if (xdiff > 0) {
-//	    //std::cout << "xdiff: " << xdiff << std::endl << std::flush;
-//	    g->ship.angle += 0.05f * (float)xdiff;
-//	    if (g->ship.angle >= 360.0f)
-//		g->ship.angle -= 360.0f;
-//	}
-//	else if (xdiff < 0) {
-//	    //std::cout << "xdiff: " << xdiff << std::endl << std::flush;
-//	    g->ship.angle += 0.05f * (float)xdiff;
-//	    if (g->ship.angle < 0.0f)
-//		g->ship.angle += 360.0f;
-//	}
-//	if (ydiff > 0) {
-//	    //apply thrust
-//	    //convert ship angle to radians
-//	    Flt rad = ((g->ship.angle+90.0) / 360.0f) * PI * 2.0;
-//	    //convert angle to a vector
-//	    Flt xdir = cos(rad);
-//	    Flt ydir = sin(rad);
-//	    g->ship.vel[0] += xdir * (float)ydiff * 0.01f;
-//	    g->ship.vel[1] += ydir * (float)ydiff * 0.01f;
-//	    Flt speed = sqrt(g->ship.vel[0]*g->ship.vel[0]+
-//		    g->ship.vel[1]*g->ship.vel[1]);
-//	    if (speed > 10.0f) {
-//		speed = 10.0f;
-//		normalize(g->ship.vel);
-//		g->ship.vel[0] *= speed;
-//		g->ship.vel[1] *= speed;
-//	    }
-//	    g->mouseThrustOn = true;
-//	    clock_gettime(CLOCK_REALTIME, &g->mouseThrustTimer);
-//	}
-//	set_mouse_position(100,100);
-//	savex=100;
-//	savey=100;
-//    }
-//}
-
 int check_keys(XEvent *e)
 {
     //keyboard input?
@@ -616,9 +519,10 @@ void physics(Game *g)
     //Update ship position
     g->ship.pos[0] += g->ship.vel[0];
     g->ship.pos[1] += g->ship.vel[1];
-    // TODO use similar physics to original ship?
-    g->ship2.setPosX(g->ship.pos[0]-(g->ship2.getWidth()/2));
-    g->ship2.setPosY(g->ship.pos[1]-10);
+	// My ship
+	g->ship2.addGravity(GRAVITY);
+    g->ship2.setPosX(g->ship2.getPosX()+g->ship2.getVelX());
+    g->ship2.setPosY(g->ship2.getPosY()+g->ship2.getVelY());
     g->ship2.collidesWith(g->plat[0]);
     g->ship2.collidesWith(g->plat[1]);
 
@@ -650,6 +554,19 @@ void physics(Game *g)
     }
     else if (g->ship.pos[1] > (float)yres) {
 	g->ship.pos[1] -= (float)yres;
+    }
+	// My ship
+    if (g->ship2.getPosX() < 0.0) {
+		g->ship2.setPosX(g->ship2.getPosX() + (float)xres);
+    }
+    else if (g->ship2.getPosX() > (float)xres) {
+		g->ship2.setPosX(g->ship2.getPosX() - (float)xres);
+    }
+    else if (g->ship2.getPosY() < 0.0) {
+		g->ship2.setPosY(g->ship2.getPosY() + (float)yres);
+    }
+    else if (g->ship2.getPosY() > (float)yres) {
+		g->ship2.setPosY(g->ship2.getPosY() - (float)yres);
     }
     //
     //
@@ -791,12 +708,25 @@ void physics(Game *g)
 	    //BoosterSound();	//BoosterSound
 	    playSound(p.alSourceBooster);	//Booster
 	    //convert ship angle to radians
-	    Flt rad = ((g->ship.angle+90.0) / 360.0f) * PI * 2.0;
+	    Flt rad = ((g->ship2.getRot()+90.0) / 360.0f) * PI * 2.0;
+	    //Flt rad = ((g->ship.angle+90.0) / 360.0f) * PI * 2.0;
 	    //convert angle to a vector
 	    Flt xdir = cos(rad);
 	    Flt ydir = sin(rad);
-	    g->ship.vel[0] += xdir*0.02f;
-	    g->ship.vel[1] += ydir*0.02f;
+		// My ship
+		if (g->ship2.enabledBooster1) {
+			g->ship2.setVelX(g->ship2.getVelX() + xdir * 0.02f);
+			g->ship2.setVelY(g->ship2.getVelY() + ydir * 0.02f);
+		} else if (g->ship2.enabledBooster2) {
+			g->ship2.setVelX(g->ship2.getVelX() + xdir * 0.025f);
+			g->ship2.setVelY(g->ship2.getVelY() + ydir * 0.025f);
+		} else if (g->ship2.enabledBooster3) {
+			g->ship2.setVelX(g->ship2.getVelX() + xdir * 0.03f);
+			g->ship2.setVelY(g->ship2.getVelY() + ydir * 0.03f);
+		}
+		// Orig ship
+	    g->ship.vel[0] += xdir*0.02f; //
+	    g->ship.vel[1] += ydir*0.02f; //
 	    Flt speed = sqrt(g->ship.vel[0]*g->ship.vel[0]+
 		    g->ship.vel[1]*g->ship.vel[1]);
 	    if (speed > 10.0f) {

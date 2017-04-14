@@ -374,34 +374,26 @@ void Ship2::drawRect()
 	//draw platform
 	glColor3ub(111,111,111);
 	glPushMatrix();
-	glTranslatef(pos[0], pos[1], 0);
 	glBegin(GL_QUADS);
 
-	// Coords using (0,0) pos
-	glVertex2i(0,0);
-	glVertex2i(0, shape.height);
-	glVertex2i(shape.width, shape.height);
-	glVertex2i(shape.width, 0);
+	//glVertex2i(0,0);
+	//glVertex2i(0, shape.height);
+	//glVertex2i(shape.width, shape.height);
+	//glVertex2i(shape.width, 0);
 
 	glEnd();
 	glPopMatrix();
 }
 
 void Ship2::drawTri()
-	//void Ship2::drawTri(Shape s)
 {
 	glColor3ub(255,0,0);
 	glPushMatrix();
-	glTranslatef(200, 200, 0);
 	glBegin(GL_TRIANGLES);
 
-	glVertex2i(0,0);
-	glVertex2i(50, 0);
-	glVertex2i(25, 50);
-
-	//    glVertex2i(0,0);
-	//    glVertex2i(shape.base, 0);
-	//    glVertex2i(shape.base\2, shape.height);
+	//glVertex2i(0,0);
+	//glVertex2i(shape.base, 0);
+	//glVertex2i(shape.base\2, shape.height);
 
 	glEnd();
 	glPopMatrix();
@@ -426,6 +418,15 @@ void Ship2::enableBooster3()
 	enabledBooster1 = false;
 	enabledBooster2 = false;
 	enabledBooster3 = true;
+}
+
+void Ship2::addGravity(float grav)
+{
+	vel[1] -= grav;
+	if (vel[1] < -2.0)
+		vel[1] = -2.0;
+	if (vel[1] > 4.0)
+		vel[1] = 4.0;
 }
 
 // ---------- //
