@@ -90,13 +90,9 @@ bool Ship2::collidesWith(Object ob)
 	// Use line-line collision testing for all shapes except cirlce
 	if (
 			triCollidesWith(collidables[1], ob, pos[0], pos[1]) || // left wing
-			//rectCollidesWith(collidables[0], ob, pos[0]+collidables[0].width, pos[1]) || //cockpit
 			rectCollidesWith(collidables[0], ob, pos[0]+(collidables[1].base*.5), pos[1]) || //cockpit
-			//triCollidesWith(collidables[2], ob, pos[0]+collidables[0].width+
-		    //	collidables[1].base, pos[1]) || // right wing
 			triCollidesWith(collidables[2], ob, pos[0]+collidables[1].base, pos[1]) || // right wing
 			rectCollidesWith(collidables[3], ob, pos[0]+(collidables[1].base*.5)+3, pos[1]+collidables[0].height) || // nose box
-			//rectCollidesWith(collidables[3], ob, pos[0]+collidables[0].width+3, pos[1]+collidables[0].height) || // nose box
 			triCollidesWith(collidables[4], ob, pos[0]+(collidables[1].base*.5), pos[1]+collidables[0].height+collidables[3].height) // nose cone
 	   ) {
 		return true;
@@ -422,6 +418,7 @@ void Ship2::enableBooster3()
 
 void Ship2::addGravity(float grav)
 {
+	printf("VelY: %f\n", vel[1]);
 	vel[1] -= grav;
 	if (vel[1] < -2.0)
 		vel[1] = -2.0;

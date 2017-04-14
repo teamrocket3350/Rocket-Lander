@@ -523,8 +523,28 @@ void physics(Game *g)
 	g->ship2.addGravity(GRAVITY);
     g->ship2.setPosX(g->ship2.getPosX()+g->ship2.getVelX());
     g->ship2.setPosY(g->ship2.getPosY()+g->ship2.getVelY());
-    g->ship2.collidesWith(g->plat[0]);
-    g->ship2.collidesWith(g->plat[1]);
+	// Move this to nicholas.cpp file when fully working
+	if (g->ship2.collidesWith(g->plat[0])) {
+		//float shipCenterX = g->ship2.getposX() + g->ship2.getWidth()*.5;
+		//float shipCenterY = g->ship2.getposY() + g->ship2.getHeight()*.5;
+		//float platCenterX = g->plat[0].getposX() + g->plat[0].getWidth()*.5;
+		//float platCenterY = g->plat[0].getposY() + g->plat[0].getHeight()*.5;
+		if (g->ship2.getPosY() < g->plat[0].getPosY() + g->plat[0].getHeight()) {
+			g->ship2.setPosY(g->plat[0].getPosY() + g->plat[0].getHeight() + 1);
+			g->ship2.setVelX(0); // Temp
+			g->ship2.setVelY(0);
+//		} else if (g->ship2.getPosY() + g->ship2.getHeight() > g->plat[0].getPosY()) {
+//			g->ship2.setPosY(g->plat[0].getPosY() - 1);
+//			g->ship2.setVelY(0);
+		}
+	} else if (g->ship2.collidesWith(g->plat[1])) {
+		if (g->ship2.getPosY() < g->plat[1].getPosY() + g->plat[1].getHeight()) {
+			g->ship2.setPosY(g->plat[1].getPosY() + g->plat[0].getHeight() + 1);
+			g->ship2.setVelX(0); // Temp
+			g->ship2.setVelY(0);
+		}
+
+	}
 
 
     //	//check for collision with boxes...
