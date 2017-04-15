@@ -422,9 +422,33 @@ void Ship2::enableBooster3()
 	enabledBooster3 = true;
 }
 
+void Ship2::accelerate()
+{
+	if (fuel > 0) {
+		float rad = (rot+90.0) / 360.0f * PI * 2.0;
+		float xdir = cos(rad);
+		float ydir = sin(rad);
+		if (enabledBooster1) {
+			vel[0] += xdir * 0.02f;
+			vel[1] += ydir * 0.02f;
+		} else if (enabledBooster2) {
+			vel[0] += xdir * 0.025f;
+			vel[1] += ydir * 0.025f;
+		} else if (enabledBooster3) {
+			vel[0] += xdir * 0.03f;
+			vel[1] += ydir * 0.03f;
+		}
+		fuel -= .2;
+	} else {
+		fuel = 0;
+	}
+
+	//printf("Fuel left: %f\n", fuel);
+}
+
 void Ship2::addGravity(float grav)
 {
-	printf("VelY: %f\n", vel[1]);
+	//printf("VelY: %f\n", vel[1]);
 	vel[1] -= grav;
 	if (vel[1] < -2.0)
 		vel[1] = -2.0;
@@ -449,35 +473,6 @@ void Enemy::draw() {
 
 // ---------- //
 
-//Chaser::Chaser(Ship * s)
-//{
-//    ship = s;
-//}
-
-void Chaser::move() {
-	printf("The chaser is moving!\n");
-}
-
-void Chaser::draw() {
-	printf("Drawing the chaser!\n");
-}
-
-// ---------- //
-
-//Circler::Circler(Ship * s)
-//{
-//    ship = s;
-//}
-
-void Circler::move() 
-{
-	printf("The circler is moving!\n");
-}
-
-void Circler::draw() 
-{
-	printf("Drawing the circler!\n");
-}
 
 // ---------- //
 
@@ -512,6 +507,56 @@ void Platform::draw()
 }
 
 // ---------- //
+
+void drawFuelGauge(float fuelLeft, float fuelMax, float x, float y)
+{
+	float width = 155;
+	float height = 25;
+	float fuelWidth = ((fuelLeft)/fuelMax)*width-8;
+	//outer outline platform
+	glColor3ub(255,0,0);
+	glPushMatrix();
+	glTranslatef(x-(width*.5), y, 0);
+	glBegin(GL_QUADS);
+
+	glVertex2i(0,0);
+	glVertex2i(0, height);
+	glVertex2i(width, height);
+	glVertex2i(width, 0);
+
+	glEnd();
+	glPopMatrix();
+
+	// inner outline
+	glColor3ub(0,0,0);
+	glPushMatrix();
+	glTranslatef(x-(width*.5)+2, y+2, 0);
+	glBegin(GL_QUADS);
+
+	glVertex2i(0,0);
+	glVertex2i(0, height-4);
+	glVertex2i(width-4, height-4);
+	glVertex2i(width-4, 0);
+
+	glEnd();
+	glPopMatrix();
+
+	if (fuelWidth > 0) {
+		// fuel gauge
+		glColor3ub(0,255,0);
+		glPushMatrix();
+		glTranslatef(x-(width*.5)+4, y+4, 0);
+		glBegin(GL_QUADS);
+
+		glVertex2i(0,0);
+		glVertex2i(0, height-8);
+		glVertex2i(fuelWidth, height-8);
+		glVertex2i(fuelWidth, 0);
+
+		glEnd();
+		glPopMatrix();
+	}
+}
 
 void drawNicholasMenu(int xres, int yres, Rect r)
 {   

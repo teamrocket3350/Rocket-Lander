@@ -95,7 +95,8 @@ class Ship2 : public MovableObject {
 //class Ship : public MovableObject {
 	private:
 		Shape collidables[5];
-		int fuel;
+		float fuel = 100;
+		float fuelMax = 100;
 
 		bool linesIntersect(Line, Line);
 		Point* getRectPointArray(float, float, float, float, float);
@@ -110,9 +111,8 @@ class Ship2 : public MovableObject {
 		void move();
 		bool collidesWith(Object);
 		void draw();
-		void drawRect();
-		void drawTri();
-		//void drawTri(Shape);
+		void drawRect(); // remove?
+		void drawTri(); // remove?
 
 		// Choose between the 3
 		bool haveBooster1;
@@ -127,6 +127,8 @@ class Ship2 : public MovableObject {
 		bool haveDoubleShot;
 		bool haveTripleShot;
 
+		float getFuelLeft() {return fuel;}
+		float getFuelMax() {return fuelMax;}
 		bool buyBooster1();
 		bool buyBooster2();
 		bool buyBooster3();
@@ -139,6 +141,7 @@ class Ship2 : public MovableObject {
 		void enableBooster2();
 		void enableBooster3();
 
+		void accelerate();
 		void addGravity(float);
 };
 
@@ -185,6 +188,7 @@ class Platform : public Object
 	void draw();
 };
 
+void drawFuelGauge(float, float, float, float);
 void drawNicholasMenu(int xres, int yres, Rect r);
 
 #endif

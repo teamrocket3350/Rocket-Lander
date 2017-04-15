@@ -724,22 +724,13 @@ void physics(Game *g)
 	    //BoosterSound();	//BoosterSound
 	    playSound(p.alSourceBooster);	//Booster
 	    //convert ship angle to radians
-	    Flt rad = ((g->ship2.getRot()+90.0) / 360.0f) * PI * 2.0;
-	    //Flt rad = ((g->ship.angle+90.0) / 360.0f) * PI * 2.0;
+	    //Flt rad = ((g->ship2.getRot()+90.0) / 360.0f) * PI * 2.0;
+	    Flt rad = ((g->ship.angle+90.0) / 360.0f) * PI * 2.0;
 	    //convert angle to a vector
 	    Flt xdir = cos(rad);
 	    Flt ydir = sin(rad);
 		// My ship
-		if (g->ship2.enabledBooster1) {
-			g->ship2.setVelX(g->ship2.getVelX() + xdir * 0.02f);
-			g->ship2.setVelY(g->ship2.getVelY() + ydir * 0.02f);
-		} else if (g->ship2.enabledBooster2) {
-			g->ship2.setVelX(g->ship2.getVelX() + xdir * 0.025f);
-			g->ship2.setVelY(g->ship2.getVelY() + ydir * 0.025f);
-		} else if (g->ship2.enabledBooster3) {
-			g->ship2.setVelX(g->ship2.getVelX() + xdir * 0.03f);
-			g->ship2.setVelY(g->ship2.getVelY() + ydir * 0.03f);
-		}
+		g->ship2.accelerate();
 		// Orig ship
 	    g->ship.vel[0] += xdir*0.02f; //
 	    g->ship.vel[1] += ydir*0.02f; //
@@ -809,6 +800,14 @@ void physics(Game *g)
 	    //	    ggprint8b(&r, 16, 0x00ffff00, "n bullets: %i", g->nbullets);
 	    //	    ggprint8b(&r, 16, 0x00ffff00, "n asteroids: %i", g->nasteroids);
 	    //-------------------------------------------------------------------------
+
+		// Draw fuel gauge
+	    Rect fuelBar;
+	    fuelBar.bot = yres - 43;
+	    fuelBar.left = xres*.5-10;
+	    fuelBar.center = 0;
+		drawFuelGauge(g->ship2.getFuelLeft(), g->ship2.getFuelMax(), xres*.5, 850);
+	    ggprint8b(&fuelBar, 16, 0x00ff0000, "Fuel");
 
 	    g->ship2.draw();
 
