@@ -557,8 +557,7 @@ void physics(Game *g)
     g->ship.pos[1] += g->ship.vel[1];
 	// My ship
 	g->ship2.addGravity(GRAVITY);
-    g->ship2.setPosX(g->ship2.getPosX()+g->ship2.getVelX());
-    g->ship2.setPosY(g->ship2.getPosY()+g->ship2.getVelY());
+	g->ship2.move();
 
 	// Check for collision with platforms
 	for (int i=0; i<5; i++) {
@@ -569,7 +568,6 @@ void physics(Game *g)
 	}
 	g->ship2.collidesWith(g->goal);
 	g->ship2.goalTriggered(g->goal);
-//	g->ship2.collidesWith(g->goal.getTrigger());
 	
     //Check for collision with window edges
     if (g->ship.pos[0] < 0.0) {

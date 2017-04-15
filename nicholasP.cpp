@@ -76,7 +76,9 @@ Ship2::Ship2()
 
 void Ship2::move()
 {
-	//printf("The ship is moving!\n");
+	pos[0] += vel[0];
+	pos[1] += vel[1];
+
 }
 
 bool Ship2::goalTriggered(Goal goal)
