@@ -79,6 +79,17 @@ void Ship2::move()
 	//printf("The ship is moving!\n");
 }
 
+bool Ship2::goalTriggered(Goal goal)
+{
+	if (collidesWith(goal.getTrigger()) &&
+			vel[0] == 0 &&
+			vel[1] == 0) {
+		printf("Goal triggered!\n");
+		return true;
+	}
+	return false;
+}
+
 bool Ship2::collidesWith(Object ob)
 {
 	// TODO Collision types:
@@ -492,6 +503,54 @@ void Platform::draw()
 {
 	//draw platform
 	//glColor3ub(255,165,0);
+	glPushMatrix();
+	glTranslatef(pos[0], pos[1], 0);
+	glBegin(GL_QUADS);
+
+	// Coords using (0,0) pos
+	glVertex2i(0,0);
+	glVertex2i(0, shape.height);
+	glVertex2i(shape.width, shape.height);
+	glVertex2i(shape.width, 0);
+
+	glEnd();
+	glPopMatrix();
+}
+
+// ---------- //
+
+Goal::Goal(float x, float y, float width, float height)
+{
+	pos[0] = x;
+	pos[1] = y;
+	shape.width = width;
+	shape.height = height;
+
+	trigger.setPosX(x);
+	trigger.setPosY(y);
+	trigger.setWidth(width);
+	trigger.setHeight(height+5);
+}
+
+void Goal::draw()
+{
+	//draw trigger 
+	glColor3ub(255,111,111);
+	glPushMatrix();
+	glTranslatef(pos[0], pos[1], 0);
+	glBegin(GL_QUADS);
+
+	// Coords using (0,0) pos
+	glVertex2i(0,0);
+	glVertex2i(0, trigger.getHeight());
+	glVertex2i(trigger.getWidth(), trigger.getHeight());
+	glVertex2i(trigger.getWidth(), 0);
+
+	glEnd();
+	glPopMatrix();
+
+	//draw platform
+	glColor3ub(111,111,111);
 	glPushMatrix();
 	glTranslatef(pos[0], pos[1], 0);
 	glBegin(GL_QUADS);

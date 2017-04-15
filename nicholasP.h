@@ -90,6 +90,18 @@ class MovableObject : public Object
 		void move();
 };
 
+class Goal : public Object
+{
+	private:
+		Object trigger;
+
+    public:
+		Goal(float, float, float, float);
+		void draw();
+
+		Object getTrigger() {return trigger;}
+};
+
 // Rename to Ship when integrating into rocketlander.cpp
 class Ship2 : public MovableObject {
 //class Ship : public MovableObject {
@@ -109,6 +121,7 @@ class Ship2 : public MovableObject {
 		Ship2();
 
 		void move();
+		bool goalTriggered(Goal);
 		bool collidesWith(Object);
 		void draw();
 		void drawRect(); // remove?
@@ -185,8 +198,9 @@ class Asteroid2 : public MovableObject {
 class Platform : public Object
 {
     public:
-	void draw();
+		void draw();
 };
+
 
 void drawFuelGauge(float, float, float, float);
 void drawNicholasMenu(int xres, int yres, Rect r);

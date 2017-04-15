@@ -146,9 +146,9 @@ struct Game {
     int nbullets;
     struct timespec bulletTimer;
     struct timespec mouseThrustTimer;
-    //Shape platforms[2];
 	Platform ground[5];
-    Platform plat[2]; // Nick's platform class
+    Platform plats[2]; // Nick's platform class
+	Goal goal = Goal(950, 740, 100, 10);
     bool mouseThrustOn;
     Game() {
 	ahead = NULL;
@@ -185,15 +185,25 @@ struct Game {
 	ground[4].setWidth(125);
 	ground[4].setHeight(100);
 
-	plat[0].setPosX(100);
-	plat[0].setPosY(600);
-	plat[0].setWidth(100);
-	plat[0].setHeight(10);
+	plats[0].setPosX(100);
+	plats[0].setPosY(600);
+	plats[0].setWidth(100);
+	plats[0].setHeight(10);
 
-	plat[1].setPosX(950);
-	plat[1].setPosY(740);
-	plat[1].setWidth(100);
-	plat[1].setHeight(10);
+	plats[1].setPosX(550);
+	plats[1].setPosY(440);
+	plats[1].setWidth(100);
+	plats[1].setHeight(10);
+
+//	plats[1].setPosX(950);
+//	plats[1].setPosY(740);
+//	plats[1].setWidth(100);
+//	plats[1].setHeight(10);
+
+//	goal.setPosX(950);
+//	goal.setPosY(740);
+//	goal.setWidth(100);
+//	goal.setHeight(10);
 
 	mouseThrustOn = false;
     }
@@ -555,8 +565,11 @@ void physics(Game *g)
 		g->ship2.collidesWith(g->ground[i]);
 	}
 	for (int i=0; i<2; i++) {
-		g->ship2.collidesWith(g->plat[i]);
+		g->ship2.collidesWith(g->plats[i]);
 	}
+	g->ship2.collidesWith(g->goal);
+	g->ship2.goalTriggered(g->goal);
+//	g->ship2.collidesWith(g->goal.getTrigger());
 	
     //Check for collision with window edges
     if (g->ship.pos[0] < 0.0) {
@@ -817,8 +830,10 @@ void physics(Game *g)
 		}
 
 		glColor3ub(255,165,0);
-	    g->plat[0].draw();
-	    g->plat[1].draw();
+	    g->plats[0].draw();
+	    g->plats[1].draw();
+
+		g->goal.draw();
 
 		if (renderShip) {
 			//Draw the ship
