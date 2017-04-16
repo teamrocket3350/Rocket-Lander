@@ -1,3 +1,14 @@
+/* Name: Nick Polach
+ *
+ * Description:
+ * My part of the project deals with the ship and the simple objects that
+ * it interacts with (platforms/goal). In the main file, my ship object is
+ * provided with other objects in the level and it checks if it collides
+ * with those objects. My file also provides functions to draw UI items
+ * that give info about the ship such as the fuel gauge.
+ *
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
