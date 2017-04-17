@@ -107,8 +107,10 @@ class Ship2 : public MovableObject {
 //class Ship : public MovableObject {
 	private:
 		Shape collidables[5];
-		float fuel = 100;
-		float fuelMax = 100;
+		float fuel;
+		float fuelMax;
+		//float fuel = 100;
+		//float fuelMax = 100;
 
 		bool linesIntersect(Line, Line);
 		Point* getRectPointArray(float, float, float, float, float);

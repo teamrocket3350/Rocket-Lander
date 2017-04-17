@@ -63,7 +63,6 @@ extern struct timespec timePause;
 extern double physicsCountdown;
 extern double timeSpan;
 extern double timeDiff(struct timespec *start, struct timespec *end);
-extern void drawnicholasMenu(int xres, int yres, Rect r);
 extern void timeCopy(struct timespec *dest, struct timespec *source);
 //-----------------------------------------------------------------------------
 
@@ -80,7 +79,6 @@ extern struct Global {
 
 int xres=1250, yres=900;
 int credits = 0;
-int nick_menu = 0;
 int renderShip = 0;
 int pat_menu = 0;
 int ramon_menu = 0;
@@ -148,7 +146,7 @@ struct Game {
     struct timespec mouseThrustTimer;
 	Platform ground[5];
     Platform plats[2]; // Nick's platform class
-	Goal goal = Goal(950, 740, 100, 10);
+    Goal goal = Goal(950, 740, 100, 10);
     bool mouseThrustOn;
     Game() {
 	ahead = NULL;
@@ -473,7 +471,6 @@ int check_keys(XEvent *e)
 	case XK_f:
 	    break;
 	case XK_n:
-	    nick_menu = nick_menu ^ 1;
 	    break;
 	case XK_t:
 	    renderShip ^= 1;
@@ -929,10 +926,6 @@ void physics(Game *g)
 	    //draw abrahams menu
 	    if (credits == 1) {
 		showCredits(xres,yres,r);
-	    }
-	    // Draw Nick's Menu
-	    if (nick_menu == 1) {
-		drawNicholasMenu(xres, yres, r);
 	    }
 	    // Draw Pat's Menu
 	    if (pat_menu == 1) {

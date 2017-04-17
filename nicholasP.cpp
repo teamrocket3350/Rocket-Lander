@@ -83,6 +83,7 @@ Ship2::Ship2()
 	shape.height = collidables[0].height + collidables[3].height + collidables[4].height;
 
 	fuel = 100;
+	fuelMax = 100;
 }
 
 void Ship2::move()
@@ -466,8 +467,6 @@ void Ship2::accelerate()
 	} else {
 		fuel = 0;
 	}
-
-	//printf("Fuel left: %f\n", fuel);
 }
 
 void Ship2::addGravity(float grav)
@@ -478,36 +477,6 @@ void Ship2::addGravity(float grav)
 		vel[1] = -2.0;
 	if (vel[1] > 4.0)
 		vel[1] = 4.0;
-}
-
-// ---------- //
-
-Enemy::Enemy()
-{
-	health = 100;
-}
-
-void Enemy::move() {
-	printf("The enemy is moving!\n");
-}
-
-void Enemy::draw() {
-	printf("Drawing the enemy!\n");
-}
-
-// ---------- //
-
-
-// ---------- //
-
-void Asteroid2::move()
-{
-	printf("The asteroid is moving!\n");
-}
-
-void Asteroid2::draw()
-{
-	printf("Drawing the asteroid!\n");
 }
 
 // ---------- //
@@ -628,67 +597,4 @@ void drawFuelGauge(float fuelLeft, float fuelMax, float x, float y)
 		glEnd();
 		glPopMatrix();
 	}
-}
-
-void drawNicholasMenu(int xres, int yres, Rect r)
-{   
-
-	//
-	//    // Test circle collision
-	//    Platform plat2;
-	//    plat2.setHeight(10);
-	//
-	//    // Test circle collision
-	//    Platform plat3;
-	//    plat3.setRadius(10);
-
-	Ship2 ship;
-	ship.setPosX(400);
-	ship.setPosY(10);
-	
-	// Test Rectangle collision
-	Platform plat;
-	plat.setPosX(440);
-	plat.setPosY(100);
-	plat.setWidth(25);
-	plat.setHeight(25);
-
-	ship.draw();
-	plat.draw();
-	ship.collidesWith(plat);
-
-	//Ship ship;
-	//Enemy enemy(&ship);
-	//enemy.move();
-	//enemy.draw();
-
-	//Ship ship;
-	//Chaser e1(&ship);
-	//e1.move();
-	//e1.draw();
-
-	//Ship ship;
-	//Circler e2(&ship);
-	//e2.move();
-	//e2.draw();
-
-	//Asteroid ast;
-	//ast.move();
-	//ast.draw();
-
-	glColor3f(1.0, 0.0, 0.0);
-	int cx = xres/2;
-	int cy = yres/2;
-	glBegin(GL_QUADS);
-	glVertex2f(cx-100, cy+100);
-	glVertex2f(cx+100, cy+100);
-	glVertex2f(cx+100, cy-100);
-	glVertex2f(cx-100, cy-100);
-	glEnd();
-	glEnable(GL_TEXTURE_2D);
-	r.bot = cy + 20;
-	r.left = cx;
-	r.center = 1;
-	ggprint8b(&r, 16, 0x00ffff00, "This is Nick's menu");
-	ggprint8b(&r, 16, 0x00ffff00, "Debugging!");
 }
