@@ -76,6 +76,29 @@ unsigned char *buildAlphadata(Ppimage *img) {
 void initOpengl(void) {
 	glViewport(0, 0, xres, yres);
 	glMatrixMode(GL_PROJECTION); glLoadIdentity();
-	
-	
+	glMatrixMode(GL_MODELVIEW); glLoadIdentity();
+	glOrtho(0, xres, 0, yres, -1, 1);
+	glDisable(GL_LIGHTING);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_FOG);
+	glDisable(GL_CULL_FACE);
+	glClearColor(1.0, 1.0, 1.0, 1.0);
+	glEnable(GL_TEXTURE_2D);
+	initialize_fonts();
+	hittersImage = ppm6GetImage("./Images/hitters.ppm");
+	// other objects add-ons
+	glGenTextures(1, &HittersTexture);
+	// other objects add-ons
+	// Visual enemies/aliens
+	int w = hittersimage->width;
+	int h = hittersImage->height;
+	glBindTexture(GL_TEXTURE_2D, hittersTexture);
+	glTextParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTextParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0 GL_RGB, GL_UNSIGNED_BYTE, hittersImage->data);
+	// For background layout
+	// look at rainforest.cpp for background upload
+	// also must add a transparent background so other objects can be visual
+	// add code below for background
+}
 
