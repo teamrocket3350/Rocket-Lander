@@ -33,7 +33,7 @@ struct saveData {
 	int enemyCount;
 	float gravity;
 	float time;
-}
+};
 
 void showCredits(int xres, int yres, Rect r)
 {
