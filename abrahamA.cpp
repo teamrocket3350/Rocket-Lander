@@ -85,41 +85,40 @@ void imageClean()
 
 int loadLevel()
 {
-    	int level;
+    int level;
 	ifstream load;
 	load.open ("./save_file.txt");
-		if (load.is_open()) {
-			cout << "\nSave file loaded successfully\n";
-			load >> level;
-			cout << "Level - " << level << "\n";
-		}
-		else {
-			cout << "\nCould not open save file\n";
-			level = 1;
-			cout << "Level - 1\n";	
-		}
+	if (load.is_open()) {
+		cout << "\nSave file loaded successfully\n";
+		load >> level;
+		cout << "Level - " << level << "\n";
+	}
+	else {
+		cout << "\nCould not open save file\n";
+		level = 1;
+		cout << "Level - 1\n";	
+	}
 	load.close();
 	return (level);	
 }
 
 int loadShip()
 {
-    	int ship;
+    int ship;
 	char buffer[3];
 	ifstream load;
 	load.open ("./save_file.txt");
-		if (load.is_open()) {
-			cout << "Loaded successfully\n";
-			load.getline(buffer,3);
-			load >> ship;	  
-			cout << "Ship - " << ship << "\n\n";
-		}
-		else {
-			cout << "Could not open save file\n";
-			ship = 1;
-			cout << "Ship - 1\n\n";	
-		}
-
+	if (load.is_open()) {
+		cout << "Loaded successfully\n";
+		load.getline(buffer,3);
+		load >> ship;	  
+		cout << "Ship - " << ship << "\n\n";
+	}
+	else {
+		cout << "Could not open save file\n";
+		ship = 1;
+		cout << "Ship - 1\n\n";	
+	}
 	load.close();
 	return (ship);	
 }
@@ -128,8 +127,8 @@ void save(int level, int ship)
 {
 	ofstream save;
 	save.open ("./save_file.txt");
-		save << level << "\n"; 
-		save << ship;
+	save << level << "\n"; 
+	save << ship;
 	save.close();
 }
 
