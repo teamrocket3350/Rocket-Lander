@@ -12,6 +12,7 @@
 #include "fonts.h"
 #include "ramonR.h"
 #include "ppm.h"
+#define ALPHA 1
 
 
 void drawRamRMenu(int xres, int yres, Rect r)
@@ -46,14 +47,20 @@ Ppimage *hittersImage = NULL;
 // Ppimage *backgroundImage = NULL;
 // and other objects
 GLunit hittersTexture;
+GLunit silhouetteTexture;
 // GLunit backgroundTexture;
 // and other objects
 int showHitters = 0;
+int silhouette = 1;
 // int objects;
 // delcare other objects;
 // typedef struct t_otherObjects {
 	
 // } otherObjects;
+void setupScreenRes(const int w, const int h) {
+	xres = w;
+	yres = h;
+}
 unsigned char *buildAlphadata(Ppimage *img) {
 	int i, a, b, c;
 	unsigned char *newdata, *ptr;
@@ -101,4 +108,64 @@ void initOpengl(void) {
 	// also must add a transparent background so other objects can be visual
 	// add code below for background
 }
-
+void moveHitters() {
+	int addgrav = 1;
+	//update position
+	hitters.pos[0] += hitters.vel[0];
+	hitters.pos[1] += hitters.vel[1];
+	//Check for collision with window edges
+	if ((hitters.pos[0] < -140.0 && hitters.vel[0] < 0.0 || 
+	     		(hitters.pos[0] >= (float)xres + 140.0 && hitters.vel[0] > 0.0)) {
+		hitters.vel[0] = -hitters.vel[0];
+		addgrav = 0;
+	}
+	if ((hitters.pos[1] < 150.0 && king.vel[1] < 0.0 || 
+	     		(hitters.pos[1] >= (float)yres && hitters.vel[1] > 0.0)) {
+		hitters.vel[1] = -hitters.vel[1];
+		addgrav = 0;
+	}
+	// addgrav = gravity
+	if (addgrav)
+	    hitters.vel[1] -= 0.75;
+	    }
+void physics(void) {
+	if(showHitters)
+		moveHitters();
+}
+void render(void) {
+//clear screen
+//draw a quad with texture
+//render the background
+if (showHitters) {
+	glPushMatrix();
+	glTranslatef(hitters.pos[0], hitters.pos[1], king.pos[2]);
+	if (!silhouette) {
+		glBindTexture(GL_TEXTURE_2D, hittersTexture);
+	}
+	else {
+		glBindTexture(GL_TEXTURE_2D, silhouetteTexture);
+		glEnable(GL_Alpha_Test);
+		glAlphaFunc(GL_GREATER, 0.0f);
+		glColor4ub(255, 255, 255, 255);
+	}
+	glBegin(GL_QUADS);
+	if (hitters.vel[0] > 0.0) {
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(-wid, -wid);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(-wid, wid);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i(wid, wid);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i(wid, -wid);
+	}
+	else {
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(-wid, -wid);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(-wid, wid);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i(wid, wid);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i(wid, -wid);
+	}
+	glEnd();
+	glPopMatrix();
+}
+	
+	    
+	    
+	    
+		
