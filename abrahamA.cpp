@@ -3,6 +3,11 @@
 // Rocket-Lander
 // abrahamA.cpp
 
+// load game data from xml file and save back to it
+// game credits
+// convert images to ppm
+// clean images
+
 #include<iostream>
 #include<fstream>
 #include<cstdlib>
@@ -58,6 +63,26 @@ void showCredits(int xres, int yres, Rect r)
 	ggprint16(&r,16, 0xffffff, "Ramon R");
 }
 
+void imageConvert()
+{
+	//copy images to main
+	system("cp ./images/*.png .");
+	system("cp ./images/*.jpg .");
+	
+	//convert images to ppm
+	system("mogrify -format ppm *.png");
+	system("mogrify -format ppm *.jpg");
+}
+
+void imageClean()
+{
+	//clean up all images in master folder
+	system("rm *.ppm");
+	system("rm *.png");
+	system("rm *.jpg");
+	return;
+}
+
 int loadLevel()
 {
     	int level;
@@ -107,13 +132,8 @@ void save(int level, int ship)
 		save << ship;
 	save.close();
 }
+
 /*
-int main() {
-    int level, ship;
-    level = loadLevel();
-    ship = loadShip();
-    return 0;
-}
 
 Level::Level(char levelFile[])
 {
