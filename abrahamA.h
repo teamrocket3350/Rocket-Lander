@@ -19,6 +19,10 @@
 
 void showCredits(int xres, int yres, Rect r);
 
+void imageConvert();
+
+void imageClean();
+
 int loadLevel();
 
 int loadShip();
