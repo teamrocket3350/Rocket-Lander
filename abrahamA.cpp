@@ -3,7 +3,7 @@
 // Rocket-Lander
 // abrahamA.cpp
 
-// load game data from xml file and save back to it
+// load game data from file and save back to it
 // game credits
 // convert images to ppm
 // clean images
@@ -23,6 +23,17 @@
 #include"abrahamA.h"
 
 using namespace std;
+
+struct saveData {
+	int levelNumber;
+	int score;
+	int rocket;
+	int platformCount;
+	int asteroidCount;
+	int enemyCount;
+	float gravity;
+	float time;
+}
 
 void showCredits(int xres, int yres, Rect r)
 {
