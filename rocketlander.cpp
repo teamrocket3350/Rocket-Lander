@@ -139,6 +139,8 @@ struct Game {
     Ship ship;
 #ifndef debug
     Ship2 ship2; // Nick's ship class
+#else
+
 #endif
     Asteroid *ahead;
     Bullet *barr;
@@ -150,6 +152,8 @@ struct Game {
     Platform ground[5];
     Platform plats[2]; // Nick's platform class
     Goal goal = Goal(950, 740, 100, 10);
+#else
+
 #endif
     bool mouseThrustOn;
     Game() {
@@ -198,15 +202,8 @@ struct Game {
 	plats[1].setWidth(100);
 	plats[1].setHeight(10);
 
-//	plats[1].setPosX(950);
-//	plats[1].setPosY(740);
-//	plats[1].setWidth(100);
-//	plats[1].setHeight(10);
+#else
 
-//	goal.setPosX(950);
-//	goal.setPosY(740);
-//	goal.setWidth(100);
-//	goal.setHeight(10);
 #endif
 	mouseThrustOn = false;
     }
@@ -579,6 +576,7 @@ void physics(Game *g)
     else if (g->ship2.getPosX() > (float)xres) {
 		g->ship2.setPosX(g->ship2.getPosX() - (float)xres);
     }
+#else
 
 #endif
     //Check for collision with window edges
@@ -727,6 +725,8 @@ void physics(Game *g)
 	    g->ship.angle += 4.0;
 #ifndef debug
 	    g->ship2.setRot(g->ship2.getRot()+4.0);
+#else
+
 #endif
 	    if (g->ship.angle >= 360.0f)
 		g->ship.angle -= 360.0f;
@@ -735,6 +735,8 @@ void physics(Game *g)
 	    g->ship.angle -= 4.0;
 #ifndef debug
 	    g->ship2.setRot(g->ship2.getRot()-4.0);
+#else
+
 #endif
 	    if (g->ship.angle < 0.0f)
 		g->ship.angle += 360.0f;
@@ -753,6 +755,8 @@ void physics(Game *g)
 #ifndef debug
 	    // My ship
 	    g->ship2.accelerate();
+#else
+
 #endif
 		// Orig ship
 	    g->ship.vel[0] += xdir*0.02f; //
@@ -826,7 +830,7 @@ void physics(Game *g)
 
 
 #ifndef debug
-		// Draw fuel gauge
+	    // Draw fuel gauge
 	    Rect fuelBar;
 	    fuelBar.bot = yres - 43;
 	    fuelBar.left = xres*.5-10;
@@ -846,6 +850,8 @@ void physics(Game *g)
 	    g->plats[1].draw();
 
 	    g->goal.draw();
+# else
+	    // Abraham - add function call to render level objects here
 #endif
 		if (renderShip) {
 			//Draw the ship
