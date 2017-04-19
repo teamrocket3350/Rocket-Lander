@@ -137,16 +137,20 @@ struct Game {
 
 
     Ship ship;
+#ifndef debug
     Ship2 ship2; // Nick's ship class
+#endif
     Asteroid *ahead;
     Bullet *barr;
     int nasteroids;
     int nbullets;
     struct timespec bulletTimer;
     struct timespec mouseThrustTimer;
-	Platform ground[5];
+#ifndef debug
+    Platform ground[5];
     Platform plats[2]; // Nick's platform class
     Goal goal = Goal(950, 740, 100, 10);
+#endif
     bool mouseThrustOn;
     Game() {
 	ahead = NULL;
@@ -154,6 +158,7 @@ struct Game {
 	nasteroids = 0;
 	nbullets = 0;
 
+#ifndef debug
 	ship2.enableBooster2();
 	ship2.setPosX(53);
 	ship2.setPosY(15);
@@ -202,7 +207,7 @@ struct Game {
 //	goal.setPosY(740);
 //	goal.setWidth(100);
 //	goal.setHeight(10);
-
+#endif
 	mouseThrustOn = false;
     }
     ~Game() {
@@ -553,19 +558,29 @@ void physics(Game *g)
     g->ship.pos[0] += g->ship.vel[0];
     g->ship.pos[1] += g->ship.vel[1];
 	// My ship
-	g->ship2.addGravity(GRAVITY);
-	g->ship2.move();
+#ifndef debug
+    g->ship2.addGravity(GRAVITY);
+    g->ship2.move();
 
-	// Check for collision with platforms
-	for (int i=0; i<5; i++) {
-		g->ship2.collidesWith(g->ground[i]);
-	}
-	for (int i=0; i<2; i++) {
-		g->ship2.collidesWith(g->plats[i]);
-	}
-	g->ship2.collidesWith(g->goal);
-	g->ship2.goalTriggered(g->goal);
+    // Check for collision with platforms
+    for (int i=0; i<5; i++) {
+	    g->ship2.collidesWith(g->ground[i]);
+    }
+    for (int i=0; i<2; i++) {
+	    g->ship2.collidesWith(g->plats[i]);
+    }
+    g->ship2.collidesWith(g->goal);
+    g->ship2.goalTriggered(g->goal);
 	
+    // My ship
+    if (g->ship2.getPosX() < 0.0) {
+		g->ship2.setPosX(g->ship2.getPosX() + (float)xres);
+    }
+    else if (g->ship2.getPosX() > (float)xres) {
+		g->ship2.setPosX(g->ship2.getPosX() - (float)xres);
+    }
+
+#endif
     //Check for collision with window edges
     if (g->ship.pos[0] < 0.0) {
 	g->ship.pos[0] += (float)xres;
@@ -578,13 +593,6 @@ void physics(Game *g)
     }
     else if (g->ship.pos[1] > (float)yres) {
 	g->ship.pos[1] -= (float)yres;
-    }
-	// My ship
-    if (g->ship2.getPosX() < 0.0) {
-		g->ship2.setPosX(g->ship2.getPosX() + (float)xres);
-    }
-    else if (g->ship2.getPosX() > (float)xres) {
-		g->ship2.setPosX(g->ship2.getPosX() - (float)xres);
     }
 //    else if (g->ship2.getPosY() < 0.0) {
 //		g->ship2.setPosY(g->ship2.getPosY() + (float)yres);
@@ -717,13 +725,17 @@ void physics(Game *g)
 	//check keys pressed now
 	if (keys[XK_Left]) {
 	    g->ship.angle += 4.0;
-		g->ship2.setRot(g->ship2.getRot()+4.0);
+#ifndef debug
+	    g->ship2.setRot(g->ship2.getRot()+4.0);
+#endif
 	    if (g->ship.angle >= 360.0f)
 		g->ship.angle -= 360.0f;
 	}
 	if (keys[XK_Right]) {
 	    g->ship.angle -= 4.0;
-		g->ship2.setRot(g->ship2.getRot()-4.0);
+#ifndef debug
+	    g->ship2.setRot(g->ship2.getRot()-4.0);
+#endif
 	    if (g->ship.angle < 0.0f)
 		g->ship.angle += 360.0f;
 	}
@@ -737,8 +749,11 @@ void physics(Game *g)
 	    //convert angle to a vector
 	    Flt xdir = cos(rad);
 	    Flt ydir = sin(rad);
-		// My ship
-		g->ship2.accelerate();
+
+#ifndef debug
+	    // My ship
+	    g->ship2.accelerate();
+#endif
 		// Orig ship
 	    g->ship.vel[0] += xdir*0.02f; //
 	    g->ship.vel[1] += ydir*0.02f; //
@@ -809,27 +824,29 @@ void physics(Game *g)
 	    //	    ggprint8b(&r, 16, 0x00ffff00, "n asteroids: %i", g->nasteroids);
 	    //-------------------------------------------------------------------------
 
+
+#ifndef debug
 		// Draw fuel gauge
 	    Rect fuelBar;
 	    fuelBar.bot = yres - 43;
 	    fuelBar.left = xres*.5-10;
 	    fuelBar.center = 0;
-		drawFuelGauge(g->ship2.getFuelLeft(), g->ship2.getFuelMax(), xres*.5, 850);
+	    drawFuelGauge(g->ship2.getFuelLeft(), g->ship2.getFuelMax(), xres*.5, 850);
 	    ggprint8b(&fuelBar, 16, 0x00ff0000, "Fuel");
 
 	    g->ship2.draw();
 
-		glColor3ub(51,102,0);
-		for (int i=0;i<5;i++) {
-			g->ground[i].draw();
-		}
+	    glColor3ub(51,102,0);
+	    for (int i=0;i<5;i++) {
+		    g->ground[i].draw();
+	    }
 
-		glColor3ub(255,165,0);
+	    glColor3ub(255,165,0);
 	    g->plats[0].draw();
 	    g->plats[1].draw();
 
-		g->goal.draw();
-
+	    g->goal.draw();
+#endif
 		if (renderShip) {
 			//Draw the ship
 			glColor3fv(g->ship.color);
