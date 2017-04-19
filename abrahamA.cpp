@@ -24,17 +24,6 @@
 
 using namespace std;
 
-struct saveData {
-	int levelNumber;
-	int score;
-	int rocket;
-	int platformCount;
-	int asteroidCount;
-	int enemyCount;
-	float gravity;
-	float time;
-};
-
 void showCredits(int xres, int yres, Rect r)
 {
 	glColor3f(0.1,0.1,0.1);
