@@ -94,54 +94,80 @@ void imageClean()
 	return;
 }
 
-int loadLevel()
+int getData(int count)
 {
-    int level;
+    int data;
+
 	ifstream load;
-	load.open ("./save_file.txt");
+	load.open ("./saveFile.txt");
 	if (load.is_open()) {
-		cout << "\nSave file loaded successfully\n";
-		load >> level;
-		cout << "Level - " << level << "\n";
+		if (count == 1) {
+			cout << "\nThe Save File has been loaded successfully.\n\n";
+		}
+		for (int i = 0; i < count; i++) {
+			load >> data;
+		}
 	}
 	else {
 		cout << "\nCould not open save file\n";
-		level = 1;
-		cout << "Level - 1\n";	
+		data = 1;
+		cout << "Default data - 1\n";
 	}
 	load.close();
-	return (level);	
+	return (data);
 }
 
-int loadShip()
-{
-    int ship;
-	char buffer[3];
-	ifstream load;
-	load.open ("./save_file.txt");
-	if (load.is_open()) {
-		cout << "Loaded successfully\n";
-		load.getline(buffer,3);
-		load >> ship;	  
-		cout << "Ship - " << ship << "\n\n";
-	}
-	else {
-		cout << "Could not open save file\n";
-		ship = 1;
-		cout << "Ship - 1\n\n";	
-	}
-	load.close();
-	return (ship);	
-}
-
-void save(int level, int ship)
+void putData(float data, int flag)
 {
 	ofstream save;
-	save.open ("./save_file.txt");
-	save << level << "\n"; 
-	save << ship;
+	if (flag == 1) {
+		save.open ("./saveFile.txt");
+		save << data << "\n";
+	}
+	else {
+		save.open ("./saveFile.txt", fstream::out | fstream::app);
+		save << data << "\n";
+	}
 	save.close();
 }
+
+saveData loadGame(saveData data)
+{
+	cout << "\nLoading the Save File. Do not touch the Memory Card in Slot A or the Power Button...\n";
+    	data.levelNumber = getData(1);
+	cout << "Level - " << data.levelNumber << endl;
+	data.score = getData(2);
+	cout << "Score - " << data.score << endl;
+	data.rocket = getData(3);
+	cout << "Rocket - " << data.rocket << endl;
+	data.platformCount = getData(4);
+	cout << "Platforms - " << data.platformCount << endl;
+	data.asteroidCount = getData(5);
+	cout << "Asteroids - " << data.asteroidCount << endl;
+	data.enemyCount = getData(6);
+	cout << "Enemies - " << data.enemyCount << endl;
+	data.gravity = getData(7);
+	cout << "Gravity - " << data.gravity << endl;
+	data.time = getData(8);
+	cout << "time - " << data.time << endl << endl;
+
+	return data;
+}
+
+void saveGame(saveData data)
+{
+	cout << "Saving... Do not touch the Memory Card in Slot A or the Power Button.\n";
+	putData(data.levelNumber,1);
+	putData(data.score,0);
+	putData(data.rocket,0);
+	putData(data.platformCount,0);
+	putData(data.asteroidCount,0);
+	putData(data.enemyCount,0);
+	putData(data.gravity,0);
+	putData(data.time,0);
+	cout << "\nYour progress was saved.\n\n";
+}
+
 
 /*
 
