@@ -17,17 +17,34 @@
 #include"fonts.h"
 #include"nicholasP.h"
 
+struct saveData {
+	int levelNumber;
+	int score;
+	int rocket;
+	int platformCount;
+	int asteroidCount;
+	int enemyCount;
+	float gravity;
+	float time;
+};
+
 void showCredits(int xres, int yres, Rect r);
 
 void imageConvert();
 
 void imageClean();
 
-int loadLevel();
+int getData(int);
 
-int loadShip();
+void putData(float, int);
+
+saveData loadGame(saveData);
+
+void saveGame(saveData);
 
 void save(int level, int ship);
+
+
 class Level {
         private:
                 float gravity;
