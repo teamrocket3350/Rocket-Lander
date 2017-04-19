@@ -85,7 +85,7 @@ void imageClean()
 
 int getData(int count)
 {
-    int data;
+	int data;
 
 	ifstream load;
 	load.open ("./saveFile.txt");
