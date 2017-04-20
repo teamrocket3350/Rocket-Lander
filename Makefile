@@ -18,7 +18,7 @@ rocketlander: rocketlander.cpp log.cpp mytime.cpp ppm.cpp \
 	    libggfonts.a \
 	    /usr/lib/x86_64-linux-gnu/libopenal.so \
 	    /usr/lib/x86_64-linux-gnu/libalut.so \
-	    -Wall -Wextra $(LFLAGS) -o rocketlander
+	    -Wall -Wextra $(LFLAGS) -DUSE_OPENAL_SOUND -o rocketlander
 
 # Temporary debug build so Abraham can implement his level loading
 rocketlander-debug: rocketlander.cpp log.cpp mytime.cpp ppm.cpp \
