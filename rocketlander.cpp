@@ -19,6 +19,7 @@
 #include <GL/glx.h>
 #include "log.h"
 #include "fonts.h"
+#include "ppm.h"
 
 #include "nicholasP.h"
 #include "abrahamA.h"
@@ -85,6 +86,9 @@ int credits = 0;
 int renderShip = 0;
 int pat_menu = 0;
 int ramon_menu = 0;
+
+Ppmimage * backgroundImage=NULL;
+GLuint backgroundTexture;
 
 struct Ship {
     Vec dir;
@@ -358,6 +362,26 @@ void init_opengl(void)
     //Do this to allow fonts
     glEnable(GL_TEXTURE_2D);
     initialize_fonts();
+
+    // load image files into a ppm structure
+    backgroundImage	= ppm6GetImage("./images/hitters.ppm");
+
+    //create opengl texture elements
+    glGenTextures(1, &backgroundTexture);
+
+    //background
+    //
+    //int w = backgroundImage->width;
+    //int h = backgroundImage->height;
+
+    glBindTexture(GL_TEXTURE_2D,backgroundTexture);
+
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, 3,
+	    backgroundImage->width, backgroundImage->height,
+	    0, GL_RGB, GL_UNSIGNED_BYTE, backgroundImage->data);	
 }
 
 void check_resize(XEvent *e)
@@ -828,8 +852,21 @@ void physics(Game *g)
 
 	void render(Game *g)
 	{
-	    Rect r;
+
 	    glClear(GL_COLOR_BUFFER_BIT);
+
+	    // Background Image
+	    glEnable(GL_TEXTURE_2D);
+	    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	    glBindTexture(GL_TEXTURE_2D, backgroundTexture);
+	    glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(0, yres);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i(xres, yres);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i(xres, 0);
+	    glEnd();
+
+	    Rect r;
 	    //
 	    r.bot = yres - 20;
 	    r.left = 10;
