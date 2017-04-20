@@ -18,16 +18,20 @@
 // sound stuff
 #include <fcntl.h>
 #include <sys/stat.h>
+#ifdef USE_OPENAL_SOUND
 #include </usr/include/AL/alut.h>
+#endif //use openal sound
 
 extern int xres,yres;
 
+#ifdef USE_OPENAL_SOUND
 struct Global {
     ALuint alBufferLaser, alBufferBooster, alBufferAstroid, alBufferVictory,
 	   alBufferCollide;
     ALuint alSourceLaser, alSourceBooster, alSourceAstroid, alSourceVictory,
 	   alSourceCollide;
 } p;
+#endif // close use_openal_sound
 
 // Playing with background image
 void startMenu(void)
@@ -136,6 +140,7 @@ void LaserMenu(int xres,int yres,Rect r)
 }
 
 /**********SOUNDS**********/
+#ifdef USE_OPENAL_SOUND
 void startUpSound()
 {
     //Start up
@@ -215,12 +220,16 @@ void startUpSound()
 	printf("Error: Collide sound\n");
     }
 }
+#endif // close use_openal_sound
 
+#ifdef USE_OPENAL_SOUND
 void playSound(ALuint source)
 {
     alSourcePlay(source);
 }
+#endif // close use_openal_sound
 
+#ifdef USE_OPENAL_SOUND
 void cleanSound()
 {
     //Cleanup
@@ -248,4 +257,5 @@ void cleanSound()
     //close device
     alcCloseDevice(Device);
 }
+#endif // close use_openal_sound
 
