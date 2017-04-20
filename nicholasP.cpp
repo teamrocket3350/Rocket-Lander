@@ -28,6 +28,7 @@
 #define PI 3.14159265
 int tempcount = 0;
 
+// Object with basic properties of shape
 Object::Object()
 {
 	pos[0] = 0;
@@ -36,8 +37,6 @@ Object::Object()
 	shape.height = 0.0;
 	shape.base = 0.0;
 	shape.radius = 0.0;
-	shape.center[0] = 0.0;
-	shape.center[1] = 0.0;
 }
 
 Object::~Object()
@@ -47,6 +46,7 @@ Object::~Object()
 
 // ---------- //
 
+// Object with basic properties for movable shape
 MovableObject::MovableObject()
 {
 	vel[0] = 0;
@@ -93,6 +93,7 @@ void Ship2::move()
 
 }
 
+// Checks if goal was triggered
 bool Ship2::goalTriggered(Goal goal)
 {
 	if (collidesWith(goal.getTrigger()) &&
@@ -132,6 +133,7 @@ bool Ship2::collidesWith(Object ob)
 	}
 }
 
+// Checks whether to given lines intersect
 bool Ship2::linesIntersect(Line l1, Line l2)
 {
 	if (l1.p1.x <= l2.p2.x && 
@@ -143,6 +145,7 @@ bool Ship2::linesIntersect(Line l1, Line l2)
 	return false;
 }
 
+// Generates an array of points that create the square with the given parameters
 Point * Ship2::getRectPointArray(float x, float y, float rot, float width, float height)
 {
 	// p2 -> p3 
@@ -189,6 +192,8 @@ Point * Ship2::getRectPointArray(float x, float y, float rot, float width, float
 	return pts;
 }
 
+
+// Generates an array of points that create the triangle with the given parameters
 Point * Ship2::getTriPointArray(float x, float y, float rot, float base, float height)
 {
 	//    p2  
@@ -232,7 +237,7 @@ Point * Ship2::getTriPointArray(float x, float y, float rot, float base, float h
 	return pts;
 }
 
-// x, y are offsets from 0,0
+// Checks if any of the rectangular collidables of the ship collide with the given object
 bool Ship2::rectCollidesWith(Shape collidable, Object ob, float x, float y)
 {
 	bool collides = false;
@@ -266,6 +271,7 @@ bool Ship2::rectCollidesWith(Shape collidable, Object ob, float x, float y)
 	return collides;
 }
 
+// Checks if any of the triangular collidables of the ship collide with the given object
 bool Ship2::triCollidesWith(Shape collidable, Object ob, float x, float y)
 {
 	bool collides = false;
@@ -298,6 +304,8 @@ bool Ship2::triCollidesWith(Shape collidable, Object ob, float x, float y)
 	return collides;
 }
 
+// Draw the collidable pieces of the ship to the screen
+// Used mainly for debugging
 void Ship2::draw()
 {
 	Point * pts;
@@ -396,36 +404,37 @@ void Ship2::draw()
 	pts = NULL;
 }
 
-void Ship2::drawRect()
-{
-	//draw platform
-	glColor3ub(111,111,111);
-	glPushMatrix();
-	glBegin(GL_QUADS);
+//void Ship2::drawRect()
+//{
+//	//draw platform
+//	glColor3ub(111,111,111);
+//	glPushMatrix();
+//	glBegin(GL_QUADS);
+//
+//	//glVertex2i(0,0);
+//	//glVertex2i(0, shape.height);
+//	//glVertex2i(shape.width, shape.height);
+//	//glVertex2i(shape.width, 0);
+//
+//	glEnd();
+//	glPopMatrix();
+//}
+//
+//void Ship2::drawTri()
+//{
+//	glColor3ub(255,0,0);
+//	glPushMatrix();
+//	glBegin(GL_TRIANGLES);
+//
+//	//glVertex2i(0,0);
+//	//glVertex2i(shape.base, 0);
+//	//glVertex2i(shape.base\2, shape.height);
+//
+//	glEnd();
+//	glPopMatrix();
+//}
 
-	//glVertex2i(0,0);
-	//glVertex2i(0, shape.height);
-	//glVertex2i(shape.width, shape.height);
-	//glVertex2i(shape.width, 0);
-
-	glEnd();
-	glPopMatrix();
-}
-
-void Ship2::drawTri()
-{
-	glColor3ub(255,0,0);
-	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-
-	//glVertex2i(0,0);
-	//glVertex2i(shape.base, 0);
-	//glVertex2i(shape.base\2, shape.height);
-
-	glEnd();
-	glPopMatrix();
-}
-
+///// Swaps enabled booster /////
 void Ship2::enableBooster1()
 {
 	enabledBooster2 = false;
@@ -446,7 +455,9 @@ void Ship2::enableBooster3()
 	enabledBooster2 = false;
 	enabledBooster3 = true;
 }
+///////////////////////////////
 
+// Changes velocity to move ship in direction that it's pointing
 void Ship2::accelerate()
 {
 	if (fuel > 0) {
@@ -469,6 +480,7 @@ void Ship2::accelerate()
 	}
 }
 
+// Add gravity to move ship to the bottom of the window
 void Ship2::addGravity(float grav)
 {
 	//printf("VelY: %f\n", vel[1]);
@@ -481,6 +493,7 @@ void Ship2::addGravity(float grav)
 
 // ---------- //
 
+// Basic platform
 void Platform::draw()
 {
 	//draw platform
@@ -501,6 +514,7 @@ void Platform::draw()
 
 // ---------- //
 
+// Platform with goal trigger
 Goal::Goal(float x, float y, float width, float height)
 {
 	pos[0] = x;
