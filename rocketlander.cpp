@@ -88,7 +88,9 @@ int pat_menu = 0;
 int ramon_menu = 0;
 
 Ppmimage * backgroundImage=NULL;
+Ppmimage * hitterImage=NULL;
 GLuint backgroundTexture;
+GLuint hitterTexture;
 
 struct Ship {
     Vec dir;
@@ -291,6 +293,7 @@ void cleanupXWindows(void)
 void cleanupImages()
 {
 	system("rm ./images/background.ppm");
+	system("rm ./images/hitters.ppm");
 }
 
 void set_title(void)
@@ -372,10 +375,13 @@ void init_opengl(void)
 
     // load image files into a ppm structure
 	system("convert ./images/background.jpg ./images/background.ppm");
+	system("convert ./images/hitters.jpg ./images/hitters.ppm");
     backgroundImage	= ppm6GetImage("./images/background.ppm");
+    hitterImage	= ppm6GetImage("./images/hitters.ppm");
 
     //create opengl texture elements
     glGenTextures(1, &backgroundTexture);
+    glGenTextures(1, &hitterTexture);
 
     //background
     glBindTexture(GL_TEXTURE_2D,backgroundTexture);
@@ -385,6 +391,15 @@ void init_opengl(void)
     glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	    backgroundImage->width, backgroundImage->height,
 	    0, GL_RGB, GL_UNSIGNED_BYTE, backgroundImage->data);	
+
+    //hitter
+    glBindTexture(GL_TEXTURE_2D,hitterTexture);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, 3,
+	    hitterImage->width, hitterImage->height,
+	    0, GL_RGB, GL_UNSIGNED_BYTE, hitterImage->data);	
 
 }
 
@@ -869,6 +884,19 @@ void physics(Game *g)
 		glTexCoord2f(0.0f, 0.0f); glVertex2i(0, yres);
 		glTexCoord2f(1.0f, 0.0f); glVertex2i(xres, yres);
 		glTexCoord2f(1.0f, 1.0f); glVertex2i(xres, 0);
+
+	    glEnd();
+
+	    // Hitter Image
+	    glEnable(GL_TEXTURE_2D);
+	    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	    glBindTexture(GL_TEXTURE_2D, hitterTexture);
+		glColor4f(1.0, 1.0, 1.0, 1.0); // reset gl color
+	    glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(0, hitterImage->height);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i(hitterImage->width, hitterImage->height);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i(hitterImage->width, 0);
 
 	    glEnd();
 
