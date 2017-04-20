@@ -375,7 +375,7 @@ void init_opengl(void)
 
     // load image files into a ppm structure
 	system("convert ./images/background.jpg ./images/background.ppm");
-	system("convert ./images/hitters.jpg ./images/hitters.ppm");
+	system("convert ./images/hitters.png ./images/hitters.ppm");
     backgroundImage	= ppm6GetImage("./images/background.ppm");
     hitterImage	= ppm6GetImage("./images/hitters.ppm");
 
