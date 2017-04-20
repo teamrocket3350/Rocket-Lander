@@ -67,6 +67,7 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 //-----------------------------------------------------------------------------
 
 // Patrick's extern-------------------------------------------------
+#ifdef USE_OPENAL_SOUND
 extern void startUpSound();
 extern void cleanSound();
 extern struct Global {
@@ -74,7 +75,9 @@ extern struct Global {
 	   alBufferCollide;
     ALuint alSourceLaser, alSourceBooster, alSourceAstroid, alSourceVictory,
 	   alSourceCollide;
+
 }p;
+#endif //end openal sound
 //------------------------------------------------------------------
 
 int xres=1250, yres=900;
@@ -222,7 +225,9 @@ void check_resize(XEvent *e);
 //void check_mouse(XEvent *e, Game *game);
 int check_keys(XEvent *e);
 void init(Game *g);
+#ifdef USE_OPENAL_SOUND
 void init_sounds(void);
+#endif //end openal sound
 void physics(Game *game);
 void render(Game *game);
 void set_mouse_position(int x, int y);
@@ -233,7 +238,9 @@ int main(void)
     logOpen();
     initXWindows();
     init_opengl();
+#ifdef USE_OPENAL_SOUND
     startUpSound();		// from Patrick to add sound
+#endif //end openal sound
     Game game;
     init(&game);
     srand(time(NULL));
@@ -262,7 +269,9 @@ int main(void)
     }
     cleanupXWindows();
     cleanup_fonts();
+#ifdef USE_OPENAL_SOUND
     cleanSound();		// clean up sounds
+#endif //end openal sound
     logClose();
     return 0;
 }
@@ -742,9 +751,11 @@ void physics(Game *g)
 		g->ship.angle += 360.0f;
 	}
 	if (keys[XK_Up]) {
+#ifdef USE_OPENAL_SOUND
 	    //apply thrust
 	    //BoosterSound();	//BoosterSound
 	    playSound(p.alSourceBooster);	//Booster
+#endif //end openal sound
 	    //convert ship angle to radians
 	    //Flt rad = ((g->ship2.getRot()+90.0) / 360.0f) * PI * 2.0;
 	    Flt rad = ((g->ship.angle+90.0) / 360.0f) * PI * 2.0;
@@ -956,6 +967,6 @@ void physics(Game *g)
 	    }
 	    // Draw Ramon's Menu
 	    if (ramon_menu == 1) {
-		drawRamRMenu(xres, yres, r);
+		//drawRamRMenu(xres, yres, r);
 	    }
 	}
