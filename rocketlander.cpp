@@ -225,6 +225,7 @@ int keys[65536];
 void initXWindows(void);
 void init_opengl(void);
 void cleanupXWindows(void);
+void cleanupImages();
 void check_resize(XEvent *e);
 //void check_mouse(XEvent *e, Game *game);
 int check_keys(XEvent *e);
@@ -272,6 +273,7 @@ int main(void)
 	glXSwapBuffers(dpy, win);
     }
     cleanupXWindows();
+	cleanupImages();
     cleanup_fonts();
 #ifdef USE_OPENAL_SOUND
     cleanSound();		// clean up sounds
@@ -284,6 +286,11 @@ void cleanupXWindows(void)
 {
     XDestroyWindow(dpy, win);
     XCloseDisplay(dpy);
+}
+
+void cleanupImages()
+{
+	system("rm ./images/background.ppm");
 }
 
 void set_title(void)
@@ -364,24 +371,21 @@ void init_opengl(void)
     initialize_fonts();
 
     // load image files into a ppm structure
-    backgroundImage	= ppm6GetImage("./images/hitters.ppm");
+	system("convert ./images/background.jpg ./images/background.ppm");
+    backgroundImage	= ppm6GetImage("./images/background.ppm");
 
     //create opengl texture elements
     glGenTextures(1, &backgroundTexture);
 
     //background
-    //
-    //int w = backgroundImage->width;
-    //int h = backgroundImage->height;
-
     glBindTexture(GL_TEXTURE_2D,backgroundTexture);
-
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 
     glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	    backgroundImage->width, backgroundImage->height,
 	    0, GL_RGB, GL_UNSIGNED_BYTE, backgroundImage->data);	
+
 }
 
 void check_resize(XEvent *e)
@@ -859,11 +863,13 @@ void physics(Game *g)
 	    glEnable(GL_TEXTURE_2D);
 	    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	    glBindTexture(GL_TEXTURE_2D, backgroundTexture);
+		glColor4f(1.0, 1.0, 1.0, 1.0); // reset gl color
 	    glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
 		glTexCoord2f(0.0f, 0.0f); glVertex2i(0, yres);
 		glTexCoord2f(1.0f, 0.0f); glVertex2i(xres, yres);
 		glTexCoord2f(1.0f, 1.0f); glVertex2i(xres, 0);
+
 	    glEnd();
 
 	    Rect r;
