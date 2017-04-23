@@ -17,8 +17,6 @@
 #include <math.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
-//#include <GL/gl.h>
-//#include <GL/glu.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
 #include "log.h"
@@ -39,6 +37,68 @@ Object::Object()
 	shape.radius = 0.0;
 }
 
+// Setters
+void Object::setPosX(float x)
+{
+	pos[0]=x;
+}
+
+void Object::setPosY(float y)
+{
+	pos[1]=y;
+}
+
+void Object::setRot(float r)
+{
+		rot=r;
+}
+
+void Object::setWidth(float w)
+{
+	shape.width=w;
+}
+
+void Object::setHeight(float h)
+{
+	shape.height=h;
+}
+
+void Object::setRadius(float r)
+{
+	shape.radius=r;
+}
+
+// Getters
+float Object::getPosX()
+{
+	return pos[0];
+}
+
+float Object::getPosY()
+{
+	return pos[1];
+}
+
+float Object::getRot()
+{
+	return rot;
+}
+
+float Object::getWidth()
+{
+	return shape.width;
+}
+
+float Object::getHeight()
+{
+	return shape.height;
+}
+
+float Object::getRadius()
+{
+	return shape.radius;
+}
+
 Object::~Object()
 {
 
@@ -51,6 +111,28 @@ MovableObject::MovableObject()
 {
 	vel[0] = 0;
 	vel[1] = 0;
+}
+
+// Setters
+void MovableObject::setVelX(float x)
+{
+	vel[0]=x;
+}
+
+void MovableObject::setVelY(float y)
+{
+	vel[1]=y;
+}
+
+// Getters
+float MovableObject::getVelX()
+{
+	return vel[0];
+}
+
+float MovableObject::getVelY()
+{
+	return vel[1];
 }
 
 // ---------- //
@@ -99,7 +181,7 @@ bool Ship2::goalTriggered(Goal goal)
 	if (collidesWith(goal.getTrigger()) &&
 			vel[0] == 0 &&
 			vel[1] == 0) {
-		printf("Goal triggered!\n");
+		//printf("Goal triggered!\n");
 		return true;
 	}
 	return false;
@@ -404,36 +486,6 @@ void Ship2::draw()
 	pts = NULL;
 }
 
-//void Ship2::drawRect()
-//{
-//	//draw platform
-//	glColor3ub(111,111,111);
-//	glPushMatrix();
-//	glBegin(GL_QUADS);
-//
-//	//glVertex2i(0,0);
-//	//glVertex2i(0, shape.height);
-//	//glVertex2i(shape.width, shape.height);
-//	//glVertex2i(shape.width, 0);
-//
-//	glEnd();
-//	glPopMatrix();
-//}
-//
-//void Ship2::drawTri()
-//{
-//	glColor3ub(255,0,0);
-//	glPushMatrix();
-//	glBegin(GL_TRIANGLES);
-//
-//	//glVertex2i(0,0);
-//	//glVertex2i(shape.base, 0);
-//	//glVertex2i(shape.base\2, shape.height);
-//
-//	glEnd();
-//	glPopMatrix();
-//}
-
 ///// Swaps enabled booster /////
 void Ship2::enableBooster1()
 {
@@ -485,10 +537,55 @@ void Ship2::addGravity(float grav)
 {
 	//printf("VelY: %f\n", vel[1]);
 	vel[1] -= grav;
+	// Prevent infinite downward acceleration
 	if (vel[1] < -2.0)
 		vel[1] = -2.0;
+
+	// Prevent infinite upward acceleration
 	if (vel[1] > 4.0)
 		vel[1] = 4.0;
+}
+
+void Ship2::rotateLeft()
+{
+	rot += 4.0;
+
+	// Prevents rot from going over float limit
+	if (rot > 360)
+		rot -= 360;
+}
+
+void Ship2::rotateRight()
+{
+	rot -= 4.0;
+	// Prevents rot from going under float limit
+	if (rot < -360)
+		rot += 360;
+}
+
+bool Ship2::ownBooster1()
+{
+	return haveBooster1;
+}
+
+bool Ship2::ownBooster2()
+{
+	return haveBooster2;
+}
+
+bool Ship2::ownBooster3()
+{
+	return haveBooster3;
+}
+
+float Ship2::getFuelLeft()
+{
+	return fuel;
+}
+
+float Ship2::getFuelMax()
+{
+	return fuelMax;
 }
 
 // ---------- //

@@ -9,8 +9,6 @@
 #include <math.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
-//#include <GL/gl.h>
-//#include <GL/glu.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
 #include "log.h"
@@ -26,7 +24,7 @@ struct Shape {
     float height;
     float base;
     float radius;
-    Vec center; // Remove after integrate with rocketlander.cpp
+    Vec center;
 };
 
 struct Point {
@@ -52,20 +50,20 @@ class Object
 		~Object();
 
 		// Setters
-		void setPosX(float x) {pos[0]=x;}
-		void setPosY(float y) {pos[1]=y;}
-		void setRot(float r) {rot=r;}
-		void setWidth(float w) {shape.width=w;}
-		void setHeight(float h) {shape.height=h;}
-		void setRadius(float r) {shape.radius=r;}
+		void setPosX(float x);
+		void setPosY(float y);
+		void setRot(float r);
+		void setWidth(float w);
+		void setHeight(float h);
+		void setRadius(float r);
 
 		// Getters
-		float getPosX() {return pos[0];}
-		float getPosY() {return pos[1];}
-		float getRot() {return rot;}
-		float getWidth() {return shape.width;}
-		float getHeight() {return shape.height;}
-		float getRadius() {return shape.radius;}
+		float getPosX();
+		float getPosY();
+		float getRot();
+		float getWidth();
+		float getHeight();
+		float getRadius();
 
 		void draw();
 };
@@ -78,14 +76,14 @@ class MovableObject : public Object
 	public:
 		// Constructor
 		MovableObject();
-
+		
 		// Setters
-		void setVelX(float x) {vel[0]=x;}
-		void setVelY(float y) {vel[1]=y;}
+		void setVelX(float x);
+		void setVelY(float y);
 
 		// Getters
-		float getVelX() {return vel[0];}
-		float getVelY() {return vel[1];}
+		float getVelX();
+		float getVelY();
 
 		void move();
 };
@@ -109,8 +107,19 @@ class Ship2 : public MovableObject {
 		Shape collidables[5];
 		float fuel;
 		float fuelMax;
-		//float fuel = 100;
-		//float fuelMax = 100;
+
+		// Choose between the 3
+		bool haveBooster1;
+		bool enabledBooster1;
+		bool haveBooster2;
+		bool enabledBooster2;
+		bool haveBooster3;
+		bool enabledBooster3;
+		
+		bool haveLeftStrafe;
+		bool haveRightStrafe;
+		bool haveDoubleShot;
+		bool haveTripleShot;
 
 		bool linesIntersect(Line, Line);
 		Point* getRectPointArray(float, float, float, float, float);
@@ -126,31 +135,17 @@ class Ship2 : public MovableObject {
 		bool goalTriggered(Goal);
 		bool collidesWith(Object);
 		void draw();
-		void drawRect(); // remove?
-		void drawTri(); // remove?
 
-		// Choose between the 3
-		bool haveBooster1;
-		bool enabledBooster1;
-		bool haveBooster2;
-		bool enabledBooster2;
-		bool haveBooster3;
-		bool enabledBooster3;
-		
-		bool haveLeftStrafe;
-		bool haveRightStrafe;
-		bool haveDoubleShot;
-		bool haveTripleShot;
+		float getFuelLeft();
+		float getFuelMax();
 
-		float getFuelLeft() {return fuel;}
-		float getFuelMax() {return fuelMax;}
 		bool buyBooster1();
 		bool buyBooster2();
 		bool buyBooster3();
 
-		bool ownBooster1() {return haveBooster1;}
-		bool ownBooster2() {return haveBooster2;}
-		bool ownBooster3() {return haveBooster3;}
+		bool ownBooster1(); 
+		bool ownBooster2();
+		bool ownBooster3();
 
 		void enableBooster1();
 		void enableBooster2();
@@ -158,6 +153,9 @@ class Ship2 : public MovableObject {
 
 		void accelerate();
 		void addGravity(float);
+
+		void rotateLeft();
+		void rotateRight();
 };
 
 class Enemy : public MovableObject {
@@ -202,7 +200,6 @@ class Platform : public Object
     public:
 		void draw();
 };
-
 
 void drawFuelGauge(float, float, float, float);
 void drawNicholasMenu(int xres, int yres, Rect r);
