@@ -26,9 +26,9 @@ extern int xres,yres;
 
 #ifdef USE_OPENAL_SOUND
 struct Global {
-    ALuint alBufferLaser, alBufferBooster, alBufferAstroid, alBufferVictory,
+    ALuint alBufferLaser, alBufferBooster, alBufferAstroid, alBufferVictory, 
 	   alBufferCollide;
-    ALuint alSourceLaser, alSourceBooster, alSourceAstroid, alSourceVictory,
+    ALuint alSourceLaser, alSourceBooster, alSourceAstroid, alSourceVictory, 
 	   alSourceCollide;
 } p;
 #endif // close use_openal_sound
@@ -71,7 +71,7 @@ void startMenu(void)
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, 3,
-	    bgImage->width, bgImage->height,
+	    bgImage->width, bgImage->height, 
 	    0, GL_RGB, GL_UNSIGNED_BYTE, bgImage->data);
 }
 
