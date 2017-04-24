@@ -36,6 +36,7 @@ void drawRamRMenu(int xres, int yres, Rect r)
 // upload images onto the program
 // movment just left to right
 // reference from rainforest framework section: ./~gordon/3350/code/framework
+/*
 int done = 0;
 int xres = 800, yres = 600;
 typedef struct t_hitters {
@@ -164,7 +165,7 @@ if (showHitters) {
 	glEnd();
 	glPopMatrix();
 }
-	
+*/	
 	    
 	    
 	    
