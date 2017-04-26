@@ -399,7 +399,7 @@ void init_opengl(void)
 
     // load image files into a ppm structure
 	system("convert ./images/background.jpg ./images/background.ppm");
-	system("convert ./images/hitters.jpg ./images/hitters.ppm");
+	system("convert ./images/hitters2.jpg ./images/hitters.ppm");
 	//system("convert ./images/hitters.png ./images/hitters.ppm");
     backgroundImage	= ppm6GetImage("./images/background.ppm");
     hitterImage	= ppm6GetImage("./images/hitters.ppm");
@@ -931,10 +931,12 @@ void physics(Game *g)
 	    glBindTexture(GL_TEXTURE_2D, hitterTexture);
 		glColor4f(1.0, 1.0, 1.0, 1.0); // reset gl color
 	    glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+	    float w = (145.0 / 180.0);
+	    float h = (242.0 / 280.0);
+		glTexCoord2f(0.0f, h); glVertex2i(0, 0);
 		glTexCoord2f(0.0f, 0.0f); glVertex2i(0, hitterImage->height);
-		glTexCoord2f(1.0f, 0.0f); glVertex2i(hitterImage->width, hitterImage->height);
-		glTexCoord2f(1.0f, 1.0f); glVertex2i(hitterImage->width, 0);
+		glTexCoord2f(w, 0.0f); glVertex2i(hitterImage->width, hitterImage->height);
+		glTexCoord2f(w, h); glVertex2i(hitterImage->width, 0);
 
 	    glEnd();
 
