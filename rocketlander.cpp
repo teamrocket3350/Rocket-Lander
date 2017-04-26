@@ -89,6 +89,7 @@ int ramon_menu = 0;
 
 Ppmimage * backgroundImage=NULL;
 Ppmimage * hitterImage=NULL;
+GLuint silhouetteTexture;
 GLuint backgroundTexture;
 GLuint hitterTexture;
 
@@ -352,6 +353,29 @@ void reshape_window(int width, int height)
     set_title();
 }
 
+unsigned char *buildAlphaData(Ppmimage *img)
+{
+    //add 4th component to RGB stream...
+    int i;
+    int a,b,c;
+    unsigned char *newdata, *ptr;
+    unsigned char *data = (unsigned char *)img->data;
+    newdata = (unsigned char *)malloc(img->width * img->height * 4);
+    ptr = newdata;
+    for (i=0; i<img->width * img->height * 3; i+=3) {
+	a = *(data+0);
+	b = *(data+1);
+	c = *(data+2);
+	*(ptr+0) = a;
+	*(ptr+1) = b;
+	*(ptr+2) = c;
+	*(ptr+3) = (a|b|c);
+	ptr += 4;
+	data += 3;
+    }
+    return newdata;
+}
+
 void init_opengl(void)
 {
     //OpenGL initialization
@@ -375,11 +399,13 @@ void init_opengl(void)
 
     // load image files into a ppm structure
 	system("convert ./images/background.jpg ./images/background.ppm");
-	system("convert ./images/hitters.png ./images/hitters.ppm");
+	system("convert ./images/hitters.jpg ./images/hitters.ppm");
+	//system("convert ./images/hitters.png ./images/hitters.ppm");
     backgroundImage	= ppm6GetImage("./images/background.ppm");
     hitterImage	= ppm6GetImage("./images/hitters.ppm");
 
     //create opengl texture elements
+    glGenTextures(1, &silhouetteTexture);
     glGenTextures(1, &backgroundTexture);
     glGenTextures(1, &hitterTexture);
 
@@ -401,6 +427,18 @@ void init_opengl(void)
 	    hitterImage->width, hitterImage->height,
 	    0, GL_RGB, GL_UNSIGNED_BYTE, hitterImage->data);	
 
+    //hitter alpha
+    glBindTexture(GL_TEXTURE_2D,silhouetteTexture);
+    //
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    //
+    // must bild a new set of data...
+    unsigned char *silhouetteData = buildAlphaData(hitterImage);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+	    hitterImage->width, hitterImage->height,
+	    0, GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);	
+    free(silhouetteData);
 }
 
 void check_resize(XEvent *e)
