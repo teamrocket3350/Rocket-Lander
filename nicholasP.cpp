@@ -208,6 +208,11 @@ bool Ship2::collidesWith(Object ob)
 				pos[1] = ob.getPosY() + ob.getHeight() + 1;
 				vel[0] = 0; // Temp
 				vel[1] = 0;
+				if (rot > 0)
+				    rot -= 4;
+				if (rot < 0)
+				    rot += 4;
+				//rot = 0;
 			}
 		return true;
 	} else {
