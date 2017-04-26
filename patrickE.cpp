@@ -159,7 +159,7 @@ void startUpSound()
     //p.alBufferBooster = alutCreateBufferFromFile("test.wav");
     p.alBufferBooster = alutCreateBufferFromFile("./sounds/booster.wav");
     //p.alBufferAstroid = alutCreateBufferFromFile("test.wav");
-    p.alBufferAstroid = alutCreateBufferFromFile("./sounds/astroid.wav");
+    p.alBufferAstroid = alutCreateBufferFromFile("./sounds/bg.wav");
     //p.alBufferVictory = alutCreateBufferFromFile("test.wav");
     p.alBufferVictory = alutCreateBufferFromFile("./sounds/victory.wav");
     //p.alBufferCollide = alutCreateBufferFromFile("test.wav");
@@ -190,12 +190,12 @@ void startUpSound()
     //Generate source and store into buffer Astroid
     alGenSources(1, &p.alSourceAstroid);
     alSourcei(p.alSourceAstroid, AL_BUFFER, p.alBufferAstroid);
-    //Set volume and pitch to normal, no looping
+    //Set volume and pitch to normal, looping
     alSourcef(p.alSourceAstroid, AL_GAIN, 1.0f);
     alSourcef(p.alSourceAstroid, AL_PITCH,1.0f);
-    alSourcei(p.alSourceAstroid, AL_LOOPING, AL_FALSE);
+    alSourcei(p.alSourceAstroid, AL_LOOPING, AL_TRUE);
     if (alGetError() != AL_NO_ERROR) {
-	printf("Error: astroid destruction sound\n");
+	printf("Error: astroid music\n");
     }
 
     //Generate source and store into buffer Victory
