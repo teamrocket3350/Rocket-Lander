@@ -171,6 +171,9 @@ int getData(int count, int flag)
 		load.close();
 		return (level);
 	}
+	else {
+		cout << "Error\n";
+	}
 }
 
 void putData(int data, int flag)
