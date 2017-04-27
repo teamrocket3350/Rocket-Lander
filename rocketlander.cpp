@@ -953,37 +953,41 @@ void physics(Game *g)
 
 	    glClear(GL_COLOR_BUFFER_BIT);
 
-	    // Background Image
-	    glEnable(GL_TEXTURE_2D);
-	    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	    glBindTexture(GL_TEXTURE_2D, backgroundTexture);
-	    glColor4f(1.0, 1.0, 1.0, 1.0); // reset gl color
-	    glBegin(GL_QUADS);
-	    glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
-	    glTexCoord2f(0.0f, 0.0f); glVertex2i(0, yres);
-	    glTexCoord2f(1.0f, 0.0f); glVertex2i(xres, yres);
-	    glTexCoord2f(1.0f, 1.0f); glVertex2i(xres, 0);
+            // Background Image
+            glPushMatrix();
+            glEnable(GL_TEXTURE_2D);
+            glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+            glBindTexture(GL_TEXTURE_2D, backgroundTexture);
+            glColor4f(1.0, 1.0, 1.0, 1.0); // reset gl color
+            glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+            glTexCoord2f(0.0f, 0.0f); glVertex2i(0, yres);
+            glTexCoord2f(1.0f, 0.0f); glVertex2i(xres, yres);
+            glTexCoord2f(1.0f, 1.0f); glVertex2i(xres, 0);
 
-	    glEnd();
+            glEnd();
+            glPopMatrix();
+////////////
+            // Hitter Image
+            glColor4f(1.0, 1.0, 1.0, 1.0); // reset gl color
+            glPushMatrix();
+            //glTranslated(x, y, 0); // Update this every frame to move asteroid
+            glTranslated(0, 0, 0);
+            glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
+            glBindTexture(GL_TEXTURE_2D, silhouetteTexture);
+            glEnable(GL_ALPHA_TEST);
+            glAlphaFunc(GL_GREATER, 0.0f); //Alpha
+            glBegin(GL_QUADS);
+            float w = 1;
+            float h = 1;
+            glTexCoord2f(0.0f, h); glVertex2i(0, 0);
+            glTexCoord2f(0.0f, 0.0f); glVertex2i(0, hitterImage->height);
+            glTexCoord2f(w, 0.0f); glVertex2i(hitterImage->width, hitterImage->height);
+            glTexCoord2f(w, h); glVertex2i(hitterImage->width, 0);
 
-	    // Hitter Image
-	    //glColor4f(1.0, 1.0, 1.0, 1.0); // reset gl color
-	    glPushMatrix();
-	    glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-	    glBindTexture(GL_TEXTURE_2D, silhouetteTexture);
-	    glEnable(GL_ALPHA_TEST);
-	    glAlphaFunc(GL_GREATER, 0.0f); //Alpha
-	    glBegin(GL_QUADS);
-	    float w = 1;
-	    float h = 1;
-//	    float w = (145.0 / 180.0);
-//	    float h = (242.0 / 280.0);
-	    glTexCoord2f(0.0f, h); glVertex2i(0, 0);
-	    glTexCoord2f(0.0f, 0.0f); glVertex2i(0, hitterImage->height);
-	    glTexCoord2f(w, 0.0f); glVertex2i(hitterImage->width, hitterImage->height);
-	    glTexCoord2f(w, h); glVertex2i(hitterImage->width, 0);
-
-	    glEnd();
+            glEnd();
+            glPopMatrix();
+/////////////
 
 	    Rect r;
 	    //
