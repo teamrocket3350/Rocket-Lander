@@ -36,12 +36,21 @@ void showCredits(int xres, int yres, Rect r)
 		glVertex2f(cx-620, cy-420);
 	glEnd();
 	glEnable(GL_TEXTURE_2D);
-
+	
 	r.bot = cy + 300;
 	r.left = cx;
 	r.center = 1;
 	ggprint40(&r,16, 0xffffff, "Game Credits");
 
+	glColor3f(1,1,1);
+	glBegin(GL_QUADS);
+		glVertex2f(cx-160, cy+300);
+		glVertex2f(cx+160, cy+300);
+		glVertex2f(cx+160, cy-295);
+		glVertex2f(cx-160, cy-295);
+	glEnd();
+	glEnable(GL_TEXTURE_2D);
+	
 	r.bot = cy + 200;
 	r.left = cx;
 	r.center = 1;
@@ -65,45 +74,103 @@ void showCredits(int xres, int yres, Rect r)
 
 void imageConvert()
 {
-	//copy images to main
-	system("cp ./images/*.png .");
-	system("cp ./images/*.jpg .");
+	//clean up all images in master folder
+	system("rm ./images/*.ppm");
 	
 	//convert images to ppm
-	system("mogrify -format ppm *.png");
-	system("mogrify -format ppm *.jpg");
+	system("mogrify -format ppm ./images/*.png");
+	system("mogrify -format ppm ./images/*.jpg");
 }
 
 void imageClean()
 {
 	//clean up all images in master folder
 	system("rm *.ppm");
-	system("rm *.png");
-	system("rm *.jpg");
 	return;
 }
 
-int getData(int count)
+int getData(int count, int flag)
 {
-	int data;
-
-	ifstream load;
-	load.open ("./saveFile.txt");
-	if (load.is_open()) {
-		if (count == 1) {
-			cout << "\nThe Save File has been loaded successfully.\n\n";
+	if (flag == 0) {
+		int data;
+		ifstream load;
+		load.open ("./saveFile.txt");
+		if (load.is_open()) {
+			if (count == 1) {
+				cout << "\nThe Save File has been loaded successfully.\n\n";
+			}
+			for (int i = 0; i < count; i++) {
+				load >> data;
+			}
 		}
-		for (int i = 0; i < count; i++) {
-			load >> data;
+		else {
+			cout << "\nCould not open save file\n";
+			data = 1;
+			cout << "Default data - 1\n";
 		}
+		load.close();
+		return (data);
 	}
-	else {
-		cout << "\nCould not open save file\n";
-		data = 1;
-		cout << "Default data - 1\n";
+	else if (flag == 1){
+		int level;
+		ifstream load;
+		load.open ("./level_1.txt");
+		if (load.is_open()) {
+			if (count == 1) {
+				cout << "\nLevel 1 has been loaded successfully.\n\n";
+			}
+			for (int i = 0; i < count; i++) {
+				load >> level;
+			}
+		}
+		else {
+			cout << "\nCould not open save file\n";
+			level = 1;
+			cout << "Default level - 1\n";
+		}
+		load.close();
+		return (level);
 	}
-	load.close();
-	return (data);
+	else if (flag == 2){
+		int level;
+		ifstream load;
+		load.open ("./level_2.txt");
+		if (load.is_open()) {
+			if (count == 1) {
+				cout << "\nLevel 2 has been loaded successfully.\n\n";
+			}
+			for (int i = 0; i < count; i++) {
+				load >> level;
+			}
+		}
+		else {
+			cout << "\nCould not open save file\n";
+			level = 1;
+			cout << "Default level - 1\n";
+		}
+		load.close();
+		return (level);
+	}
+	else if (flag == 3){
+		int level;
+		ifstream load;
+		load.open ("./level_3.txt");
+		if (load.is_open()) {
+			if (count == 1) {
+				cout << "\nLevel 3 has been loaded successfully.\n\n";
+			}
+			for (int i = 0; i < count; i++) {
+				load >> level;
+			}
+		}
+		else {
+			cout << "\nCould not open save file\n";
+			level = 1;
+			cout << "Default level - 1\n";
+		}
+		load.close();
+		return (level);
+	}
 }
 
 void putData(float data, int flag)
@@ -122,23 +189,59 @@ void putData(float data, int flag)
 
 saveData loadGame(saveData data)
 {
+	int parCount = 1;
+
 	cout << "\nLoading the Save File. Do not touch the Memory Card in Slot A or the Power Button...\n";
-    	data.levelNumber = getData(1);
+
+	data.levelNumber = getData(parCount,0);
 	cout << "Level - " << data.levelNumber << endl;
-	data.score = getData(2);
+	parCount++;
+
+	data.score = getData(parCount,0);
 	cout << "Score - " << data.score << endl;
-	data.rocket = getData(3);
-	cout << "Rocket - " << data.rocket << endl;
-	data.platformCount = getData(4);
-	cout << "Platforms - " << data.platformCount << endl;
-	data.asteroidCount = getData(5);
+	parCount++;
+
+	data.rocket.type = getData(parCount,0);
+	cout << "Rocket - " << data.rocket.type << endl;
+	parCount++;
+
+	data.rocket.x = getData(parCount,0);
+	cout << "Rocket x - " << data.rocket.x << endl;
+	parCount++;
+
+	data.rocket.y = getData(parCount,0);
+	cout << "Rocket y - " << data.rocket.y << endl;
+	parCount++;
+
+	data.asteroidCount = getData(parCount,0);
 	cout << "Asteroids - " << data.asteroidCount << endl;
-	data.enemyCount = getData(6);
+	parCount++;
+
+	data.enemyCount = getData(parCount,0);
 	cout << "Enemies - " << data.enemyCount << endl;
-	data.gravity = getData(7);
+	parCount++;
+
+	data.gravity = getData(parCount,0);
 	cout << "Gravity - " << data.gravity << endl;
-	data.time = getData(8);
+	parCount++;
+
+	data.time = getData(parCount,0);
 	cout << "time - " << data.time << endl << endl;
+	parCount++;
+
+	data.platformCount = getData(parCount,0);
+	cout << "Platforms - " << data.platformCount << endl;
+	parCount++;
+
+	for (int i = 0; i < data.platformCount; i++) {
+		data.platform.x[i] = getData(parCount,0);
+		cout << "Platform" << i+1 << " x - " << data.platform.x[i] << endl;
+		parCount++;
+
+		data.platform.y[i] = getData(parCount,0);
+		cout << "Platform" << i+1 << " y - " << data.platform.y[i] << endl;
+		parCount++;
+	}
 
 	return data;
 }
@@ -148,15 +251,70 @@ void saveGame(saveData data)
 	cout << "Saving... Do not touch the Memory Card in Slot A or the Power Button.\n";
 	putData(data.levelNumber,1);
 	putData(data.score,0);
-	putData(data.rocket,0);
-	putData(data.platformCount,0);
+	putData(data.rocket.type,0);
+	putData(data.rocket.x,0);
+	putData(data.rocket.y,0);
 	putData(data.asteroidCount,0);
 	putData(data.enemyCount,0);
 	putData(data.gravity,0);
 	putData(data.time,0);
+	putData(data.platformCount,0);
+	for (int i = 0; i < data.platformCount; i++) {
+		putData(data.platform.x[i],0);
+		putData(data.platform.y[i],0);
+	}
 	cout << "\nYour progress was saved.\n\n";
 }
 
+levelData loadLevel(levelData level, int levelNumber)
+{
+	int parCount = 1;
+
+	cout << "\nLoading the Level. Do not touch the Memory Card in Slot A or the Power Button...\n";
+
+	level.levelNumber = getData(parCount, levelNumber);
+	cout << "Level - " << level.levelNumber << endl;
+	parCount++;
+
+	level.rocket.x = getData(parCount, levelNumber);
+	cout << "Rocket x - " << level.rocket.x << endl;
+	parCount++;
+
+	level.rocket.y = getData(parCount, levelNumber);
+	cout << "Rocket y - " << level.rocket.y << endl;
+	parCount++;
+
+	level.asteroidCount = getData(parCount, levelNumber);
+	cout << "Asteroids - " << level.asteroidCount << endl;
+	parCount++;
+
+	level.enemyCount = getData(parCount, levelNumber);
+	cout << "Enemies - " << level.enemyCount << endl;
+	parCount++;
+
+	level.gravity = getData(parCount, levelNumber);
+	cout << "Gravity - " << level.gravity << endl;
+	parCount++;
+
+	level.time = getData(parCount, levelNumber);
+	cout << "time - " << level.time << endl << endl;
+	parCount++;
+
+	level.platformCount = getData(parCount, levelNumber);
+	cout << "Platforms - " << level.platformCount << endl;
+	parCount++;
+
+	for (int i = 0; i < level.platformCount; i++) {
+		level.platform.x[i] = getData(parCount, levelNumber);
+		cout << "Platform" << i+1 << " x - " << level.platform.x[i] << endl;
+		parCount++;
+
+		level.platform.y[i] = getData(parCount, levelNumber);
+		cout << "Platform" << i+1 << " y - " << level.platform.y[i] << endl;
+		parCount++;
+	}
+	return level;
+}
 
 /*
 
