@@ -88,11 +88,8 @@ int pat_menu = 0;
 int ramon_menu = 0;
 
 Ppmimage * backgroundImage=NULL;
-Ppmimage * hitterImage=NULL;
 Ppmimage * shipImage=NULL;
-GLuint silhouetteTexture;
 GLuint backgroundTexture;
-GLuint hitterTexture;
 GLuint shipTexture;
 
 struct Ship {
@@ -415,13 +412,10 @@ void init_opengl(void)
     system("convert ./images/RocketFinal.png ./images/RocketFinal.ppm");
     //system("convert ./images/hitters.png ./images/hitters.ppm");
     backgroundImage	= ppm6GetImage("./images/background.ppm");
-    hitterImage	= ppm6GetImage("./images/hitters.ppm");
     shipImage	= ppm6GetImage("./images/RocketFinal.ppm");
 
     //create opengl texture elements
-    glGenTextures(1, &silhouetteTexture);
     glGenTextures(1, &backgroundTexture);
-    glGenTextures(1, &hitterTexture);
     glGenTextures(1, &shipTexture);
 
     //background
@@ -432,30 +426,6 @@ void init_opengl(void)
     glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	    backgroundImage->width, backgroundImage->height,
 	    0, GL_RGB, GL_UNSIGNED_BYTE, backgroundImage->data);	
-
-    //Hitter
-    glBindTexture(GL_TEXTURE_2D,hitterTexture);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, 3,
-	    hitterImage->width, hitterImage->height,
-	    0, GL_RGB, GL_UNSIGNED_BYTE, hitterImage->data);	
-
-
-    //hitter alpha---------------------------------------------
-    glBindTexture(GL_TEXTURE_2D,silhouetteTexture);
-
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-
-    // must bild a new set of data...
-    unsigned char *silhouetteData = buildAlphaData(hitterImage);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
-	    hitterImage->width, hitterImage->height,
-	    0, GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);	
-    free(silhouetteData);
-    //---------------------------------------------------------
 
 //    //Hitter
 //    glBindTexture(GL_TEXTURE_2D,shipTexture);
@@ -967,27 +937,6 @@ void physics(Game *g)
 
             glEnd();
             glPopMatrix();
-////////////
-            // Hitter Image
-            glColor4f(1.0, 1.0, 1.0, 1.0); // reset gl color
-            glPushMatrix();
-            //glTranslated(x, y, 0); // Update this every frame to move asteroid
-            glTranslated(0, 0, 0);
-            glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-            glBindTexture(GL_TEXTURE_2D, silhouetteTexture);
-            glEnable(GL_ALPHA_TEST);
-            glAlphaFunc(GL_GREATER, 0.0f); //Alpha
-            glBegin(GL_QUADS);
-            float w = 1;
-            float h = 1;
-            glTexCoord2f(0.0f, h); glVertex2i(0, 0);
-            glTexCoord2f(0.0f, 0.0f); glVertex2i(0, hitterImage->height);
-            glTexCoord2f(w, 0.0f); glVertex2i(hitterImage->width, hitterImage->height);
-            glTexCoord2f(w, h); glVertex2i(hitterImage->width, 0);
-
-            glEnd();
-            glPopMatrix();
-/////////////
 
 	    Rect r;
 	    //
