@@ -94,7 +94,35 @@ class Goal : public Object
 		Object trigger;
 
     public:
-		Goal(float, float, float, float);
+		//Goal();
+		//Goal(float, float, float, float);
+
+		void setPosX(float x);
+		void setPosY(float y);
+		void setWidth(float w);
+		void setHeight(float h);
+
+		void draw();
+
+		Object getTrigger() {return trigger;}
+};
+
+class Fueler : public Object
+{
+	private:
+		float fuel;
+		Object trigger;
+
+    public:
+		Fueler();
+
+		void setPosX(float x);
+		void setPosY(float y);
+		void setWidth(float w);
+		void setHeight(float h);
+
+		float getFuelLeft();
+		void removeFuel();
 		void draw();
 
 		Object getTrigger() {return trigger;}
@@ -133,9 +161,11 @@ class Ship2 : public MovableObject {
 
 		void move();
 		bool goalTriggered(Goal);
+		bool fuelerTriggered(Fueler);
 		bool collidesWith(Object);
 		void draw();
 
+		void addFuel();
 		float getFuelLeft();
 		float getFuelMax();
 

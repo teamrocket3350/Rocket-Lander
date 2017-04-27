@@ -50,7 +50,7 @@ void Object::setPosY(float y)
 
 void Object::setRot(float r)
 {
-		rot=r;
+	rot=r;
 }
 
 void Object::setWidth(float w)
@@ -187,6 +187,18 @@ bool Ship2::goalTriggered(Goal goal)
 	return false;
 }
 
+bool Ship2::fuelerTriggered(Fueler fueler)
+{
+	if (collidesWith(fueler.getTrigger()) &&
+			vel[0] == 0 &&
+			vel[1] == 0) {
+		//printf("Fueler triggered!\n");
+		return true;
+	}
+	return false;
+}
+
+
 bool Ship2::collidesWith(Object ob)
 {
 	// TODO Collision types:
@@ -203,17 +215,17 @@ bool Ship2::collidesWith(Object ob)
 			rectCollidesWith(collidables[3], ob, pos[0]+(collidables[1].base*.5)+3, pos[1]+collidables[0].height) || // nose box
 			triCollidesWith(collidables[4], ob, pos[0]+(collidables[1].base*.5), pos[1]+collidables[0].height+collidables[3].height) // nose cone
 	   ) {
-			// Place ship above platform
-			if (pos[1] < ob.getPosY() + ob.getHeight()) {
-				pos[1] = ob.getPosY() + ob.getHeight() + 1;
-				vel[0] = 0; // Temp
-				vel[1] = 0;
-				if (rot > 0)
-				    rot -= 4;
-				if (rot < 0)
-				    rot += 4;
-				//rot = 0;
-			}
+		// Place ship above platform
+		if (pos[1] < ob.getPosY() + ob.getHeight()) {
+			pos[1] = ob.getPosY() + ob.getHeight();
+			vel[0] = 0; // Temp
+			vel[1] = 0;
+			if (rot > 0)
+				rot -= 4;
+			if (rot < 0)
+				rot += 4;
+			//rot = 0;
+		}
 		return true;
 	} else {
 		return false;
@@ -224,9 +236,9 @@ bool Ship2::collidesWith(Object ob)
 bool Ship2::linesIntersect(Line l1, Line l2)
 {
 	if (l1.p1.x <= l2.p2.x && 
-		l1.p2.x >= l2.p1.x &&
-		l1.p1.y <= l2.p2.y &&
-		l1.p2.y >= l2.p1.y) {
+			l1.p2.x >= l2.p1.x &&
+			l1.p1.y <= l2.p2.y &&
+			l1.p2.y >= l2.p1.y) {
 		return true;
 	}
 	return false;
@@ -593,6 +605,12 @@ float Ship2::getFuelMax()
 	return fuelMax;
 }
 
+void Ship2::addFuel()
+{
+	fuel += 1;
+}
+
+
 // ---------- //
 
 // Basic platform
@@ -617,23 +635,121 @@ void Platform::draw()
 // ---------- //
 
 // Platform with goal trigger
-Goal::Goal(float x, float y, float width, float height)
-{
-	pos[0] = x;
-	pos[1] = y;
-	shape.width = width;
-	shape.height = height;
+//Goal::Goal(float x, float y, float width, float height)
+//{
+//	pos[0] = x;
+//	pos[1] = y;
+//	shape.width = width;
+//	shape.height = height;
+//
+//	trigger.setPosX(x);
+//	trigger.setPosY(y);
+//	trigger.setWidth(width);
+//	trigger.setHeight(height+5);
+//}
 
+void Goal::setPosX(float x)
+{
+	pos[0]=x;
 	trigger.setPosX(x);
+}
+
+void Goal::setPosY(float y)
+{
+	pos[1]=y;
 	trigger.setPosY(y);
-	trigger.setWidth(width);
-	trigger.setHeight(height+5);
+}
+
+void Goal::setWidth(float w)
+{
+	shape.width=w;
+	trigger.setWidth(w);
+}
+
+void Goal::setHeight(float h)
+{
+	shape.height=h;
+	trigger.setHeight(h+5);
 }
 
 void Goal::draw()
 {
 	//draw trigger 
 	glColor3ub(255,111,111);
+	glPushMatrix();
+	glTranslatef(pos[0], pos[1], 0);
+	glBegin(GL_QUADS);
+
+	// Coords using (0,0) pos
+	glVertex2i(0,0);
+	glVertex2i(0, trigger.getHeight());
+	glVertex2i(trigger.getWidth(), trigger.getHeight());
+	glVertex2i(trigger.getWidth(), 0);
+
+	glEnd();
+	glPopMatrix();
+
+	//draw platform
+	glColor3ub(111,111,111);
+	glPushMatrix();
+	glTranslatef(pos[0], pos[1], 0);
+	glBegin(GL_QUADS);
+
+	// Coords using (0,0) pos
+	glVertex2i(0,0);
+	glVertex2i(0, shape.height);
+	glVertex2i(shape.width, shape.height);
+	glVertex2i(shape.width, 0);
+
+	glEnd();
+	glPopMatrix();
+}
+
+// ---------- //
+
+Fueler::Fueler()
+{
+	fuel = 100;
+}
+
+void Fueler::setPosX(float x)
+{
+	pos[0]=x;
+	trigger.setPosX(x);
+}
+
+void Fueler::setPosY(float y)
+{
+	pos[1]=y;
+	trigger.setPosY(y);
+}
+
+void Fueler::setWidth(float w)
+{
+	shape.width=w;
+	trigger.setWidth(w);
+}
+
+void Fueler::setHeight(float h)
+{
+	shape.height=h;
+	trigger.setHeight(h+5);
+}
+
+float Fueler::getFuelLeft()
+{
+	return fuel;
+}
+
+void Fueler::removeFuel()
+{
+	fuel -= 1;
+}
+
+void Fueler::draw()
+{
+	//draw trigger
+	glColor3ub(255,255,255);
 	glPushMatrix();
 	glTranslatef(pos[0], pos[1], 0);
 	glBegin(GL_QUADS);
