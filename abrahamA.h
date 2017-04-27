@@ -17,13 +17,13 @@
 #include"fonts.h"
 #include"nicholasP.h"
 
-struct Rocket {
+struct aRocket {
 	int type;
 	int x;
 	int y;
 };
 
-struct Platform {
+struct aPlatform {
 	int x[0];
 	int y[0];
 };
@@ -31,23 +31,24 @@ struct Platform {
 struct saveData {
 	int levelNumber;
 	int score;
-	int rocket;
-	int platformCount;
+	aRocket rocket;
 	int asteroidCount;
 	int enemyCount;
 	float gravity;
 	float time;
+	int platformCount;
+	aPlatform platform;
 };
 
 struct levelData {
 	int levelNumber;
-	Rocket rocket;
+	aRocket rocket;
 	int asteroidCount;
 	int enemyCount;
 	float gravity;
 	float time;
 	int platformCount;
-	Platform platform;
+	aPlatform platform;
 };
 
 void showCredits(int xres, int yres, Rect r);
