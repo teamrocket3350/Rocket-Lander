@@ -173,7 +173,7 @@ int getData(int count, int flag)
 	}
 }
 
-void putData(float data, int flag)
+void putData(int data, int flag)
 {
 	ofstream save;
 	if (flag == 1) {
