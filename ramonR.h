@@ -10,5 +10,12 @@
 #include <GL/glx.h>
 #include "log.h"
 #include "fonts.h"
+#include "ppm.h"
 
 void drawRamRMenu(int xres, int yres, Rect r);
+extern Ppmimage *hitterImage;
+extern GLuint silhousetteTexture;
+extern GLuint hitterTexture;
+void inHitters();
+void renderAstro();
+
