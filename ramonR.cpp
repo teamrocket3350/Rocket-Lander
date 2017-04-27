@@ -13,7 +13,11 @@
 #include "ramonR.h"
 #include "ppm.h"
 #define ALPHA 1
+unsigned char *buildAlphaData(Ppmimage*);
 
+Ppmimage * hitterImage;
+GLuint silhouetteTexture;
+GLuint hitterTexture;
 
 void drawRamRMenu(int xres, int yres, Rect r)
 {
@@ -32,6 +36,39 @@ void drawRamRMenu(int xres, int yres, Rect r)
     r.center = 1;
     ggprint8b(&r, 16, 0x00ffff00, "This is Ramon's menu");
 }
+
+void inHitters(void) {
+	hitterImage = ppm6GetImage("./images/hitters.ppm");
+	glGenTextures(1, &silhouetteTexture);
+	glGenTextures(1, &hitterTexture);
+
+//Hitters
+//init. of the enemy image
+	glBindTexture(GL_TEXTURE_2D,hitterTexture);
+    	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3,
+	    hitterImage->width, hitterImage->height,
+0, GL_RGB, GL_UNSIGNED_BYTE, hitterImage->data);
+
+//Hitter alpha
+//init. hitters
+	glBindTexture(GL_TEXTURE_2D,silhouetteTexture);
+    	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+    // must bild a new set of data...
+    	unsigned char *silhouetteData = buildAlphaData(hitterImage);
+    	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+	    hitterImage->width, hitterImage->height,
+	    0, GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);	
+	free(silhouetteData); 
+	
+}
+
+
+
+
 //-------------------------------------------------------------------
 // upload images onto the program
 // movment just left to right
@@ -62,7 +99,8 @@ void setupScreenRes(const int w, const int h) {
 	xres = w;
 	yres = h;
 }
-unsigned char *buildAlphadata(Ppimage *img) {
+*/
+unsigned char *buildAlphaData(Ppmimage *img) {
 	int i, a, b, c;
 	unsigned char *newdata, *ptr;
 	unsigned char *data = (unsigned char *) img->data;
@@ -81,6 +119,7 @@ unsigned char *buildAlphadata(Ppimage *img) {
 	}
 	return newdata;
 }
+/*
 void initOpengl(void) {
 	glViewport(0, 0, xres, yres);
 	glMatrixMode(GL_PROJECTION); glLoadIdentity();
@@ -133,39 +172,31 @@ void physics(void) {
 	if(showHitters)
 		moveHitters();
 }
-void render(void) {
+*/
+void renderAstro(void) {
 //clear screen
 //draw a quad with texture
 //render the background
-if (showHitters) {
-	glPushMatrix();
-	glTranslatef(hitters.pos[0], hitters.pos[1], king.pos[2]);
-	if (!silhouette) {
-		glBindTexture(GL_TEXTURE_2D, hittersTexture);
-	}
-	else {
-		glBindTexture(GL_TEXTURE_2D, silhouetteTexture);
-		glEnable(GL_Alpha_Test);
-		glAlphaFunc(GL_GREATER, 0.0f);
-		glColor4ub(255, 255, 255, 255);
-	}
-	glBegin(GL_QUADS);
-	if (hitters.vel[0] > 0.0) {
-		glTexCoord2f(0.0f, 1.0f); glVertex2i(-wid, -wid);
-		glTexCoord2f(0.0f, 0.0f); glVertex2i(-wid, wid);
-		glTexCoord2f(1.0f, 0.0f); glVertex2i(wid, wid);
-		glTexCoord2f(1.0f, 1.0f); glVertex2i(wid, -wid);
-	}
-	else {
-		glTexCoord2f(0.0f, 1.0f); glVertex2i(-wid, -wid);
-		glTexCoord2f(0.0f, 0.0f); glVertex2i(-wid, wid);
-		glTexCoord2f(1.0f, 0.0f); glVertex2i(wid, wid);
-		glTexCoord2f(1.0f, 1.0f); glVertex2i(wid, -wid);
-	}
-	glEnd();
+// Hitter Image
+	glColor4f(1.0, 1.0, 1.0, 1.0); // reset gl color
+        glPushMatrix();
+	//glTranslated(x, y, 0); // Update this every frame to move asteroid
+        glTranslated(0, 0, 0);
+        glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
+        glBindTexture(GL_TEXTURE_2D, silhouetteTexture);
+        glEnable(GL_ALPHA_TEST);
+        glAlphaFunc(GL_GREATER, 0.0f); //Alpha
+        glBegin(GL_QUADS);
+        float w = 1;
+        float h = 1;
+        glTexCoord2f(0.0f, h); glVertex2i(0, 0);
+        glTexCoord2f(0.0f, 0.0f); glVertex2i(0, hitterImage->height);
+        glTexCoord2f(w, 0.0f); glVertex2i(hitterImage->width, hitterImage->height);
+        glTexCoord2f(w, h); glVertex2i(hitterImage->width, 0);
+
+        glEnd();
 	glPopMatrix();
-}
-*/	
+}	
 	    
 	    
 	    
