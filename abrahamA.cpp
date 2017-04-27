@@ -46,8 +46,8 @@ void showCredits(int xres, int yres, Rect r)
 	glBegin(GL_QUADS);
 		glVertex2f(cx-160, cy+300);
 		glVertex2f(cx+160, cy+300);
-		glVertex2f(cx+160, cy-295);
-		glVertex2f(cx-160, cy-295);
+		glVertex2f(cx+160, cy+295);
+		glVertex2f(cx-160, cy+295);
 	glEnd();
 	glEnable(GL_TEXTURE_2D);
 	
@@ -59,17 +59,17 @@ void showCredits(int xres, int yres, Rect r)
 	r.bot = cy + 150;
 	r.left = cx;
 	r.center = 1;
-	ggprint16(&r,16, 0xffffff, "Nicholas P");
+	ggprint16(&r,16, 0xffffff, "Nicholas Polach");
 	
 	r.bot = cy + 100;
 	r.left = cx;
 	r.center = 1;
-	ggprint16(&r,16, 0xffffff, "Patrick E");
+	ggprint16(&r,16, 0xffffff, "Patrick Espiritu");
 	
 	r.bot = cy + 50;
 	r.left = cx;
 	r.center = 1;
-	ggprint16(&r,16, 0xffffff, "Ramon R");
+	ggprint16(&r,16, 0xffffff, "Ramon Romero");
 }
 
 void imageConvert()
@@ -111,7 +111,7 @@ int getData(int count, int flag)
 		load.close();
 		return (data);
 	}
-	else if (flag == 1){
+	else if (flag == 1) {
 		int level;
 		ifstream load;
 		load.open ("./level_1.txt");
@@ -131,7 +131,7 @@ int getData(int count, int flag)
 		load.close();
 		return (level);
 	}
-	else if (flag == 2){
+	else if (flag == 2) {
 		int level;
 		ifstream load;
 		load.open ("./level_2.txt");
@@ -151,7 +151,7 @@ int getData(int count, int flag)
 		load.close();
 		return (level);
 	}
-	else if (flag == 3){
+	else if (flag == 3) {
 		int level;
 		ifstream load;
 		load.open ("./level_3.txt");
