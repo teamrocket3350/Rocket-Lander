@@ -148,25 +148,17 @@ struct Game {
 
 
 	Ship ship;
-#ifndef debug
 	Ship2 ship2; // Nick's ship class
-#else
-
-#endif
 	Asteroid *ahead;
 	Bullet *barr;
 	int nasteroids;
 	int nbullets;
 	struct timespec bulletTimer;
 	struct timespec mouseThrustTimer;
-#ifndef debug
 	Platform ground[5];
 	Platform plats[2]; // Nick's platform class
 	Goal goal;
 	//Fueler fueler;
-#else
-
-#endif
 	bool mouseThrustOn;
 	Game() {
 		ahead = NULL;
@@ -174,7 +166,6 @@ struct Game {
 		nasteroids = 0;
 		nbullets = 0;
 
-#ifndef debug
 		ship2.enableBooster2();
 		ship2.setPosX(53);
 		ship2.setPosY(15);
@@ -226,10 +217,6 @@ struct Game {
 		//fueler.setWidth(100);
 		//fueler.setHeight(10);
 
-
-#else
-
-#endif
 		mouseThrustOn = false;
 	}
 	~Game() {
@@ -658,7 +645,6 @@ void physics(Game *g)
 	g->ship.pos[0] += g->ship.vel[0];
 	g->ship.pos[1] += g->ship.vel[1];
 	// My ship
-#ifndef debug
 	g->ship2.addGravity(GRAVITY);
 	g->ship2.move();
 
@@ -692,9 +678,6 @@ void physics(Game *g)
 	else if (g->ship2.getPosX() > (float)xres) {
 		g->ship2.setPosX(g->ship2.getPosX() - (float)xres);
 	}
-#else
-
-#endif
 	//Check for collision with window edges
 	if (g->ship.pos[0] < 0.0) {
 		g->ship.pos[0] += (float)xres;
@@ -839,21 +822,14 @@ void physics(Game *g)
 		//check keys pressed now
 		if (keys[XK_Left]) {
 			g->ship.angle += 4.0;
-#ifndef debug
 			g->ship2.rotateLeft();
-#else
 
-#endif
 			if (g->ship.angle >= 360.0f)
 				g->ship.angle -= 360.0f;
 		}
 		if (keys[XK_Right]) {
 			g->ship.angle -= 4.0;
-#ifndef debug
 			g->ship2.rotateRight();
-#else
-
-#endif
 			if (g->ship.angle < 0.0f)
 				g->ship.angle += 360.0f;
 		}
@@ -870,12 +846,9 @@ void physics(Game *g)
 			Flt xdir = cos(rad);
 			Flt ydir = sin(rad);
 
-#ifndef debug
 			// My ship
 			g->ship2.accelerate();
-#else
 
-#endif
 			// Orig ship
 			g->ship.vel[0] += xdir*0.02f; //
 			g->ship.vel[1] += ydir*0.02f; //
@@ -966,7 +939,6 @@ void physics(Game *g)
 			//-------------------------------------------------------------------------
 
 
-#ifndef debug
 			// Draw fuel gauge
 			Rect fuelBar;
 			fuelBar.bot = yres - 43;
@@ -989,9 +961,6 @@ void physics(Game *g)
 			g->goal.draw();
 			//g->fueler.draw();
 
-# else
-			// Abraham - add function call to render level objects here
-#endif
 			if (renderShip) {
 				//Draw the ship
 				glColor3fv(g->ship.color);
