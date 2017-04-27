@@ -172,9 +172,8 @@ int getData(int count, int flag)
 		return (level);
 	}
 	else {
-		level = 1;
 		cout << "Error\n";
-		return (level);
+		return (1);
 	}
 }
 
