@@ -84,13 +84,15 @@ extern struct Global {
 int xres=1250, yres=900;
 int credits = 0;
 int renderShip = 0;
-int pat_menu = 0;
+int pat_menu = 1;
 int ramon_menu = 0;
 
 Ppmimage * backgroundImage=NULL;
 Ppmimage * shipImage=NULL;
+Ppmimage *bg_image=NULL;
 GLuint backgroundTexture;
 GLuint shipTexture;
+GLuint bg_texture;
 
 struct Ship {
     Vec dir;
@@ -251,6 +253,7 @@ int main(void)
 {
     logOpen();
     initXWindows();
+    imageConvert();
     init_opengl();
 #ifdef USE_OPENAL_SOUND
     startUpSound();		// from Patrick to add sound
@@ -283,7 +286,7 @@ int main(void)
 	glXSwapBuffers(dpy, win);
     }
     cleanupXWindows();
-    cleanupImages();
+    imageClean();
     cleanup_fonts();
 #ifdef USE_OPENAL_SOUND
     cleanSound();		// clean up sounds
@@ -382,10 +385,10 @@ void init_opengl(void)
     glEnable(GL_TEXTURE_2D);
     initialize_fonts();
 
-    // load image files into a ppm structure
-    system("convert ./images/background.jpg ./images/background.ppm");
-    system("convert ./images/hitters.jpg ./images/hitters.ppm");
-    system("convert ./images/RocketFinal.png ./images/RocketFinal.ppm");
+    //// load image files into a ppm structure
+    //system("convert ./images/background.jpg ./images/background.ppm");
+    //system("convert ./images/hitters.jpg ./images/hitters.ppm");
+    //system("convert ./images/RocketFinal.png ./images/RocketFinal.ppm");
     //system("convert ./images/hitters.png ./images/hitters.ppm");
     backgroundImage	= ppm6GetImage("./images/background.ppm");
     shipImage	= ppm6GetImage("./images/RocketFinal.ppm");
@@ -404,28 +407,35 @@ void init_opengl(void)
     glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	    backgroundImage->width, backgroundImage->height,
 	    0, GL_RGB, GL_UNSIGNED_BYTE, backgroundImage->data);	
+    
+    bg_image = ppm6GetImage("./images/background2.ppm");	
+    glGenTextures(1, &bg_texture);
+    glBindTexture(GL_TEXTURE_2D, bg_texture);	
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, bg_image->width, bg_image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, bg_image->data);
 
-//    //Hitter
-//    glBindTexture(GL_TEXTURE_2D,shipTexture);
-//    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-//    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-//
-//    glTexImage2D(GL_TEXTURE_2D, 0, 3,
-//	    shipImage->width, shipImage->height,
-//	    0, GL_RGB, GL_UNSIGNED_BYTE, shipImage->data);	
-//
-//    //hitter alpha---------------------------------------------
-//    glBindTexture(GL_TEXTURE_2D,silhouetteTexture);
-//
-//    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-//    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-//
-//    // must bild a new set of data...
-//    unsigned char *silhouetteData = buildAlphaData(shipImage);
-//    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
-//	    shipImage->width, shipImage->height,
-//	    0, GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);	
-//    free(silhouetteData);
+    //    //Hitter
+    //    glBindTexture(GL_TEXTURE_2D,shipTexture);
+    //    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    //    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    //
+    //    glTexImage2D(GL_TEXTURE_2D, 0, 3,
+    //	    shipImage->width, shipImage->height,
+    //	    0, GL_RGB, GL_UNSIGNED_BYTE, shipImage->data);	
+    //
+    //    //hitter alpha---------------------------------------------
+    //    glBindTexture(GL_TEXTURE_2D,silhouetteTexture);
+    //
+    //    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    //    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    //
+    //    // must bild a new set of data...
+    //    unsigned char *silhouetteData = buildAlphaData(shipImage);
+    //    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+    //	    shipImage->width, shipImage->height,
+    //	    0, GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);	
+    //    free(silhouetteData);
     //---------------------------------------------------------
 
 }
@@ -901,23 +911,23 @@ void physics(Game *g)
 
 	    glClear(GL_COLOR_BUFFER_BIT);
 
-            // Background Image
-            glPushMatrix();
-            glEnable(GL_TEXTURE_2D);
-            glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-            glBindTexture(GL_TEXTURE_2D, backgroundTexture);
-            glColor4f(1.0, 1.0, 1.0, 1.0); // reset gl color
-            glBegin(GL_QUADS);
-            glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
-            glTexCoord2f(0.0f, 0.0f); glVertex2i(0, yres);
-            glTexCoord2f(1.0f, 0.0f); glVertex2i(xres, yres);
-            glTexCoord2f(1.0f, 1.0f); glVertex2i(xres, 0);
+	    // Background Image
+	    glPushMatrix();
+	    glEnable(GL_TEXTURE_2D);
+	    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	    glBindTexture(GL_TEXTURE_2D, backgroundTexture);
+	    glColor4f(1.0, 1.0, 1.0, 1.0); // reset gl color
+	    glBegin(GL_QUADS);
+	    glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+	    glTexCoord2f(0.0f, 0.0f); glVertex2i(0, yres);
+	    glTexCoord2f(1.0f, 0.0f); glVertex2i(xres, yres);
+	    glTexCoord2f(1.0f, 1.0f); glVertex2i(xres, 0);
 
-            glEnd();
-            glPopMatrix();
+	    glEnd();
+	    glPopMatrix();
 
 	    renderAstro();
-		
+
 	    Rect r;
 	    //
 	    r.bot = yres - 20;
@@ -1052,8 +1062,12 @@ void physics(Game *g)
 	    }
 	    // Draw Pat's Menu
 	    if (pat_menu == 1) {
-		UpgradeMenu(xres, yres, r);
+		startMenu(r);
+		//UpgradeMenu(xres, yres, r);
 	    }
+	    //if (pat_menu== 0) {
+	    //    clearMenu();
+	    //}
 	    // Draw Ramon's Menu
 	    if (ramon_menu == 1) {
 		//drawRamRMenu(xres, yres, r);

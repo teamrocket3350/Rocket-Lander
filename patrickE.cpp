@@ -33,49 +33,49 @@ struct Global {
 } p;
 #endif // close use_openal_sound
 
+extern Ppmimage *bg_image;
+extern GLuint bg_texture;
+
 // Playing with background image
-void startMenu(void)
+void startMenu(Rect r)
 {
-    Ppmimage *bgImage= NULL;
-    GLuint bgTexture;
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glVertex2i(0, 0);
+    glVertex2i(0, yres);
+    glVertex2i(xres, yres);
+    glVertex2i(xres, 0);
+    glEnd();
+    glPopMatrix();
 
-    //OpenGL initialization
-    glViewport(0, 0, xres, yres);
-    //Initialize matrices
-    glMatrixMode(GL_PROJECTION); glLoadIdentity();
-    glMatrixMode(GL_MODELVIEW); glLoadIdentity();
-    //This sets 2D mode (no perspective)
-    glOrtho(0, xres, 0, yres, -1, 1);
-
-    glDisable(GL_LIGHTING);
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_FOG);
-    glDisable(GL_CULL_FACE);
-
-    //Clear the screen
-    glClearColor(0.0, 0.0, 0.0, 1.0);
-    //glClear(GL_COLOR_BUFFER_BIT);
-    //Do this to allow fonts
+    //glColor3ub(0, 204, 204);
+    glBindTexture(GL_TEXTURE_2D, bg_texture);
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0, 1); glVertex2i(0, 0);
+    glTexCoord2f(0.0, 0.0); glVertex2i(0, yres);
+    glTexCoord2f(1, 0.0); glVertex2i(xres, yres);
+    glTexCoord2f(1, 1); glVertex2i(xres, 0);
+    glEnd();
+   
+  //  glPopMatrix();
+  //  glColor3f(.25,.25,.25);
+    int cx = xres/2;
+    int cy = yres/2;
+  //  glBegin(GL_QUADS);
+  //  glVertex2i(cx-666,cy+777);
+  //  glVertex2i(cx+666,cy+777);
+  //  glVertex2i(cx+666,cy-777);
+  //  glVertex2i(cx-666,cy-777);
+  //  glEnd();
     glEnable(GL_TEXTURE_2D);
-    initialize_fonts();
-    //
-    //load the images file into a ppm structure.
-    //
-    bgImage = ppm6GetImage("./images/background.ppm");
-
-    //create opengl texture elements
-    glGenTextures(1, &bgTexture);
-
-    glBindTexture(GL_TEXTURE_2D, bgTexture);
-
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, 3,
-	    bgImage->width, bgImage->height, 
-	    0, GL_RGB, GL_UNSIGNED_BYTE, bgImage->data);
+    r.bot=cy;
+    r.left=cx;
+    r.center=1;
+    ggprint16(&r,160,0xffcc11,"Rocket Lander");    
+    ggprint13(&r,20,0xffcc11,"Press P to play"); 
 }
 
-/**********UPGRADE MENUS**********/
 void UpgradeMenu(int xres,int yres,Rect r)
 {
     glColor3f(.13,.49,.2);
