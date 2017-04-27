@@ -30,10 +30,10 @@ void showCredits(int xres, int yres, Rect r)
 	int cx = xres/2;
 	int cy = yres/2;
 	glBegin(GL_QUADS);
-		glVertex2f(cx-620, cy+420);
-		glVertex2f(cx+620, cy+420);
-		glVertex2f(cx+620, cy-420);
-		glVertex2f(cx-620, cy-420);
+		glVertex2f(cx-700, cy+500);
+		glVertex2f(cx+700, cy+500);
+		glVertex2f(cx+700, cy-500);
+		glVertex2f(cx-700, cy-500);
 	glEnd();
 	glEnable(GL_TEXTURE_2D);
 	
