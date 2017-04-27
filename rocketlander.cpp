@@ -361,30 +361,6 @@ void reshape_window(int width, int height)
     set_title();
 }
 
-//Alpha Image
-unsigned char *buildAlphaData(Ppmimage *img)
-{
-    //add 4th component to RGB stream...
-    int i;
-    int a,b,c;
-    unsigned char *newdata, *ptr;
-    unsigned char *data = (unsigned char *)img->data;
-    newdata = (unsigned char *)malloc(img->width * img->height * 4);
-    ptr = newdata;
-    for (i=0; i<img->width * img->height * 3; i+=3) {
-	a = *(data+0);
-	b = *(data+1);
-	c = *(data+2);
-	*(ptr+0) = a;
-	*(ptr+1) = b;
-	*(ptr+2) = c;
-	*(ptr+3) = (a|b|c);
-	ptr += 4;
-	data += 3;
-    }
-    return newdata;
-}
-
 void init_opengl(void)
 {
     //OpenGL initialization
@@ -414,6 +390,8 @@ void init_opengl(void)
     backgroundImage	= ppm6GetImage("./images/background.ppm");
     shipImage	= ppm6GetImage("./images/RocketFinal.ppm");
 
+    inHitters(); // Initialize hitter image
+	
     //create opengl texture elements
     glGenTextures(1, &backgroundTexture);
     glGenTextures(1, &shipTexture);
@@ -938,6 +916,8 @@ void physics(Game *g)
             glEnd();
             glPopMatrix();
 
+	    renderAstro();
+		
 	    Rect r;
 	    //
 	    r.bot = yres - 20;
