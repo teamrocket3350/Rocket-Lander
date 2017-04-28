@@ -156,7 +156,7 @@ struct Game {
 	Platform ground[5];
 	Platform plats[2]; // Nick's platform class
 	Goal goal;
-	//Fueler fueler;
+	Fueler fueler;
 	bool mouseThrustOn;
 	Game() {
 		ahead = NULL;
@@ -210,10 +210,10 @@ struct Game {
 		goal.setHeight(10);
 
 
-		//fueler.setPosX(850);
-		//fueler.setPosY(340);
-		//fueler.setWidth(100);
-		//fueler.setHeight(10);
+		fueler.setPosX(850);
+		fueler.setPosY(340);
+		fueler.setWidth(100);
+		fueler.setHeight(10);
 
 		mouseThrustOn = false;
 	}
@@ -631,16 +631,16 @@ void physics(Game *g)
 	g->ship2.collidesWith(g->goal);
 	g->ship2.goalTriggered(g->goal);
 
-//	// Check for collision with fueler platform
-//	g->ship2.collidesWith(g->fueler);
-//	// If fueler is triggered and it has fuel left
-//	if (g->ship2.fuelerTriggered(g->fueler) && g->fueler.getFuelLeft() > 1) {
-//		// Do not overfill the ship
-//		if (!(g->ship2.getFuelLeft() > g->ship2.getFuelMax()-1)) {
-//			g->fueler.removeFuel();
-//			g->ship2.addFuel();
-//		}
-//	}
+	// Check for collision with fueler platform
+	g->ship2.collidesWith(g->fueler);
+	// If fueler is triggered and it has fuel left
+	if (g->ship2.fuelerTriggered(g->fueler) && g->fueler.getFuelLeft() > 1) {
+		// Do not overfill the ship
+		if (!(g->ship2.getFuelLeft() > g->ship2.getFuelMax()-1)) {
+			g->fueler.removeFuel();
+			g->ship2.addFuel();
+		}
+	}
 
 	// My ship
 	if (g->ship2.getPosX() < 0.0) {
@@ -897,6 +897,9 @@ void physics(Game *g)
 			glPopMatrix();
 
 			renderAstro();
+			g->ship2.draw();
+//			glBindTexture(GL_TEXTURE_2D, 0);
+//			glDisable(GL_ALPHA_TEST);
 
 			Rect r;
 			//
@@ -908,7 +911,6 @@ void physics(Game *g)
 			//	    ggprint8b(&r, 16, 0x00ffff00, "n asteroids: %i", g->nasteroids);
 			//-------------------------------------------------------------------------
 
-			g->ship2.draw_debug();
 
 			// Draw fuel gauge
 			Rect fuelBar;
@@ -928,7 +930,7 @@ void physics(Game *g)
 			g->plats[1].draw();
 
 			g->goal.draw();
-			//g->fueler.draw();
+			g->fueler.draw();
 
 			if (renderShip) {
 				//Draw the ship

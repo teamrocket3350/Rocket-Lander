@@ -23,7 +23,7 @@
 #include "fonts.h"
 #include "ppm.h"
 #include "nicholasP.h"
-//#include "ramonR.h" // Temp
+#include "ramonR.h" // Temp
 
 #define PI 3.14159265
 int tempcount = 0;
@@ -523,25 +523,25 @@ void Ship2::draw_debug()
 
 void Ship2::draw()
 {
-//	Point * pts;
-//	pts = getRectPointArray(pos[0], pos[1], rot, shape.width, shape.height);
-//	// Ship image
-//	glColor4f(1.0, 1.0, 1.0, 1.0); // reset gl color
-//	glPushMatrix();
-//	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-//	glBindTexture(GL_TEXTURE_2D, shipSilhouetteTexture);
-//	glEnable(GL_ALPHA_TEST);
-//	glAlphaFunc(GL_GREATER, 0.0f); //Alpha
-//	glBegin(GL_QUADS);
-//	glTexCoord2f(0.0f, 1.0f); glVertex2i(pts[0].x, pts[0].y);
-//	glTexCoord2f(0.0f, 0.0f); glVertex2i(pts[1].x, pts[1].y); 
-//	glTexCoord2f(1.0f, 0.0f); glVertex2i(pts[2].x, pts[2].y);
-//	glTexCoord2f(1.0f, 1.0f); glVertex2i(pts[3].x, pts[3].y);
-//
-//	glEnd();
-//	glPopMatrix();
-//	delete [] pts;
-//	pts = NULL;
+	Point * pts;
+	pts = getRectPointArray(pos[0], pos[1], rot, shape.width, shape.height);
+	// Ship image
+	glColor4f(1.0, 1.0, 1.0, 1.0); // reset gl color
+	glPushMatrix();
+	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
+	glBindTexture(GL_TEXTURE_2D, shipSilhouetteTexture);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f); //Alpha
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0f, 1.0f); glVertex2i(pts[0].x, pts[0].y);
+	glTexCoord2f(0.0f, 0.0f); glVertex2i(pts[1].x, pts[1].y); 
+	glTexCoord2f(1.0f, 0.0f); glVertex2i(pts[2].x, pts[2].y);
+	glTexCoord2f(1.0f, 1.0f); glVertex2i(pts[3].x, pts[3].y);
+
+	glEnd();
+	glPopMatrix();
+	delete [] pts;
+	pts = NULL;
 }
 
 ///// Swaps enabled booster /////
@@ -891,9 +891,9 @@ void init_ship_image()
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 
-//	unsigned char *silhouetteData = buildAlphaData(shipImage);
-//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
-//		shipImage->width, shipImage->height,
-//		0, GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
-//	free(silhouetteData);
+	unsigned char *silhouetteData = buildAlphaData(shipImage);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+		shipImage->width, shipImage->height,
+		0, GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
+	free(silhouetteData);
 }
