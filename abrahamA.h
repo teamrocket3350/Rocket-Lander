@@ -47,6 +47,8 @@ struct levelData {
 	int enemyCount;
 	float gravity;
 	float time;
+	int goalX;
+	int goalY;
 	int platformCount;
 	aPlatform platform;
 };
