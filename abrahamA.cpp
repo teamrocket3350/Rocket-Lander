@@ -85,7 +85,7 @@ void imageConvert()
 void imageClean()
 {
 	//clean up all images in master folder
-	system("rm *.ppm");
+	system("rm ./images/*.ppm");
 	return;
 }
 
