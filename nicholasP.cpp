@@ -523,6 +523,7 @@ void Ship2::draw_debug()
 
 void Ship2::draw()
 {
+//	Point * pts;
 //	pts = getRectPointArray(pos[0], pos[1], rot, shape.width, shape.height);
 //	// Ship image
 //	glColor4f(1.0, 1.0, 1.0, 1.0); // reset gl color
