@@ -197,7 +197,7 @@ void renderAstro(void) {
         glEnd();
 	glPopMatrix();
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glDisable(GL_AlPHA_TEST);
+	glDisable(GL_ALPHA_TEST);
 }	
 	    
 	    
