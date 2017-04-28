@@ -301,9 +301,17 @@ levelData loadLevel(levelData level, int levelNumber)
 	parCount++;
 
 	level.time = getData(parCount, levelNumber);
-	cout << "time - " << level.time << endl << endl;
+	cout << "Time - " << level.time << endl << endl;
 	parCount++;
 
+	level.goalX = getData(parCount, levelNumber);
+	cout << "Goal x position - " << level.goalX << endl << endl;
+	parCount++;
+	
+	level.goalY = getData(parCount, levelNumber);
+	cout << "Goal y position - " << level.goalY << endl << endl;
+	parCount++;
+	
 	level.platformCount = getData(parCount, levelNumber);
 	cout << "Platforms - " << level.platformCount << endl;
 	parCount++;
