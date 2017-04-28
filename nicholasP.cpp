@@ -540,6 +540,9 @@ void Ship2::draw()
 
 	glEnd();
 	glPopMatrix();
+	glBindTexture(GL_TEXTURE_2D, 0);
+        glDisable(GL_ALPHA_TEST);
+
 	delete [] pts;
 	pts = NULL;
 }
