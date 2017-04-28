@@ -21,10 +21,17 @@
 #include <GL/glx.h>
 #include "log.h"
 #include "fonts.h"
+#include "ppm.h"
 #include "nicholasP.h"
+//#include "ramonR.h" // Temp
 
 #define PI 3.14159265
 int tempcount = 0;
+
+Ppmimage * shipImage;
+GLuint shipSilhouetteTexture;
+GLuint shipTexture;
+
 
 // Object with basic properties of shape
 Object::Object()
@@ -164,6 +171,7 @@ Ship2::Ship2()
 	shape.width = collidables[0].width + collidables[1].base*.5 + collidables[2].base*.5;
 	shape.height = collidables[0].height + collidables[3].height + collidables[4].height;
 
+	printf("%f %f\n", shape.width, shape.height);
 	fuel = 100;
 	fuelMax = 100;
 }
@@ -414,7 +422,7 @@ bool Ship2::triCollidesWith(Shape collidable, Object ob, float x, float y)
 
 // Draw the collidable pieces of the ship to the screen
 // Used mainly for debugging
-void Ship2::draw()
+void Ship2::draw_debug()
 {
 	Point * pts;
 	// The area for the ship image
@@ -510,6 +518,29 @@ void Ship2::draw()
 	glPopMatrix();
 	delete [] pts;
 	pts = NULL;
+}
+
+
+void Ship2::draw()
+{
+//	pts = getRectPointArray(pos[0], pos[1], rot, shape.width, shape.height);
+//	// Ship image
+//	glColor4f(1.0, 1.0, 1.0, 1.0); // reset gl color
+//	glPushMatrix();
+//	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
+//	glBindTexture(GL_TEXTURE_2D, shipSilhouetteTexture);
+//	glEnable(GL_ALPHA_TEST);
+//	glAlphaFunc(GL_GREATER, 0.0f); //Alpha
+//	glBegin(GL_QUADS);
+//	glTexCoord2f(0.0f, 1.0f); glVertex2i(pts[0].x, pts[0].y);
+//	glTexCoord2f(0.0f, 0.0f); glVertex2i(pts[1].x, pts[1].y); 
+//	glTexCoord2f(1.0f, 0.0f); glVertex2i(pts[2].x, pts[2].y);
+//	glTexCoord2f(1.0f, 1.0f); glVertex2i(pts[3].x, pts[3].y);
+//
+//	glEnd();
+//	glPopMatrix();
+//	delete [] pts;
+//	pts = NULL;
 }
 
 ///// Swaps enabled booster /////
@@ -838,4 +869,30 @@ void drawFuelGauge(float fuelLeft, float fuelMax, float x, float y)
 		glEnd();
 		glPopMatrix();
 	}
+}
+
+void init_ship_image()
+{
+	shipImage = ppm6GetImage("./images/RocketFinal.ppm");
+	glGenTextures(1, &shipSilhouetteTexture);
+	glGenTextures(1, &shipTexture);
+
+	// Ship
+	glBindTexture(GL_TEXTURE_2D,shipTexture);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3,
+		shipImage->width, shipImage->height,
+		0, GL_RGB, GL_UNSIGNED_BYTE, shipImage->data);
+
+	// Alpha
+	glBindTexture(GL_TEXTURE_2D,shipSilhouetteTexture);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+//	unsigned char *silhouetteData = buildAlphaData(shipImage);
+//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+//		shipImage->width, shipImage->height,
+//		0, GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
+//	free(silhouetteData);
 }

@@ -88,10 +88,8 @@ int pat_menu = 0;
 int ramon_menu = 0;
 
 Ppmimage * backgroundImage=NULL;
-Ppmimage * shipImage=NULL;
 Ppmimage *bg_image=NULL;
 GLuint backgroundTexture;
-GLuint shipTexture;
 GLuint bg_texture;
 
 struct Ship {
@@ -168,7 +166,7 @@ struct Game {
 
 		ship2.enableBooster2();
 		ship2.setPosX(53);
-		ship2.setPosY(15);
+		ship2.setPosY(50);
 
 		ground[0].setPosX(0);
 		ground[0].setPosY(0);
@@ -387,18 +385,14 @@ void init_opengl(void)
 	initialize_fonts();
 
 	//// load image files into a ppm structure
-	//system("convert ./images/background.jpg ./images/background.ppm");
-	//system("convert ./images/hitters.jpg ./images/hitters.ppm");
-	//system("convert ./images/RocketFinal.png ./images/RocketFinal.ppm");
-	//system("convert ./images/hitters.png ./images/hitters.ppm");
 	backgroundImage	= ppm6GetImage("./images/background.ppm");
-	shipImage	= ppm6GetImage("./images/RocketFinal.ppm");
 
+	// Initialize group member images
 	inHitters(); // Initialize hitter image
+	init_ship_image();
 
 	//create opengl texture elements
 	glGenTextures(1, &backgroundTexture);
-	glGenTextures(1, &shipTexture);
 
 	//background
 	glBindTexture(GL_TEXTURE_2D,backgroundTexture);
@@ -415,29 +409,6 @@ void init_opengl(void)
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, bg_image->width, bg_image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, bg_image->data);
-
-	//    //Hitter
-	//    glBindTexture(GL_TEXTURE_2D,shipTexture);
-	//    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-	//    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	//
-	//    glTexImage2D(GL_TEXTURE_2D, 0, 3,
-	//	    shipImage->width, shipImage->height,
-	//	    0, GL_RGB, GL_UNSIGNED_BYTE, shipImage->data);	
-	//
-	//    //hitter alpha---------------------------------------------
-	//    glBindTexture(GL_TEXTURE_2D,silhouetteTexture);
-	//
-	//    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-	//    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	//
-	//    // must bild a new set of data...
-	//    unsigned char *silhouetteData = buildAlphaData(shipImage);
-	//    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
-	//	    shipImage->width, shipImage->height,
-	//	    0, GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);	
-	//    free(silhouetteData);
-	//---------------------------------------------------------
 
 }
 
@@ -916,7 +887,6 @@ void physics(Game *g)
 			glEnable(GL_TEXTURE_2D);
 			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 			glBindTexture(GL_TEXTURE_2D, backgroundTexture);
-			glColor4f(1.0, 1.0, 1.0, 1.0); // reset gl color
 			glBegin(GL_QUADS);
 			glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
 			glTexCoord2f(0.0f, 0.0f); glVertex2i(0, yres);
@@ -938,6 +908,7 @@ void physics(Game *g)
 			//	    ggprint8b(&r, 16, 0x00ffff00, "n asteroids: %i", g->nasteroids);
 			//-------------------------------------------------------------------------
 
+			g->ship2.draw_debug();
 
 			// Draw fuel gauge
 			Rect fuelBar;
@@ -946,8 +917,6 @@ void physics(Game *g)
 			fuelBar.center = 0;
 			drawFuelGauge(g->ship2.getFuelLeft(), g->ship2.getFuelMax(), xres*.5, 850);
 			ggprint8b(&fuelBar, 16, 0x00ff0000, "Fuel");
-
-			g->ship2.draw();
 
 			glColor3ub(51,102,0);
 			for (int i=0;i<5;i++) {

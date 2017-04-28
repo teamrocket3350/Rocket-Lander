@@ -164,6 +164,7 @@ class Ship2 : public MovableObject {
 		bool fuelerTriggered(Fueler);
 		bool collidesWith(Object);
 		void draw();
+		void draw_debug();
 
 		void addFuel();
 		float getFuelLeft();
@@ -232,6 +233,7 @@ class Platform : public Object
 };
 
 void drawFuelGauge(float, float, float, float);
+void init_ship_image();
 void drawNicholasMenu(int xres, int yres, Rect r);
 
 #endif
