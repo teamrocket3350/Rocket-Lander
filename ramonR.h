@@ -11,6 +11,7 @@
 #include "log.h"
 #include "fonts.h"
 #include "ppm.h"
+unsigned char *buildAlphaData(Ppmimage*);
 
 void drawRamRMenu(int xres, int yres, Rect r);
 extern Ppmimage *hitterImage;
