@@ -171,7 +171,6 @@ Ship2::Ship2()
 	shape.width = collidables[0].width + collidables[1].base*.5 + collidables[2].base*.5;
 	shape.height = collidables[0].height + collidables[3].height + collidables[4].height;
 
-	printf("%f %f\n", shape.width, shape.height);
 	fuel = 100;
 	fuelMax = 100;
 }
