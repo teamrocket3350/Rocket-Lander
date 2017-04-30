@@ -75,7 +75,7 @@ void showCredits(int xres, int yres, Rect r)
 void imageConvert()
 {
 	//clean up all images in master folder
-	system("rm ./images/*.ppm");
+	remove("./images/*.ppm");
 	
 	//convert images to ppm
 	system("mogrify -format ppm ./images/*.png");
@@ -85,7 +85,7 @@ void imageConvert()
 void imageClean()
 {
 	//clean up all images in master folder
-	system("rm ./images/*.ppm");
+	remove("./images/*.ppm");
 	return;
 }
 
