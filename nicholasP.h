@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <time.h>
+#include <ctime>
 #include <math.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -50,20 +50,20 @@ class Object
 		~Object();
 
 		// Setters
-		void setPosX(float x);
-		void setPosY(float y);
-		void setRot(float r);
-		void setWidth(float w);
-		void setHeight(float h);
-		void setRadius(float r);
+		void setPosX(float x) {pos[0]=x;}
+		void setPosY(float y) {pos[1]=y;}
+		void setRot(float r) {rot=r;}
+		void setWidth(float w) {shape.width=w;}
+		void setHeight(float h) {shape.height=h;}
+		void setRadius(float r) {shape.radius=r;}
 
 		// Getters
-		float getPosX();
-		float getPosY();
-		float getRot();
-		float getWidth();
-		float getHeight();
-		float getRadius();
+		float getPosX() {return pos[0];}
+		float getPosY() {return pos[1];}
+		float getRot() {return rot;}
+		float getWidth() {return shape.width;}
+		float getHeight() {return shape.height;}
+		float getRadius() {return shape.radius;}
 
 		void draw();
 };
@@ -78,12 +78,12 @@ class MovableObject : public Object
 		MovableObject();
 		
 		// Setters
-		void setVelX(float x);
-		void setVelY(float y);
+		void setVelX(float x) {vel[0]=x;}
+		void setVelY(float y) {vel[1]=y;}
 
 		// Getters
-		float getVelX();
-		float getVelY();
+		float getVelX() {return vel[0];}
+		float getVelY() {return vel[1];}
 
 		void move();
 };
@@ -121,7 +121,7 @@ class Fueler : public Object
 		void setWidth(float w);
 		void setHeight(float h);
 
-		float getFuelLeft();
+		float getFuelLeft() {return fuel;}
 		void removeFuel();
 		void draw();
 
@@ -136,13 +136,14 @@ class Ship2 : public MovableObject {
 		float fuel;
 		float fuelMax;
 
+		bool watchGoal = false;
+		bool watchFuel = false;
+		bool exploded = false;
+
 		// Choose between the 3
 		bool haveBooster1;
-		bool enabledBooster1;
 		bool haveBooster2;
-		bool enabledBooster2;
 		bool haveBooster3;
-		bool enabledBooster3;
 		
 		bool haveLeftStrafe;
 		bool haveRightStrafe;
@@ -156,6 +157,10 @@ class Ship2 : public MovableObject {
 		bool triCollidesWith(Shape, Object, float, float);
 
 	public:
+		bool enabledBooster1;
+		bool enabledBooster2;
+		bool enabledBooster3;
+
 		// Constructor
 		Ship2();
 
@@ -163,20 +168,22 @@ class Ship2 : public MovableObject {
 		bool goalTriggered(Goal);
 		bool fuelerTriggered(Fueler);
 		bool collidesWith(Object);
+		bool shipExploded() {return exploded;}
+		void reset() {exploded=false;fuel=100;}
 		void draw();
 		void draw_debug();
 
 		void addFuel();
-		float getFuelLeft();
-		float getFuelMax();
+		float getFuelLeft() {return fuel;}
+		float getFuelMax() {return fuelMax;}
 
 		bool buyBooster1();
 		bool buyBooster2();
 		bool buyBooster3();
 
-		bool ownBooster1(); 
-		bool ownBooster2();
-		bool ownBooster3();
+		bool ownBooster1() {return haveBooster1;} 
+		bool ownBooster2() {return haveBooster2;}
+		bool ownBooster3() {return haveBooster3;}
 
 		void enableBooster1();
 		void enableBooster2();

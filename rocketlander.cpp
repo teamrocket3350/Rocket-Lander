@@ -12,9 +12,6 @@
 #include <ctime>
 #include <cmath>
 #include <X11/Xlib.h>
-//#include <X11/Xutil.h>
-//#include <GL/gl.h>
-//#include <GL/glu.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
 #include "log.h"
@@ -32,6 +29,7 @@ typedef float Vec[3];
 typedef Flt	Matrix[4][4];
 
 //macros
+#define PI 3.141592653589793
 #define rnd() (((double)rand())/(double)RAND_MAX)
 #define random(a) (rand()%a)
 #define VecZero(v) (v)[0]=0.0,(v)[1]=0.0,(v)[2]=0.0
@@ -41,13 +39,10 @@ typedef Flt	Matrix[4][4];
 #define VecSub(a,b,c) (c)[0]=(a)[0]-(b)[0]; \
 			     (c)[1]=(a)[1]-(b)[1]; \
 (c)[2]=(a)[2]-(b)[2]
+
 //constants
 const float timeslice = 1.0f;
 const float gravity = -0.2f;
-#define PI 3.141592653589793
-#define ALPHA 1
-const int MAX_BULLETS = 11;
-const Flt MINIMUM_ASTEROID_SIZE = 60.0;
 const float GRAVITY = 0.006;
 
 //X Windows variables
@@ -495,6 +490,16 @@ void physics(Game *g)
 #endif //end openal sound
 	g->ship2.accelerate();
     }
+
+	if (g->ship2.shipExploded()) {
+		g->ship2.setPosX(53);
+		g->ship2.setPosY(50);
+		g->ship2.setVelX(0);
+		g->ship2.setVelY(0);
+		g->ship2.setRot(0);
+		printf("Ship exploded!\n");
+		g->ship2.reset();
+	}
 }
 
 void render(Game *g)
