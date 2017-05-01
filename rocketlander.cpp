@@ -84,7 +84,7 @@ extern struct Global {
 int xres=1250, yres=900;
 int credits = 0;
 int renderShip = 0;
-int pat_menu = 0;
+int pat_menu = 0;	// change to 1 to turn on Main Menu
 int ramon_menu = 0;
 
 Ppmimage * backgroundImage=NULL;
@@ -547,14 +547,15 @@ void render(Game *g)
     g->goal.draw();
     g->fueler.draw();
 
-    //draw abrahams menu
-    if (credits == 1) {
-	showCredits(xres,yres,r);
-    }
+ 
     // Draw Pat's Menu
     if (pat_menu == 1) {
 	startMenu(r);
-	//UpgradeMenu(xres, yres, r);
+	//UpgradeMenu(xres, yres, r);   
+	    //draw abrahams menu
+    if (credits == 1) {
+	showCredits(xres,yres,r);
+    }
     }
     //if (pat_menu== 0) {
     //    clearMenu();
