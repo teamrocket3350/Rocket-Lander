@@ -171,13 +171,6 @@ void render(Game *game);
 void set_mouse_position(int x, int y);
 void show_mouse_cursor(const int onoff);
 
-
-#ifdef USE_OPENAL_SOUND
-void init_sounds() {
-    playSound(p.alSourceAstroid);	//bgm
-}
-#endif //end openal sound
-
 int main(void)
 {
     logOpen();
