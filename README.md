@@ -19,3 +19,14 @@ Collision                       | Nick
 ------------------------------------------------
 Objectives                      | Nick?
 ------------------------------------------------
+
+Note to Nick:
+Make sure project size is below 5MB
+
+
+Notes to Abraham:
+Switch "Ship2" to just "Ship" in your header file. I switched the name in my files.
+Remove "remove("./images/*.ppm");"
+Add "remove("./images/background.ppm")"
+Add "remove("./images/background2.ppm")"
+Add "remove("./images/RocketFinal.ppm")"
