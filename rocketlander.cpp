@@ -490,6 +490,9 @@ void physics(Game *g)
 		g->ship.setVelY(0);
 		g->ship.setRot(0);
 		printf("Ship exploded!\n");
+		#ifdef USE_OPENAL_SOUND
+	playSound(p.alSourceCollide);	//Collide
+#endif //end openal sound
 		g->ship.reset();
 	}
 }
