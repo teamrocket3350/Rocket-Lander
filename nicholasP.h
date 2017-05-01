@@ -13,6 +13,7 @@
 #include <GL/glx.h>
 #include "log.h"
 #include "fonts.h"
+#include "ppm.h"
 
 typedef float Vec[3];
 
@@ -94,9 +95,6 @@ class Goal : public Object
 		Object trigger;
 
     public:
-		//Goal();
-		//Goal(float, float, float, float);
-
 		void setPosX(float x);
 		void setPosY(float y);
 		void setWidth(float w);
@@ -128,9 +126,7 @@ class Fueler : public Object
 		Object getTrigger() {return trigger;}
 };
 
-// Rename to Ship when integrating into rocketlander.cpp
-class Ship2 : public MovableObject {
-//class Ship : public MovableObject {
+class Ship : public MovableObject {
 	private:
 		Shape collidables[5];
 		float fuel;
@@ -157,12 +153,8 @@ class Ship2 : public MovableObject {
 		bool triCollidesWith(Shape, Object, float, float);
 
 	public:
-		bool enabledBooster1;
-		bool enabledBooster2;
-		bool enabledBooster3;
-
 		// Constructor
-		Ship2();
+		Ship();
 
 		void move();
 		bool goalTriggered(Goal);
@@ -185,6 +177,12 @@ class Ship2 : public MovableObject {
 		bool ownBooster2() {return haveBooster2;}
 		bool ownBooster3() {return haveBooster3;}
 
+		// True if that booster type is enabled
+		bool enabledBooster1;
+		bool enabledBooster2;
+		bool enabledBooster3;
+
+		// Function to enable booster
 		void enableBooster1();
 		void enableBooster2();
 		void enableBooster3();
@@ -194,6 +192,11 @@ class Ship2 : public MovableObject {
 
 		void rotateLeft();
 		void rotateRight();
+
+		// Image
+		Ppmimage * image;
+		GLuint texture;
+		GLuint silhouette;
 };
 
 class Enemy : public MovableObject {
@@ -208,7 +211,7 @@ class Enemy : public MovableObject {
 
 class Chaser : public Enemy {
 	private:
-		Ship2 * ship;
+		Ship * ship;
 
 	public:
 		//Chaser(Ship*);
@@ -218,7 +221,7 @@ class Chaser : public Enemy {
 
 class Circler : public Enemy {
 	private:
-		Ship2 * ship;
+		Ship * ship;
 
 	public:
 		//Circler(Ship*);
@@ -237,10 +240,17 @@ class Platform : public Object
 {
     public:
 		void draw();
+		void draw_debug();
+
+		// Image
+		Ppmimage * image;
+		GLuint texture;
 };
 
 void drawFuelGauge(float, float, float, float);
-void init_ship_image();
+void init_alpha_image(char * imagePath, Ppmimage * image,
+		GLuint * texture, GLuint * silhouette);
+void init_image(char * imagePath, Ppmimage * image, GLuint * texture);
 void drawNicholasMenu(int xres, int yres, Rect r);
 
 #endif

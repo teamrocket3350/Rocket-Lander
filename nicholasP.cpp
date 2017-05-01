@@ -33,9 +33,9 @@ extern double timeDiff(struct timespec *start, struct timespec *end);
 extern void timeCopy(struct timespec *dest, struct timespec *source);
 const double oobillion = 1.0 / 1e9;
 
-Ppmimage * shipImage;
-GLuint shipSilhouetteTexture;
-GLuint shipTexture;
+Ppmimage * image;
+GLuint texture;
+GLuint silhouette;
 
 timespec gStartTime, gCurTime;
 timespec fStartTime, fCurTime;
@@ -67,7 +67,7 @@ MovableObject::MovableObject()
 
 // ---------- //
 
-Ship2::Ship2()
+Ship::Ship()
 {
     // Cockpit
     collidables[0].width = 26;
@@ -96,14 +96,16 @@ Ship2::Ship2()
     //collidables[5].height= 10;
 
     // Overall ship size
-    shape.width = collidables[0].width + collidables[1].base*.5 + collidables[2].base*.5;
-    shape.height = collidables[0].height + collidables[3].height + collidables[4].height;
+    shape.width = collidables[0].width +
+        collidables[1].base*.5 + collidables[2].base*.5;
+    shape.height = collidables[0].height +
+        collidables[3].height + collidables[4].height;
 
     fuel = 100;
     fuelMax = 100;
 }
 
-void Ship2::move()
+void Ship::move()
 {
     pos[0] += vel[0];
     pos[1] += vel[1];
@@ -111,7 +113,7 @@ void Ship2::move()
 }
 
 // Checks if goal was triggered
-bool Ship2::goalTriggered(Goal goal)
+bool Ship::goalTriggered(Goal goal)
 {
     // Timing has already started...
     if (gStartTime.tv_nsec > 0) {
@@ -146,7 +148,7 @@ bool Ship2::goalTriggered(Goal goal)
 }
 
 // Checks if fueler was triggered
-bool Ship2::fuelerTriggered(Fueler fueler)
+bool Ship::fuelerTriggered(Fueler fueler)
 {
     // Timing has already started...
     if (fStartTime.tv_nsec > 0) {
@@ -180,12 +182,18 @@ bool Ship2::fuelerTriggered(Fueler fueler)
     return false;
 }
 
-bool Ship2::collidesWith(Object ob)
+bool Ship::collidesWith(Object ob)
 {
     // Use line-line collision testing for all shapes except cirlce
-    if (triCollidesWith(collidables[1], ob, pos[0], pos[1]) || // left wing
-            rectCollidesWith(collidables[0], ob, pos[0]+(collidables[1].base*.5), pos[1]) || //cockpit
-            triCollidesWith(collidables[2], ob, pos[0]+collidables[1].base, pos[1])) { // right wing
+    if (triCollidesWith(collidables[1], ob,
+                pos[0],
+                pos[1]) || // left wing
+            rectCollidesWith(collidables[0], ob,
+                pos[0]+(collidables[1].base*.5),
+                pos[1]) || //cockpit
+            triCollidesWith(collidables[2], ob,
+                pos[0]+collidables[1].base,
+                pos[1])) { // right wing
         // Ship explodes if going to fast and hits object
         if (vel[0] < -1.5 || vel[0] > 1.5 || 
                 vel[1] < -1.5 || vel[1] > 1.5) {
@@ -213,18 +221,22 @@ bool Ship2::collidesWith(Object ob)
                 rot += 360;
         }
         return true;
-    // Ship explodes if it nose cone or nose box are hit
-    } else if (rectCollidesWith(collidables[3], ob, pos[0]+(collidables[1].base*.5)+3, pos[1]+collidables[0].height) || // nose box
-                triCollidesWith(collidables[4], ob, pos[0]+(collidables[1].base*.5), pos[1]+collidables[0].height+collidables[3].height)) { // nose cone
-            exploded = true;
-            return true;
+        // Ship explodes if it nose cone or nose box are hit
+    } else if (rectCollidesWith(collidables[3], ob,
+                pos[0]+(collidables[1].base*.5)+3,
+                pos[1]+collidables[0].height) || // nose box
+            triCollidesWith(collidables[4], ob,
+                pos[0]+(collidables[1].base*.5),
+                pos[1]+collidables[0].height+collidables[3].height)) {
+        exploded = true;
+        return true;
     } else {
         return false;
     }
 }
 
 // Checks whether to given lines intersect
-bool Ship2::linesIntersect(Line l1, Line l2)
+bool Ship::linesIntersect(Line l1, Line l2)
 {
     if (l1.p1.x <= l2.p2.x && 
             l1.p2.x >= l2.p1.x &&
@@ -235,8 +247,8 @@ bool Ship2::linesIntersect(Line l1, Line l2)
     return false;
 }
 
-// Generates an array of points that create the square with the given parameters
-Point * Ship2::getRectPointArray(float x, float y, float rot, float width, float height)
+// Generates array of points that create the square with the given parameters
+Point * Ship::getRectPointArray(float x, float y, float rot, float width, float height)
 {
     // p2 -> p3 
     // ^     |
@@ -283,7 +295,7 @@ Point * Ship2::getRectPointArray(float x, float y, float rot, float width, float
 
 
 // Generates an array of points that create the triangle with the given parameters
-Point * Ship2::getTriPointArray(float x, float y, float rot, float base, float height)
+Point * Ship::getTriPointArray(float x, float y, float rot, float base, float height)
 {
     //    p2  
     // ^     |
@@ -326,12 +338,14 @@ Point * Ship2::getTriPointArray(float x, float y, float rot, float base, float h
 }
 
 // Checks if rectangular collidables of the ship collide with the given object
-bool Ship2::rectCollidesWith(Shape collidable, Object ob, float x, float y)
+bool Ship::rectCollidesWith(Shape collidable, Object ob, float x, float y)
 {
     bool collides = false;
     if (ob.getWidth() > 0) {			// rectangle
-        Point * pts1 = getRectPointArray(x, y, rot, collidable.width, collidable.height);
-        Point * pts2 = getRectPointArray(ob.getPosX(), ob.getPosY(), ob.getRot(), ob.getWidth(), ob.getHeight());
+        Point * pts1 = getRectPointArray(x, y,
+                rot, collidable.width, collidable.height);
+        Point * pts2 = getRectPointArray(ob.getPosX(), ob.getPosY(),
+                ob.getRot(), ob.getWidth(), ob.getHeight());
         Line l1;
         Line l2;
         // Check each line in ship against 4 lines in rectangle 
@@ -342,7 +356,6 @@ bool Ship2::rectCollidesWith(Shape collidable, Object ob, float x, float y)
                 l2.p1 = pts2[i2];
                 l2.p2 = pts2[(i2+1)%4];
                 if (linesIntersect(l1, l2)) {
-                    //printf("%i. Rectangle collide with rectangle\n", tempcount++);
                     collides = true;
                     break;
                 }
@@ -350,19 +363,19 @@ bool Ship2::rectCollidesWith(Shape collidable, Object ob, float x, float y)
         }
         delete [] pts1;
         delete [] pts2;
-    } else {
-        //printf("The object has no shape\n");
     }
     return collides;
 }
 
 // Checks if triangular collidables of the ship collide with the given object
-bool Ship2::triCollidesWith(Shape collidable, Object ob, float x, float y)
+bool Ship::triCollidesWith(Shape collidable, Object ob, float x, float y)
 {
     bool collides = false;
     if (ob.getWidth() > 0) {			// rectangle
-        Point * pts1 = getTriPointArray(x, y, rot, collidable.base, collidable.height);
-        Point * pts2 = getRectPointArray(ob.getPosX(), ob.getPosY(), ob.getRot(), ob.getWidth(), ob.getHeight());
+        Point * pts1 = getTriPointArray(x, y,
+                rot, collidable.base, collidable.height);
+        Point * pts2 = getRectPointArray(ob.getPosX(), ob.getPosY(),
+                ob.getRot(), ob.getWidth(), ob.getHeight());
         Line l1;
         Line l2;
         // Check each line in ship against 3 lines in triangle
@@ -381,15 +394,13 @@ bool Ship2::triCollidesWith(Shape collidable, Object ob, float x, float y)
         }
         delete [] pts1;
         delete [] pts2;
-    } else {
-        //printf("The object has no shape\n");
-    }
+    } 
     return collides;
 }
 
 // Draw the collidable pieces of the ship to the screen
 // Used mainly for debugging
-void Ship2::draw_debug()
+void Ship::draw_debug()
 {
     Point * pts;
     // The area for the ship image
@@ -410,7 +421,8 @@ void Ship2::draw_debug()
     ////////////////////////
     // Visualization of the collision shapes
     //draw cockpit box
-    pts = getRectPointArray(pos[0]+(collidables[1].base*.5), pos[1], rot, collidables[0].width, collidables[0].height);
+    pts = getRectPointArray(pos[0]+(collidables[1].base*.5), pos[1],
+            rot, collidables[0].width, collidables[0].height);
     glColor3ub(255,0,0);
     glPushMatrix();
     glBegin(GL_QUADS);
@@ -426,7 +438,8 @@ void Ship2::draw_debug()
     pts = NULL;
     ////////////////////////
     // draw left wing
-    pts = getTriPointArray(pos[0], pos[1], rot, collidables[1].base, collidables[1].height);
+    pts = getTriPointArray(pos[0], pos[1],
+            rot, collidables[1].base, collidables[1].height);
     glColor3ub(0,0,255);
     glPushMatrix();
     glBegin(GL_TRIANGLES);
@@ -441,7 +454,8 @@ void Ship2::draw_debug()
     pts = NULL;
     ////////////////////////
     // draw right wing
-    pts = getTriPointArray(pos[0]+collidables[1].base, pos[1], rot, collidables[2].base, collidables[2].height);
+    pts = getTriPointArray(pos[0]+collidables[1].base, pos[1],
+            rot, collidables[2].base, collidables[2].height);
     glColor3ub(0,0,255);
     glPushMatrix();
     glBegin(GL_TRIANGLES);
@@ -456,7 +470,9 @@ void Ship2::draw_debug()
     pts = NULL;
     ////////////////////////
     //draw nose box
-    pts = getRectPointArray(pos[0]+(collidables[1].base*.5)+3, pos[1]+collidables[0].height, rot, collidables[3].width, collidables[3].height);
+    pts = getRectPointArray(pos[0]+(collidables[1].base*.5)+3,
+            pos[1]+collidables[0].height,
+            rot, collidables[3].width, collidables[3].height);
     glColor3ub(255,0,0);
     glPushMatrix();
     glBegin(GL_QUADS);
@@ -472,7 +488,9 @@ void Ship2::draw_debug()
     pts = NULL;
     ////////////////////////
     // draw nose cone
-    pts = getTriPointArray(pos[0]+(collidables[1].base*.5), pos[1]+collidables[0].height+collidables[3].height, rot, collidables[4].base, collidables[4].height);
+    pts = getTriPointArray(pos[0]+(collidables[1].base*.5),
+            pos[1]+collidables[0].height+collidables[3].height,
+            rot, collidables[4].base, collidables[4].height);
     glColor3ub(0,0,255);
     glPushMatrix();
     glBegin(GL_TRIANGLES);
@@ -487,7 +505,7 @@ void Ship2::draw_debug()
     pts = NULL;
 }
 
-void Ship2::draw()
+void Ship::draw()
 {
     Point * pts;
     pts = getRectPointArray(pos[0], pos[1], rot, shape.width, shape.height);
@@ -495,7 +513,7 @@ void Ship2::draw()
     glColor4f(1.0, 1.0, 1.0, 1.0); // reset gl color
     glPushMatrix();
     glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-    glBindTexture(GL_TEXTURE_2D, shipSilhouetteTexture);
+    glBindTexture(GL_TEXTURE_2D, silhouette);
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.0f); //Alpha
     glBegin(GL_QUADS);
@@ -513,22 +531,50 @@ void Ship2::draw()
     pts = NULL;
 }
 
+//void Ship::draw()
+//{
+//    Point * pts;
+//    pts = getRectPointArray(pos[0], pos[1], rot, shape.width, shape.height);
+//    // Ship image
+//    glColor4f(1.0, 1.0, 1.0, 1.0); // reset gl color
+//    glPushMatrix();
+//    glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
+//    glBindTexture(GL_TEXTURE_2D, shipSilhouetteTexture);
+//    glEnable(GL_ALPHA_TEST);
+//    glAlphaFunc(GL_GREATER, 0.0f); //Alpha
+//    glBegin(GL_QUADS);
+//    glTexCoord2f(0.0f, 1.0f); glVertex2i(pts[0].x, pts[0].y);
+//    glTexCoord2f(0.0f, 0.0f); glVertex2i(pts[1].x, pts[1].y); 
+//    glTexCoord2f(1.0f, 0.0f); glVertex2i(pts[2].x, pts[2].y);
+//    glTexCoord2f(1.0f, 1.0f); glVertex2i(pts[3].x, pts[3].y);
+//
+//    glEnd();
+//    glPopMatrix();
+//    glBindTexture(GL_TEXTURE_2D, 0);
+//    glDisable(GL_ALPHA_TEST);
+//
+//    delete [] pts;
+//    pts = NULL;
+//}
+
+
+
 ///// Swaps enabled booster /////
-void Ship2::enableBooster1()
+void Ship::enableBooster1()
 {
     enabledBooster2 = false;
     enabledBooster3 = false;
     enabledBooster1 = true;
 }
 
-void Ship2::enableBooster2()
+void Ship::enableBooster2()
 {
     enabledBooster1 = false;
     enabledBooster3 = false;
     enabledBooster2 = true;
 }
 
-void Ship2::enableBooster3()
+void Ship::enableBooster3()
 {
     enabledBooster1 = false;
     enabledBooster2 = false;
@@ -537,7 +583,7 @@ void Ship2::enableBooster3()
 ///////////////////////////////
 
 // Changes velocity to move ship in direction that it's pointing
-void Ship2::accelerate()
+void Ship::accelerate()
 {
     if (fuel > 0) {
         float rad = (rot+90.0) / 360.0f * PI * 2.0;
@@ -560,7 +606,7 @@ void Ship2::accelerate()
 }
 
 // Add gravity to move ship to the bottom of the window
-void Ship2::addGravity(float grav)
+void Ship::addGravity(float grav)
 {
     //printf("VelY: %f\n", vel[1]);
     vel[1] -= grav;
@@ -573,7 +619,7 @@ void Ship2::addGravity(float grav)
         vel[1] = 4.0;
 }
 
-void Ship2::rotateLeft()
+void Ship::rotateLeft()
 {
     rot += 4.0;
 
@@ -582,7 +628,7 @@ void Ship2::rotateLeft()
         rot -= 360;
 }
 
-void Ship2::rotateRight()
+void Ship::rotateRight()
 {
     rot -= 4.0;
     // Prevents rot from going under float limit
@@ -590,7 +636,7 @@ void Ship2::rotateRight()
         rot += 360;
 }
 
-void Ship2::addFuel()
+void Ship::addFuel()
 {
     fuel += 1;
 }
@@ -599,6 +645,25 @@ void Ship2::addFuel()
 
 // Basic platform
 void Platform::draw()
+{
+    // Platform image
+    glColor4f(1.0, 1.0, 1.0, 1.0); // reset gl color
+    glPushMatrix();
+    glTranslated(pos[0], pos[1], 0);
+    glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+    glTexCoord2f(0.0f, 0.0f); glVertex2i(0, shape.height); 
+    glTexCoord2f(1.0f, 0.0f); glVertex2i(shape.width, shape.height);
+    glTexCoord2f(1.0f, 1.0f); glVertex2i(shape.width, 0);
+
+    glEnd();
+    glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Platform::draw_debug()
 {
     //draw platform
     //glColor3ub(255,165,0);
@@ -797,54 +862,43 @@ void drawFuelGauge(float fuelLeft, float fuelMax, float x, float y)
     }
 }
 
-void init_ship_image()
+void init_image(char * imagePath, Ppmimage * image, GLuint * texture)
 {
-    shipImage = ppm6GetImage("./images/RocketFinal.ppm");
-    glGenTextures(1, &shipSilhouetteTexture);
-    glGenTextures(1, &shipTexture);
+    image = ppm6GetImage(imagePath);
+    glGenTextures(1, texture);
 
-    // Ship
-    glBindTexture(GL_TEXTURE_2D,shipTexture);
+    // Image
+    glBindTexture(GL_TEXTURE_2D, *texture);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, 3,
-            shipImage->width, shipImage->height,
-            0, GL_RGB, GL_UNSIGNED_BYTE, shipImage->data);
+            image->width, image->height,
+            0, GL_RGB, GL_UNSIGNED_BYTE, image->data);
+}
+
+void init_alpha_image(char * imagePath, Ppmimage * image,
+GLuint * texture, GLuint * silhouette)
+{
+    image = ppm6GetImage(imagePath);
+    glGenTextures(1, silhouette);
+    glGenTextures(1, texture);
+
+    // Image
+    glBindTexture(GL_TEXTURE_2D, *texture);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, 3,
+            image->width, image->height,
+            0, GL_RGB, GL_UNSIGNED_BYTE, image->data);
 
     // Alpha
-    glBindTexture(GL_TEXTURE_2D,shipSilhouetteTexture);
+    glBindTexture(GL_TEXTURE_2D,*silhouette);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 
-    unsigned char *silhouetteData = buildAlphaData(shipImage);
+    unsigned char *silhouetteData = buildAlphaData(image);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
-            shipImage->width, shipImage->height,
+            image->width, image->height,
             0, GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
     free(silhouetteData);
 }
-
-//void init_alpha_image(char * imagePath, Ppmimage* image, GLuint texture, GLuint silhouette)
-//{
-//    shipImage = ppm6GetImage(imagePath);
-//    glGenTextures(1, &silhouette);
-//    glGenTextures(1, &texture);
-//
-//    // Ship
-//    glBindTexture(GL_TEXTURE_2D, texture);
-//    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-//    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-//    glTexImage2D(GL_TEXTURE_2D, 0, 3,
-//            image->width, image->height,
-//            0, GL_RGB, GL_UNSIGNED_BYTE, image->data);
-//
-//    // Alpha
-//    glBindTexture(GL_TEXTURE_2D,silhouette);
-//    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-//    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-//
-//    unsigned char *silhouetteData = buildAlphaData(image);
-//    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
-//            image->width, image->height,
-//            0, GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
-//    free(silhouetteData);
-//}
