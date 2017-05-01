@@ -101,8 +101,14 @@ class Goal : public Object
 		void setHeight(float h);
 
 		void draw();
+		void draw_debug();
 
 		Object getTrigger() {return trigger;}
+
+		// Image
+		Ppmimage * image;
+		GLuint texture;
+		GLuint silhouette;
 };
 
 class Fueler : public Object
@@ -122,8 +128,14 @@ class Fueler : public Object
 		float getFuelLeft() {return fuel;}
 		void removeFuel();
 		void draw();
+		void draw_debug();
 
 		Object getTrigger() {return trigger;}
+
+		// Image
+		Ppmimage * image;
+		GLuint texture;
+		GLuint silhouette;
 };
 
 class Ship : public MovableObject {

@@ -105,31 +105,6 @@ struct Game {
 	ground.setWidth(1250);
 	ground.setHeight(32);
 
-//	ground[0].setPosX(0);
-//	ground[0].setPosY(0);
-//	ground[0].setWidth(365);
-//	ground[0].setHeight(50);
-//
-//	ground[1].setPosX(365);
-//	ground[1].setPosY(0);
-//	ground[1].setWidth(420);
-//	ground[1].setHeight(30);
-//
-//	ground[2].setPosX(785);
-//	ground[2].setPosY(0);
-//	ground[2].setWidth(240);
-//	ground[2].setHeight(50);
-//
-//	ground[3].setPosX(1025);
-//	ground[3].setPosY(0);
-//	ground[3].setWidth(100);
-//	ground[3].setHeight(75);
-//
-//	ground[4].setPosX(1125);
-//	ground[4].setPosY(0);
-//	ground[4].setWidth(125);
-//	ground[4].setHeight(100);
-
 	plats[0].setPosX(100);
 	plats[0].setPosY(600);
 	plats[0].setWidth(100);
@@ -143,15 +118,13 @@ struct Game {
 	goal.setPosX(950);
 	goal.setPosY(740);
 	goal.setWidth(100);
-	goal.setHeight(10);
-
+	goal.setHeight(27);
 
 	fueler.setPosX(850);
 	fueler.setPosY(340);
 	fueler.setWidth(100);
-	fueler.setHeight(10);
-
-    }
+	fueler.setHeight(27);
+	}
 };
 
 int keys[65536];
@@ -309,6 +282,12 @@ void init_opengl(Game *g)
 	init_image((char *)"./images/ground.ppm", g->ground.image, &g->ground.texture);
 	for (int i = 0; i < 2; i++)
 		init_image((char *)"./images/platform.ppm", g->plats[i].image, &g->plats[i].texture);
+
+	// Initialize goal image
+    init_alpha_image((char *)"./images/goal.ppm", g->goal.image, &g->goal.texture, &g->goal.silhouette);
+
+	// Initialize refuel image
+    init_alpha_image((char *)"./images/refuel.ppm", g->fueler.image, &g->fueler.texture, &g->fueler.silhouette);
 
 	// Initialize background image
 	init_image((char *)"./images/background.ppm", backgroundImage, &backgroundTexture);

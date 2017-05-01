@@ -248,7 +248,8 @@ bool Ship::linesIntersect(Line l1, Line l2)
 }
 
 // Generates array of points that create the square with the given parameters
-Point * Ship::getRectPointArray(float x, float y, float rot, float width, float height)
+Point * Ship::getRectPointArray(float x, float y,
+        float rot, float width, float height)
 {
     // p2 -> p3 
     // ^     |
@@ -294,8 +295,9 @@ Point * Ship::getRectPointArray(float x, float y, float rot, float width, float 
 }
 
 
-// Generates an array of points that create the triangle with the given parameters
-Point * Ship::getTriPointArray(float x, float y, float rot, float base, float height)
+// Generates array of points that create the triangle with the given parameters
+Point * Ship::getTriPointArray(float x, float y,
+        float rot, float base, float height)
 {
     //    p2  
     // ^     |
@@ -531,34 +533,6 @@ void Ship::draw()
     pts = NULL;
 }
 
-//void Ship::draw()
-//{
-//    Point * pts;
-//    pts = getRectPointArray(pos[0], pos[1], rot, shape.width, shape.height);
-//    // Ship image
-//    glColor4f(1.0, 1.0, 1.0, 1.0); // reset gl color
-//    glPushMatrix();
-//    glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-//    glBindTexture(GL_TEXTURE_2D, shipSilhouetteTexture);
-//    glEnable(GL_ALPHA_TEST);
-//    glAlphaFunc(GL_GREATER, 0.0f); //Alpha
-//    glBegin(GL_QUADS);
-//    glTexCoord2f(0.0f, 1.0f); glVertex2i(pts[0].x, pts[0].y);
-//    glTexCoord2f(0.0f, 0.0f); glVertex2i(pts[1].x, pts[1].y); 
-//    glTexCoord2f(1.0f, 0.0f); glVertex2i(pts[2].x, pts[2].y);
-//    glTexCoord2f(1.0f, 1.0f); glVertex2i(pts[3].x, pts[3].y);
-//
-//    glEnd();
-//    glPopMatrix();
-//    glBindTexture(GL_TEXTURE_2D, 0);
-//    glDisable(GL_ALPHA_TEST);
-//
-//    delete [] pts;
-//    pts = NULL;
-//}
-
-
-
 ///// Swaps enabled booster /////
 void Ship::enableBooster1()
 {
@@ -710,6 +684,25 @@ void Goal::setHeight(float h)
 
 void Goal::draw()
 {
+    // Platform image
+    glColor4f(1.0, 1.0, 1.0, 1.0); // reset gl color
+    glPushMatrix();
+    glTranslated(pos[0], pos[1], 0);
+    glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+    glTexCoord2f(0.0f, 0.0f); glVertex2i(0, shape.height+5); 
+    glTexCoord2f(1.0f, 0.0f); glVertex2i(shape.width, shape.height+5);
+    glTexCoord2f(1.0f, 1.0f); glVertex2i(shape.width, 0);
+
+    glEnd();
+    glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Goal::draw_debug()
+{
     //draw trigger 
     glColor3ub(255,111,111);
     glPushMatrix();
@@ -778,6 +771,28 @@ void Fueler::removeFuel()
 }
 
 void Fueler::draw()
+{
+    // Fueler image
+    glColor4f(1.0, 1.0, 1.0, 1.0); // reset gl color
+    glPushMatrix();
+    glTranslated(pos[0], pos[1], 0);
+    glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
+    glBindTexture(GL_TEXTURE_2D, silhouette);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f); //Alpha
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+    glTexCoord2f(0.0f, 0.0f); glVertex2i(0, shape.height+5); 
+    glTexCoord2f(1.0f, 0.0f); glVertex2i(shape.width, shape.height+5);
+    glTexCoord2f(1.0f, 1.0f); glVertex2i(shape.width, 0);
+
+    glEnd();
+    glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_ALPHA_TEST);
+}
+
+void Fueler::draw_debug()
 {
     //draw trigger
     glColor3ub(255,255,255);
@@ -877,7 +892,7 @@ void init_image(char * imagePath, Ppmimage * image, GLuint * texture)
 }
 
 void init_alpha_image(char * imagePath, Ppmimage * image,
-GLuint * texture, GLuint * silhouette)
+        GLuint * texture, GLuint * silhouette)
 {
     image = ppm6GetImage(imagePath);
     glGenTextures(1, silhouette);
