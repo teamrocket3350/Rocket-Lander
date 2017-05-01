@@ -11,6 +11,7 @@
 #include "log.h"
 #include "fonts.h"
 #include "patrickE.h"
+#include "abrahamA.h"
 
 //image stuff
 #include "ppm.h"
@@ -21,8 +22,6 @@
 #ifdef USE_OPENAL_SOUND
 #include </usr/include/AL/alut.h>
 #endif //use openal sound
-
-extern int xres,yres;
 
 #ifdef USE_OPENAL_SOUND
 struct Global {
@@ -35,6 +34,15 @@ struct Global {
 
 extern Ppmimage *bg_image;
 extern GLuint bg_texture;
+extern Ppmimage *backgroundImage;
+extern GLuint backgroundTexture;
+extern int xres,yres;
+extern int pat_menu;
+extern int credits ;
+int upgrade_menu;
+int fire_menu ;
+int boost_menu ;
+
 
 // Playing with background image
 void startMenu(Rect r)
@@ -48,7 +56,6 @@ void startMenu(Rect r)
     glEnd();
     glPopMatrix();
 
-    //glColor3ub(0, 204, 204);
     glBindTexture(GL_TEXTURE_2D, bg_texture);
     glPushMatrix();
     glBegin(GL_QUADS);
@@ -57,47 +64,47 @@ void startMenu(Rect r)
     glTexCoord2f(1, 0.0); glVertex2i(xres, yres);
     glTexCoord2f(1, 1); glVertex2i(xres, 0);
     glEnd();
-   
-  //  glPopMatrix();
-  //  glColor3f(.25,.25,.25);
+
     int cx = xres/2;
     int cy = yres/2;
-  //  glBegin(GL_QUADS);
-  //  glVertex2i(cx-666,cy+777);
-  //  glVertex2i(cx+666,cy+777);
-  //  glVertex2i(cx+666,cy-777);
-  //  glVertex2i(cx-666,cy-777);
-  //  glEnd();
     glEnable(GL_TEXTURE_2D);
     r.bot=cy;
     r.left=cx;
     r.center=1;
     ggprint16(&r,160,0xffcc11,"Rocket Lander");    
-    ggprint13(&r,20,0xffcc11,"Press P to play");
+    ggprint13(&r,20,0xffcc11,"Press P to Play");
+    ggprint13(&r,20,0xffcc11,"Press S for Saved Files"); 
     ggprint13(&r,20,0xffcc11,"Press C for Credits"); 
 }
 
-void UpgradeMenu(int xres,int yres,Rect r)
+//void checkBooster()
+//{
+//    if (g->ship2.enabledBooster1()) enableBooster2();
+//    else if (g->ship2.enabledBooster2()) enableBooster3();
+//    else if (g->ship2.enabledBooster3()) enableBooster1();
+//}
+
+void UpgradeMenu(Rect r)
 {
     glColor3f(.13,.49,.2);
     int cx = xres/2;
     int cy = yres/2;
+    glEnable(GL_TEXTURE_2D);
     glBegin(GL_QUADS);
     glVertex2i(cx-100,cy+100);
     glVertex2i(cx+100,cy+100);
     glVertex2i(cx+100,cy-100);
     glVertex2i(cx-100,cy-100);
     glEnd();
-    glEnable(GL_TEXTURE_2D);
-    r.bot=cy+60;
+    r.bot= cy+60;
     r.left=cx;
     r.center=1;
     ggprint16(&r,40,0,"Upgrades");    
-    ggprint13(&r,20,0,"Booster Uprades");    
-    ggprint13(&r,20,0,"Laser Upgrades");    
+    ggprint13(&r,20,0,"Booster Uprades(press b)");    
+    ggprint13(&r,20,0,"Laser Upgrades(press f)"); 
 }
 
-void BoosterMenu(int xres,int yres,Rect r)
+void BoosterMenu(Rect r)
 {
     glColor3f(.13,.49,.2);
     int cx = xres/2;
@@ -118,7 +125,7 @@ void BoosterMenu(int xres,int yres,Rect r)
     ggprint13(&r,20,0,"Booster Level 3");    
 }
 
-void LaserMenu(int xres,int yres,Rect r)
+void LaserMenu(Rect r)
 {
     glColor3f(.13,.49,.2);
     int cx = xres/2;
@@ -136,11 +143,38 @@ void LaserMenu(int xres,int yres,Rect r)
     ggprint16(&r,40,0,"Laser Upgrades");    
     ggprint13(&r,20,0,"Laser Fire Speed 1");    
     ggprint13(&r,20,0,"Laser Fire Speed 2");    
-    ggprint13(&r,20,0,"Dual Laser Fire");    
-    ggprint13(&r,20,0,"Triple Laser Fire");    
+    ggprint13(&r,20,0,"Laser Fire Speed 3");    
 }
 
-/**********SOUNDS**********/
+void menus(Rect r)
+{
+    //draw Pat's Menu
+    if (pat_menu == 1) {
+	upgrade_menu = 0;
+	startMenu(r);
+    } 
+    //draw abrahams menu
+    if (pat_menu == 1 &&credits == 1) {
+	showCredits(xres,yres,r);
+    }
+    else credits =0;
+}
+
+void menus2(Rect r)
+{
+    if (pat_menu == 0) {
+	if (boost_menu == 1 && fire_menu == 0) {
+	    BoosterMenu(r);
+	}
+	else if (boost_menu == 0 && fire_menu == 1) {
+	    LaserMenu(r);
+	}
+	else boost_menu = 0, fire_menu = 0;    
+    }
+}
+
+
+/**********  SOUNDS  **********/
 #ifdef USE_OPENAL_SOUND
 void startUpSound()
 {
@@ -231,6 +265,12 @@ void playSound(ALuint source)
 #endif // close use_openal_sound
 
 #ifdef USE_OPENAL_SOUND
+void init_sounds() {
+    playSound(p.alSourceAstroid);       //bgm
+}
+#endif //end openal sound
+
+#ifdef USE_OPENAL_SOUND
 void cleanSound()
 {
     //Cleanup
@@ -259,4 +299,3 @@ void cleanSound()
     alcCloseDevice(Device);
 }
 #endif // close use_openal_sound
-

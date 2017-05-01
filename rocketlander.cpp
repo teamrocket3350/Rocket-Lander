@@ -90,55 +90,50 @@ GLuint bg_texture;
 struct Game {
 
 
-    Ship ship; // Nick's ship class
-    Platform ground;
+    Ship2 ship2; // Nick's ship class
+    Platform ground[5];
     Platform plats[2]; // Nick's platform class
     Goal goal;
     Fueler fueler;
     Game() {
-	ship.enableBooster2();
-	ship.setPosX(53);
-	ship.setPosY(32);
+	ship2.enableBooster2();
+	ship2.setPosX(53);
+	ship2.setPosY(50);
 
-	ground.setPosX(0);
-	ground.setPosY(0);
-	ground.setWidth(1250);
-	ground.setHeight(32);
+	ground[0].setPosX(0);
+	ground[0].setPosY(0);
+	ground[0].setWidth(365);
+	ground[0].setHeight(50);
 
-//	ground[0].setPosX(0);
-//	ground[0].setPosY(0);
-//	ground[0].setWidth(365);
-//	ground[0].setHeight(50);
-//
-//	ground[1].setPosX(365);
-//	ground[1].setPosY(0);
-//	ground[1].setWidth(420);
-//	ground[1].setHeight(30);
-//
-//	ground[2].setPosX(785);
-//	ground[2].setPosY(0);
-//	ground[2].setWidth(240);
-//	ground[2].setHeight(50);
-//
-//	ground[3].setPosX(1025);
-//	ground[3].setPosY(0);
-//	ground[3].setWidth(100);
-//	ground[3].setHeight(75);
-//
-//	ground[4].setPosX(1125);
-//	ground[4].setPosY(0);
-//	ground[4].setWidth(125);
-//	ground[4].setHeight(100);
+	ground[1].setPosX(365);
+	ground[1].setPosY(0);
+	ground[1].setWidth(420);
+	ground[1].setHeight(30);
+
+	ground[2].setPosX(785);
+	ground[2].setPosY(0);
+	ground[2].setWidth(240);
+	ground[2].setHeight(50);
+
+	ground[3].setPosX(1025);
+	ground[3].setPosY(0);
+	ground[3].setWidth(100);
+	ground[3].setHeight(75);
+
+	ground[4].setPosX(1125);
+	ground[4].setPosY(0);
+	ground[4].setWidth(125);
+	ground[4].setHeight(100);
 
 	plats[0].setPosX(100);
 	plats[0].setPosY(600);
 	plats[0].setWidth(100);
-	plats[0].setHeight(32);
+	plats[0].setHeight(10);
 
 	plats[1].setPosX(550);
 	plats[1].setPosY(440);
 	plats[1].setWidth(100);
-	plats[1].setHeight(32);
+	plats[1].setHeight(10);
 
 	goal.setPosX(950);
 	goal.setPosY(740);
@@ -158,7 +153,7 @@ int keys[65536];
 
 //function prototypes
 void initXWindows(void);
-void init_opengl(Game *g);
+void init_opengl(void);
 void cleanupXWindows(void);
 void check_resize(XEvent *e);
 int check_keys(XEvent *e);
@@ -171,24 +166,17 @@ void render(Game *game);
 void set_mouse_position(int x, int y);
 void show_mouse_cursor(const int onoff);
 
-
-#ifdef USE_OPENAL_SOUND
-void init_sounds() {
-    playSound(p.alSourceAstroid);	//bgm
-}
-#endif //end openal sound
-
 int main(void)
 {
     logOpen();
     initXWindows();
     imageConvert();
+    init_opengl();
 #ifdef USE_OPENAL_SOUND
     startUpSound();		// from Patrick to add sound
     init_sounds();
 #endif //end openal sound
     Game game;
-    init_opengl(&game);
     init();
     srand(time(NULL));
     clock_gettime(CLOCK_REALTIME, &timePause);
@@ -285,7 +273,7 @@ void reshape_window(int width, int height)
     set_title();
 }
 
-void init_opengl(Game *g)
+void init_opengl(void)
 {
     //OpenGL initialization
     glViewport(0, 0, xres, yres);
@@ -306,31 +294,24 @@ void init_opengl(Game *g)
     glEnable(GL_TEXTURE_2D);
     initialize_fonts();
 
+    //// load image files into a ppm structure
+    backgroundImage	= ppm6GetImage("./images/background.ppm");
+
     // Initialize group member images
     inHitters(); // Initialize hitter image
-    init_alpha_image((char *)"./images/RocketFinal.ppm", g->ship.image, &g->ship.texture, &g->ship.silhouette);
-	// Initialize platform images
-	init_image((char *)"./images/ground.ppm", g->ground.image, &g->ground.texture);
-	for (int i = 0; i < 2; i++)
-		init_image((char *)"./images/platform.ppm", g->plats[i].image, &g->plats[i].texture);
+    init_ship_image();
 
-	// Initialize background
-	init_image((char *)"./images/background.ppm", backgroundImage, &backgroundTexture);
+    //create opengl texture elements
+    glGenTextures(1, &backgroundTexture);
 
-//    //// load image files into a ppm structure
-//    backgroundImage	= ppm6GetImage("./images/background.ppm");
-//
-//    //create opengl texture elements
-//    glGenTextures(1, &backgroundTexture);
-//
-//    //background
-//    glBindTexture(GL_TEXTURE_2D,backgroundTexture);
-//    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-//    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-//
-//    glTexImage2D(GL_TEXTURE_2D, 0, 3,
-//	    backgroundImage->width, backgroundImage->height,
-//	    0, GL_RGB, GL_UNSIGNED_BYTE, backgroundImage->data);	
+    //background
+    glBindTexture(GL_TEXTURE_2D,backgroundTexture);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, 3,
+	    backgroundImage->width, backgroundImage->height,
+	    0, GL_RGB, GL_UNSIGNED_BYTE, backgroundImage->data);	
 
     bg_image = ppm6GetImage("./images/background2.ppm");	
     glGenTextures(1, &bg_texture);
@@ -338,7 +319,6 @@ void init_opengl(Game *g)
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, 3, bg_image->width, bg_image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, bg_image->data);
-
 
 }
 
@@ -429,6 +409,12 @@ int check_keys(XEvent *e)
     switch (key) {
 	case XK_Escape:
 	    return 1;
+	case XK_b:
+	    //checkBooster();
+	    //if (g->ship2.enabledBooster1()) enableBooster2();
+	    //else if (g->ship2.enabledBooster2()) enableBooster3();
+	    //else if (g->ship2.enabledBooster3()) enableBooster1();
+	    break;
 	case XK_f:
 	    break;
 	case XK_n:
@@ -456,61 +442,72 @@ int check_keys(XEvent *e)
 
 void physics(Game *g)
 {
-    g->ship.addGravity(GRAVITY);
-    g->ship.move();
+    g->ship2.addGravity(GRAVITY);
+    g->ship2.move();
 
     // Check for collision with platforms
-	g->ship.collidesWith(g->ground);
+    for (int i=0; i<5; i++) {
+	g->ship2.collidesWith(g->ground[i]);
+    }
     for (int i=0; i<2; i++) {
-	g->ship.collidesWith(g->plats[i]);
+	g->ship2.collidesWith(g->plats[i]);
     }
 
     // Check for collision with goal platform
-    g->ship.collidesWith(g->goal);
-    g->ship.goalTriggered(g->goal);
+    g->ship2.collidesWith(g->goal);
+    g->ship2.goalTriggered(g->goal);
 
     // Check for collision with fueler platform
-    g->ship.collidesWith(g->fueler);
+    g->ship2.collidesWith(g->fueler);
     // If fueler is triggered and it has fuel left
-    if (g->ship.fuelerTriggered(g->fueler) && g->fueler.getFuelLeft() > 1) {
+    if (g->ship2.fuelerTriggered(g->fueler) && g->fueler.getFuelLeft() > 1) {
 	// Do not overfill the ship
-	if (!(g->ship.getFuelLeft() > g->ship.getFuelMax()-1)) {
+	if (!(g->ship2.getFuelLeft() > g->ship2.getFuelMax()-1)) {
 	    g->fueler.removeFuel();
-	    g->ship.addFuel();
+	    g->ship2.addFuel();
 	}
     }
 
-    if (g->ship.getPosX() < 0.0) {
-	g->ship.setPosX(g->ship.getPosX() + (float)xres);
+    if (g->ship2.getPosX() < 0.0) {
+	g->ship2.setPosX(g->ship2.getPosX() + (float)xres);
     }
-    else if (g->ship.getPosX() > (float)xres) {
-	g->ship.setPosX(g->ship.getPosX() - (float)xres);
+    else if (g->ship2.getPosX() > (float)xres) {
+	g->ship2.setPosX(g->ship2.getPosX() - (float)xres);
     }
     //---------------------------------------------------
     //check keys pressed now
     if (keys[XK_Left]) {
-	g->ship.rotateLeft();
+	g->ship2.rotateLeft();
 
     }
     if (keys[XK_Right]) {
-	g->ship.rotateRight();
+	g->ship2.rotateRight();
     }
     if (keys[XK_Up]) {
 #ifdef USE_OPENAL_SOUND
 	playSound(p.alSourceBooster);	//Booster
 #endif //end openal sound
-	g->ship.accelerate();
+	g->ship2.accelerate();
     }
+    
+    //if (keys[XK_b]) {
+    //    if (g->ship2.enabledBooster1()) enableBooster2();
+    //    else if (g->ship2.enabledBooster2()) enableBooster3();
+    //    else if (g->ship2.enabledBooster3()) enableBooster1();
+    //}
 
-	if (g->ship.shipExploded()) {
-		g->ship.setPosX(53);
-		g->ship.setPosY(32);
-		g->ship.setVelX(0);
-		g->ship.setVelY(0);
-		g->ship.setRot(0);
-		printf("Ship exploded!\n");
-		g->ship.reset();
-	}
+    if (g->ship2.shipExploded()) {
+	g->ship2.setPosX(53);
+	g->ship2.setPosY(50);
+	g->ship2.setVelX(0);
+	g->ship2.setVelY(0);
+	g->ship2.setRot(0);
+	printf("Ship exploded!\n");
+#ifdef USE_OPENAL_SOUND
+	playSound(p.alSourceCollide);	//Collide
+#endif //end openal sound
+	g->ship2.reset();
+    }
 }
 
 void render(Game *g)
@@ -533,45 +530,54 @@ void render(Game *g)
     glPopMatrix();
 
     renderAstro();
-    g->ship.draw();
+    g->ship2.draw();
 
     Rect r;
-    
+
     r.bot = yres - 20;
     r.left = 10;
     r.center = 0;
     ggprint8b(&r, 16, 0x00ff0000, "Rocket Lander");
+    ggprint8b(&r, 16, 0x00ff0000, "B - Upgrade Boosters");
+    ggprint8b(&r, 16, 0x00ff0000, "F - Upgrade Laser");
+
 
     // Draw fuel gauge
     Rect fuelBar;
     fuelBar.bot = yres - 43;
     fuelBar.left = xres*.5-10;
     fuelBar.center = 0;
-    drawFuelGauge(g->ship.getFuelLeft(), g->ship.getFuelMax(), xres*.5, 850);
+    drawFuelGauge(g->ship2.getFuelLeft(), g->ship2.getFuelMax(), xres*.5, 850);
     ggprint8b(&fuelBar, 16, 0x00ff0000, "Fuel");
 
-	g->ground.draw();
+    glColor3ub(51,102,0);
+    for (int i=0;i<5;i++) {
+	g->ground[i].draw();
+    }
+
+    glColor3ub(255,165,0);
     g->plats[0].draw();
     g->plats[1].draw();
 
     g->goal.draw();
     g->fueler.draw();
 
- 
-    // Draw Pat's Menu
-    if (pat_menu == 1) {
-	startMenu(r);
-	//UpgradeMenu(xres, yres, r);   
-	    //draw abrahams menu
-    if (credits == 1) {
-	showCredits(xres,yres,r);
-    }
-    }
-    //if (pat_menu== 0) {
-    //    clearMenu();
-    //}
-    // Draw Ramon's Menu
-    if (ramon_menu == 1) {
-	//drawRamRMenu(xres, yres, r);
-    }
+
+    menus(r);
+    // // Draw Pat's Menu
+    // if (pat_menu == 1) {
+    //     startMenu(r);
+    //     //UpgradeMenu(xres, yres, r);   
+    //         //draw abrahams menu
+    // if (credits == 1) {
+    //     showCredits(xres,yres,r);
+    // }
+    // }
+    // //if (pat_menu== 0) {
+    // //    clearMenu();
+    // //}
+    // // Draw Ramon's Menu
+    // if (ramon_menu == 1) {
+    //     //drawRamRMenu(xres, yres, r);
+    // }
 }
