@@ -73,7 +73,8 @@ void startMenu(Rect r)
     r.left=cx;
     r.center=1;
     ggprint16(&r,160,0xffcc11,"Rocket Lander");    
-    ggprint13(&r,20,0xffcc11,"Press P to play"); 
+    ggprint13(&r,20,0xffcc11,"Press P to play");
+    ggprint13(&r,20,0xffcc11,"Press C for Credits"); 
 }
 
 void UpgradeMenu(int xres,int yres,Rect r)
