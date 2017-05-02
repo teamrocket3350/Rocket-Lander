@@ -27,23 +27,31 @@ Make sure project size is below 5MB
 
 Notes to Abraham:
 
-Switch "Ship2" to just "Ship" in your header file. I switched the name in my files.
+abrahamA.h:
 
-Remove "remove("./images/*.ppm");"
+  in aPlatform:
+  
+  x & y should have array size of 100
+  
+  "struct aPlatform {
+    int x[100];
+    int y[100];
+};"
 
-Add "remove("./images/background.ppm")"
+Change loadLevel prototype to
+"levelData loadLevel(int);"
 
-Add "remove("./images/background2.ppm")"
+In abrahamA.cpp:
 
-Add "remove("./images/RocketFinal.ppm")"
+  Change loadLevel function definition to
+  "levelData loadLevel(int levelNumber)"
 
-Add "remove("./images/goal.ppm")"
+The level doesn't need to be passed to it.
+Just add 
 
-Add "remove("./images/refuel.ppm")"
+   "levelData level;"
 
-Add "remove("./images/ground.ppm")"
+below "int parCount = 1;"
 
-Add "remove("./images/platform.ppm")"
 
-Add "remove("./images/hitters.ppm")"
 
