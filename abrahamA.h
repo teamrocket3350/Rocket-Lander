@@ -24,8 +24,8 @@ struct aRocket {
 };
 
 struct aPlatform {
-	int x[0];
-	int y[0];
+	int x[100];
+	int y[100];
 };
 
 struct saveData {
@@ -67,7 +67,7 @@ saveData loadGame(saveData);
 
 void saveGame(saveData);
 
-levelData loadLevel(levelData, int);
+levelData loadLevel(int);
 
 
 class Level {
