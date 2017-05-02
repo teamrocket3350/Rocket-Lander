@@ -85,8 +85,14 @@ void imageConvert()
 	remove("./images/hitters.ppm");
 	
 	//convert images to ppm
-	system("mogrify -format ppm ./images/*.png");
-	system("mogrify -format ppm ./images/*.jpg");
+	system("mogrify -format ppm ./images/background.jpg");
+	system("mogrify -format ppm ./images/background2.jpg");
+	system("mogrify -format ppm ./images/RocketFinal.jpg");
+	system("mogrify -format ppm ./images/goal.jpg");
+	system("mogrify -format ppm ./images/refuel.jpg");
+	system("mogrify -format ppm ./images/ground.jpg");
+	system("mogrify -format ppm ./images/platform.jpg");
+	system("mogrify -format ppm ./images/hitters.jpg");
 }
 
 void imageClean()
@@ -339,6 +345,7 @@ levelData loadLevel(levelData level, int levelNumber)
 		cout << "Platform" << i+1 << " y - " << level.platform.y[i] << endl;
 		parCount++;
 	}
+	
 	return level;
 }
 
