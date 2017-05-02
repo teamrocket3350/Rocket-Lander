@@ -469,6 +469,9 @@ void physics(Game *g)
 		g->ship.setVelY(0);
 		g->ship.setRot(0);
 		printf("Ship exploded!\n");
+		#ifdef USE_OPENAL_SOUND
+	playSound(p.alSourceCollide);	//Collide
+#endif //end openal sound
 		g->ship.reset();
 	}
 }
@@ -517,21 +520,6 @@ void render(Game *g)
     g->goal.draw();
     g->fueler.draw();
 
- 
-    // Draw Pat's Menu
-    if (pat_menu == 1) {
-	startMenu(r);
-	//UpgradeMenu(xres, yres, r);   
-	    //draw abrahams menu
-    if (credits == 1) {
-	showCredits(xres,yres,r);
-    }
-    }
-    //if (pat_menu== 0) {
-    //    clearMenu();
-    //}
-    // Draw Ramon's Menu
-    if (ramon_menu == 1) {
-	//drawRamRMenu(xres, yres, r);
-    }
+    menus(r);
+
 }
