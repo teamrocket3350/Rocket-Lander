@@ -75,12 +75,14 @@ void showCredits(int xres, int yres, Rect r)
 void imageConvert()
 {
 	//clean up all images in master folder
-	remove("./images/background.ppm")
-	remove("./images/background2.ppm")
-	remove("./images/RocketFinal.ppm")
-	remove("./images/goal.ppm")
-	remove("./images/refuel.ppm")
-	remove("./images/ground.ppm")
+	remove("./images/background.ppm");
+	remove("./images/background2.ppm");
+	remove("./images/RocketFinal.ppm");
+	remove("./images/goal.ppm");
+	remove("./images/refuel.ppm");
+	remove("./images/ground.ppm");
+	remove("./images/platform.ppm");
+	remove("./images/hitters.ppm");
 	
 	//convert images to ppm
 	system("mogrify -format ppm ./images/*.png");
@@ -90,12 +92,14 @@ void imageConvert()
 void imageClean()
 {
 	//clean up all images in master folder
-	remove("./images/background.ppm")
-	remove("./images/background2.ppm")
-	remove("./images/RocketFinal.ppm")
-	remove("./images/goal.ppm")
-	remove("./images/refuel.ppm")
-	remove("./images/ground.ppm")
+	remove("./images/background.ppm");
+	remove("./images/background2.ppm");
+	remove("./images/RocketFinal.ppm");
+	remove("./images/goal.ppm");
+	remove("./images/refuel.ppm");
+	remove("./images/ground.ppm");
+	remove("./images/platform.ppm");
+	remove("./images/hitters.ppm");
 	return;
 }
 
