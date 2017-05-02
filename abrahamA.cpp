@@ -290,9 +290,10 @@ void saveGame(saveData data)
 	cout << "\nYour progress was saved.\n\n";
 }
 
-levelData loadLevel(levelData level, int levelNumber)
+levelData loadLevel(int levelNumber)
 {
 	int parCount = 1;
+	levelData level;
 
 	cout << "\nLoading the Level. Do not touch the Memory Card in Slot A or the Power Button...\n";
 
