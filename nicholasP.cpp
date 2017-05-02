@@ -388,7 +388,6 @@ bool Ship::triCollidesWith(Shape collidable, Object ob, float x, float y)
                 l2.p1 = pts2[i2];
                 l2.p2 = pts2[(i2+1)%4];
                 if (linesIntersect(l1, l2)) {
-                    //printf("%i. Triangle collide with rectangle\n", tempcount++);
                     collides = true;
                     break;
                 }
