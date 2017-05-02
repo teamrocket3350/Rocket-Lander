@@ -138,7 +138,6 @@ bool Ship::goalTriggered(Goal goal)
             watchGoal = true;
             // After 2 second countdown trigger goal
         } else if (timeDiff(&gStartTime, &gCurTime) > 2.0) {
-            printf("Goal triggered!\n");
             return true;
         }
     } else {
@@ -173,7 +172,6 @@ bool Ship::fuelerTriggered(Fueler fueler)
             watchFuel = true;
             // After 1 second countdown start refueling
         } else if (timeDiff(&fStartTime, &fCurTime) > 1.0) {
-            printf("Fueler triggered!\n");
             return true;
         }
     } else {
