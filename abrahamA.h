@@ -75,7 +75,7 @@ class Level {
                 float gravity;
                 float time; // Use whatever type is needed
                 int score;
-                Ship2 ship;
+                Ship ship;
                 Enemy enemies[5]; // This will be changed when we add enemy types
                 Asteroid2 asteroids[10]; // handle enemies like bullets in asteroid framework
                 Platform platforms[100]; // This can be a normal array
