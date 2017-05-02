@@ -87,38 +87,89 @@ Ppmimage *bg_image=NULL;
 GLuint backgroundTexture;
 GLuint bg_texture;
 
+//struct aRocket {
+//	int type;
+//	int x;
+//	int y;
+//};
+//
+//struct aPlatform {
+//	int x[0];
+//	int y[0];
+//};
+//
+//struct saveData {
+//	int levelNumber;
+//	int score;
+//	aRocket rocket;
+//	int asteroidCount;
+//	int enemyCount;
+//	float gravity;
+//	float time;
+//	int platformCount;
+//	aPlatform platform;
+//};
+
+//struct levelData {
+//	int levelNumber;
+//	aRocket rocket;
+//	int asteroidCount;
+//	int enemyCount;
+//	float gravity;
+//	float time;
+//	int goalX;
+//	int goalY;
+//	int platformCount;
+//	aPlatform platform;
+//};
+
 struct Game {
-
-
+	levelData level = loadLevel(1); //Abraham's level loading
     Ship ship; // Nick's ship class
     Platform ground;
-    Platform plats[2]; // Nick's platform class
+    Platform plats[100]; // Nick's platform class
     Goal goal;
     Fueler fueler;
     Game() {
 	ship.enableBooster2();
-	ship.setPosX(53);
-	ship.setPosY(32);
+	ship.setPosX(level.rocket.x);
+	ship.setPosY(level.rocket.y);
+//	ship.setPosX(53);
+//	ship.setPosY(32);
 
 	ground.setPosX(0);
 	ground.setPosY(0);
 	ground.setWidth(1250);
 	ground.setHeight(32);
 
-	plats[0].setPosX(100);
-	plats[0].setPosY(600);
-	plats[0].setWidth(100);
-	plats[0].setHeight(32);
+	for (int i = 0; i < level.platformCount; i++) { 
+		printf("Plat %d x: %d\n", i+1, level.platform.x[i]);
+		printf("Plat %d y: %d\n", i+1, level.platform.y[i]);
+		plats[i].setPosX(level.platform.x[i]);
+	   	plats[i].setPosY(level.platform.y[i]);
+		plats[i].setWidth(100);
+		plats[i].setHeight(32);
+	}
 
-	plats[1].setPosX(550);
-	plats[1].setPosY(440);
-	plats[1].setWidth(100);
-	plats[1].setHeight(32);
+//	plats[0].setPosX(100);
+//	plats[0].setPosY(600);
+//	plats[0].setWidth(100);
+//	plats[0].setHeight(32);
 
-	goal.setPosX(950);
-	goal.setPosY(740);
+//	plats[1].setPosX(550);
+//	plats[1].setPosY(440);
+//	plats[1].setWidth(100);
+//	plats[1].setHeight(32);
+
+	goal.setPosX(level.goalX);
+	goal.setPosY(level.goalY);
 	goal.setWidth(100);
 	goal.setHeight(27);
+
+//	goal.setPosX(950);
+//	goal.setPosY(740);
+//	goal.setWidth(100);
+//	goal.setHeight(27);
 
 	fueler.setPosX(850);
 	fueler.setPosY(340);
@@ -280,7 +331,7 @@ void init_opengl(Game *g)
 
 	// Initialize platform images
 	init_image((char *)"./images/ground.ppm", g->ground.image, &g->ground.texture);
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < g->level.platformCount; i++)
 		init_image((char *)"./images/platform.ppm", g->plats[i].image, &g->plats[i].texture);
 
 	// Initialize goal image
@@ -514,8 +565,8 @@ void render(Game *g)
     ggprint8b(&fuelBar, 16, 0x00ff0000, "Fuel");
 
 	g->ground.draw();
-    g->plats[0].draw();
-    g->plats[1].draw();
+	for (int i = 0; i < g->level.platformCount; i++)
+		g->plats[i].draw();
 
     g->goal.draw();
     g->fueler.draw();
