@@ -101,22 +101,27 @@ void showCredits(int xres, int yres, Rect r)
 	r.bot = cy + 130;
 	r.left = cx;
 	r.center = 1;
-	ggprint16(&r,16, 0xffd700, "Abraham Aldana");
+	ggprint16(&r,16, 0xffd700, "Nicholas Polach");
 	
 	r.bot = cy + 70;
 	r.left = cx;
 	r.center = 1;
-	ggprint16(&r,16, 0xffd700, "Nicholas Polach");
+	ggprint16(&r,16, 0xffd700, "Abraham Aldana");
 	
 	r.bot = cy + 10;
 	r.left = cx;
 	r.center = 1;
-	ggprint16(&r,16, 0xffd700, "Patrick Espiritu");
+	ggprint16(&r,16, 0xffd700, "Ramon Romero");
 	
 	r.bot = cy - 50;
 	r.left = cx;
 	r.center = 1;
-	ggprint16(&r,16, 0xffd700, "Ramon Romero");
+	ggprint16(&r,16, 0xffd700, "Patrick Espiritu");
+	
+	r.bot = cy - 320;
+	r.left = cx - 60;
+	r.center = 1;
+	ggprint08(&r,16, 0xffd700, "CMPS 3350 - Spring 2017");
 }
 
 void imageConvert()
