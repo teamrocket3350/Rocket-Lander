@@ -178,6 +178,7 @@ class Ship : public MovableObject {
 		void draw_debug();
 
 		void addFuel();
+		void resetFuel();
 		float getFuelLeft() {return fuel;}
 		float getFuelMax() {return fuelMax;}
 

@@ -450,7 +450,7 @@ void changeLevel(Game *g, int level) {
 	credits = 1;
 	level = 1;
 	g->curLevel = 1;
-    }
+    } else {
     g->level = loadLevel(level); //Abraham's level loading
 #ifdef USE_OPENAL_SOUND
     stopSound(p.alSourceAstroid);	//stops bgm
@@ -462,6 +462,7 @@ void changeLevel(Game *g, int level) {
     g->ship.enableBooster2();
     g->ship.setPosX(g->level.rocket.x);
     g->ship.setPosY(g->level.rocket.y);
+	g->ship.resetFuel();
 
     for (int i = 0; i < g->level.platformCount; i++) { 
 	g->plats[i].setPosX(g->level.platform.x[i]);
@@ -481,6 +482,7 @@ void changeLevel(Game *g, int level) {
     g->fueler.setHeight(27);
 
     init_opengl(g);
+	}
 }
 
 void physics(Game *g)

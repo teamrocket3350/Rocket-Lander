@@ -618,6 +618,11 @@ void Ship::addFuel()
     fuel += 1;
 }
 
+void Ship::resetFuel()
+{
+    fuel = 100;
+}
+
 // ---------- //
 
 // Basic platform
