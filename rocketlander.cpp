@@ -84,8 +84,10 @@ int ramon_menu = 0;
 
 Ppmimage * backgroundImage=NULL;
 Ppmimage *bg_image=NULL;
+Ppmimage *bgc_image=NULL;
 GLuint backgroundTexture;
 GLuint bg_texture;
+GLuint bgc_texture;
 
 struct Game {
     int curLevel;
@@ -325,6 +327,14 @@ void init_opengl(Game *g)
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, 3, bg_image->width, bg_image->height,
             0, GL_RGB, GL_UNSIGNED_BYTE, bg_image->data);
+
+    bgc_image = ppm6GetImage("./images/background3.ppm");	
+    glGenTextures(1, &bgc_texture);
+    glBindTexture(GL_TEXTURE_2D, bgc_texture);	
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, bgc_image->width, bgc_image->height,
+            0, GL_RGB, GL_UNSIGNED_BYTE, bgc_image->data);
 
 
 }
