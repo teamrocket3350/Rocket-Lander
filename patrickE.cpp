@@ -32,9 +32,8 @@ struct Global {
 } p;
 #endif // close use_openal_sound
 
-extern Ppmimage *bg_image;
 extern GLuint bg_texture;
-extern Ppmimage *backgroundImage;
+extern GLuint platform_texture;
 extern GLuint backgroundTexture;
 extern int xres,yres;
 extern int pat_menu;
@@ -67,6 +66,16 @@ void startMenu(Rect r)
 
     int cx = xres/2;
     int cy = yres/2;
+
+    glBindTexture(GL_TEXTURE_2D, platform_texture);
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0, 1); glVertex2i(cx+150, cy+48-170);
+    glTexCoord2f(0.0, 0.0); glVertex2i(cx+150, cy-48-170);
+    glTexCoord2f(1, 0.0); glVertex2i(cx-150, cy-48-170);
+    glTexCoord2f(1, 1); glVertex2i(cx-150, cy+48-170);
+    glEnd();
+
     glEnable(GL_TEXTURE_2D);
     r.bot=cy;
     r.left=cx;

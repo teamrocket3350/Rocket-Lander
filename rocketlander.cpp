@@ -85,9 +85,11 @@ int ramon_menu = 0;
 Ppmimage * backgroundImage=NULL;
 Ppmimage *bg_image=NULL;
 Ppmimage *bgc_image=NULL;
+Ppmimage *platform_image=NULL;
 GLuint backgroundTexture;
 GLuint bg_texture;
 GLuint bgc_texture;
+GLuint platform_texture;
 
 struct Game {
     int curLevel;
@@ -318,7 +320,15 @@ void init_opengl(Game *g)
 
     // Initialize background image
     init_image((char *)"./images/background.ppm",
-            backgroundImage, &backgroundTexture);
+	    backgroundImage, &backgroundTexture);
+
+    platform_image = ppm6GetImage("./images/platform.ppm");	
+    glGenTextures(1, &platform_texture);
+    glBindTexture(GL_TEXTURE_2D, platform_texture);	
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, platform_image->width, platform_image->height,
+	    0, GL_RGB, GL_UNSIGNED_BYTE, platform_image->data);
 
     bg_image = ppm6GetImage("./images/background2.ppm");	
     glGenTextures(1, &bg_texture);
@@ -326,7 +336,7 @@ void init_opengl(Game *g)
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, 3, bg_image->width, bg_image->height,
-            0, GL_RGB, GL_UNSIGNED_BYTE, bg_image->data);
+	    0, GL_RGB, GL_UNSIGNED_BYTE, bg_image->data);
 
     bgc_image = ppm6GetImage("./images/background3.ppm");	
     glGenTextures(1, &bgc_texture);
@@ -334,7 +344,7 @@ void init_opengl(Game *g)
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, 3, bgc_image->width, bgc_image->height,
-            0, GL_RGB, GL_UNSIGNED_BYTE, bgc_image->data);
+	    0, GL_RGB, GL_UNSIGNED_BYTE, bgc_image->data);
 
 
 }
@@ -344,11 +354,11 @@ void check_resize(XEvent *e)
     //The ConfigureNotify is sent by the
     //server if the window is resized.
     if (e->type != ConfigureNotify)
-        return;
+	return;
     XConfigureEvent xce = e->xconfigure;
     if (xce.width != xres || xce.height != yres) {
-        //Window size did change.
-        reshape_window(xce.width, xce.height);
+	//Window size did change.
+	reshape_window(xce.width, xce.height);
     }
 }
 
@@ -361,9 +371,9 @@ void normalize(Vec v)
 {
     Flt len = v[0]*v[0] + v[1]*v[1];
     if (len == 0.0f) {
-        v[0] = 1.0;
-        v[1] = 0.0;
-        return;
+	v[0] = 1.0;
+	v[1] = 0.0;
+	return;
     }
     len = 1.0f / sqrt(len);
     v[0] *= len;
@@ -378,9 +388,9 @@ void set_mouse_position(int x, int y)
 void show_mouse_cursor(const int onoff)
 {
     if (onoff) {
-        //this removes our own blank cursor.
-        XUndefineCursor(dpy, win);
-        return;
+	//this removes our own blank cursor.
+	XUndefineCursor(dpy, win);
+	return;
     }
     //vars to make blank cursor
     Pixmap blank;
@@ -390,7 +400,7 @@ void show_mouse_cursor(const int onoff)
     //make a blank cursor
     blank = XCreateBitmapFromData (dpy, win, data, 1, 1);
     if (blank == None)
-        std::cout << "error: out of memory." << std::endl;
+	std::cout << "error: out of memory." << std::endl;
     cursor = XCreatePixmapCursor(dpy, blank, blank, &dummy, &dummy, 0, 0);
     XFreePixmap(dpy, blank);
     //this makes you the cursor. then set it using this function
@@ -407,34 +417,34 @@ int check_keys(XEvent *e)
     int key = XLookupKeysym(&e->xkey, 0);
     //Log("key: %i\n", key);
     if (e->type == KeyRelease) {
-        keys[key]=0;
-        if (key == XK_Shift_L || key == XK_Shift_R)
-            shift=0;
-        return 0;
+	keys[key]=0;
+	if (key == XK_Shift_L || key == XK_Shift_R)
+	    shift=0;
+	return 0;
     }
     if (e->type == KeyPress) {
-        //std::cout << "press" << std::endl;
-        keys[key]=1;
-        if (key == XK_Shift_L || key == XK_Shift_R) {
-            shift=1;
-            return 0;
-        }
+	//std::cout << "press" << std::endl;
+	keys[key]=1;
+	if (key == XK_Shift_L || key == XK_Shift_R) {
+	    shift=1;
+	    return 0;
+	}
     } else {
-        return 0;
+	return 0;
     }
     if (shift){}
     switch (key) {
-        case XK_Escape:
-            return 1;
-        case XK_c:
-            credits = credits ^ 1;
-            break;
-        case XK_r:
-            ramon_menu = ramon_menu ^ 1;
-            break;
-        case XK_p:
-            pat_menu = pat_menu ^ 1;
-            break;
+	case XK_Escape:
+	    return 1;
+	case XK_c:
+	    credits = credits ^ 1;
+	    break;
+	case XK_r:
+	    ramon_menu = ramon_menu ^ 1;
+	    break;
+	case XK_p:
+	    pat_menu = pat_menu ^ 1;
+	    break;
     }
     return 0;
 }
@@ -442,47 +452,47 @@ int check_keys(XEvent *e)
 void changeLevel(Game *g, int level) {
     if (level > 5) {
 #ifdef USE_OPENAL_SOUND
-	    stopSound(p.alSourceAstroid);
-	    playSound(p.alSourceVictory);
-	    sleep(5);
+	stopSound(p.alSourceAstroid);
+	playSound(p.alSourceVictory);
+	sleep(5);
 #endif
 	pat_menu = 1;
 	credits = 1;
 	level = 1;
 	g->curLevel = 1;
     } else {
-    g->level = loadLevel(level); //Abraham's level loading
+	g->level = loadLevel(level); //Abraham's level loading
 #ifdef USE_OPENAL_SOUND
-    stopSound(p.alSourceAstroid);	//stops bgm
-    playSound(p.alSourceVictory);	//Victory
-    sleep(5);
-    playSound(p.alSourceAstroid);	//bgm
+	stopSound(p.alSourceAstroid);	//stops bgm
+	playSound(p.alSourceVictory);	//Victory
+	sleep(5);
+	playSound(p.alSourceAstroid);	//bgm
 #endif //end openal sound
 
-    g->ship.enableBooster2();
-    g->ship.setPosX(g->level.rocket.x);
-    g->ship.setPosY(g->level.rocket.y);
+	g->ship.enableBooster2();
+	g->ship.setPosX(g->level.rocket.x);
+	g->ship.setPosY(g->level.rocket.y);
 	g->ship.resetFuel();
 
-    for (int i = 0; i < g->level.platformCount; i++) { 
-	g->plats[i].setPosX(g->level.platform.x[i]);
-	g->plats[i].setPosY(g->level.platform.y[i]);
-	g->plats[i].setWidth(100);
-	g->plats[i].setHeight(32);
-    }
-
-    g->goal.setPosX(g->level.goalX);
-    g->goal.setPosY(g->level.goalY);
-    g->goal.setWidth(100);
-    g->goal.setHeight(27);
-
-    g->fueler.setPosX(850);
-    g->fueler.setPosY(340);
-    g->fueler.setWidth(100);
-    g->fueler.setHeight(27);
-
-    init_opengl(g);
+	for (int i = 0; i < g->level.platformCount; i++) { 
+	    g->plats[i].setPosX(g->level.platform.x[i]);
+	    g->plats[i].setPosY(g->level.platform.y[i]);
+	    g->plats[i].setWidth(100);
+	    g->plats[i].setHeight(32);
 	}
+
+	g->goal.setPosX(g->level.goalX);
+	g->goal.setPosY(g->level.goalY);
+	g->goal.setWidth(100);
+	g->goal.setHeight(27);
+
+	g->fueler.setPosX(850);
+	g->fueler.setPosY(340);
+	g->fueler.setWidth(100);
+	g->fueler.setHeight(27);
+
+	init_opengl(g);
+    }
 }
 
 void physics(Game *g)
