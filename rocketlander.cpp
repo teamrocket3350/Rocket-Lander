@@ -88,6 +88,7 @@ GLuint backgroundTexture;
 GLuint bg_texture;
 
 struct Game {
+    int curLevel;
     levelData level; //Abraham's level loading
     Ship ship; // Nick's ship class
     Platform ground;
@@ -95,7 +96,8 @@ struct Game {
     Goal goal;
     Fueler fueler;
     Game() {
-	level = loadLevel(1); //Abraham's level loading
+	curLevel = 1;
+	level = loadLevel(curLevel); //Abraham's level loading
 
         ship.enableBooster2();
         ship.setPosX(level.rocket.x);
@@ -160,6 +162,7 @@ void physics(Game *game);
 void render(Game *game);
 void set_mouse_position(int x, int y);
 void show_mouse_cursor(const int onoff);
+void changeLevel(Game *g, int level);
 
 int main(void)
 {
@@ -426,6 +429,37 @@ int check_keys(XEvent *e)
     return 0;
 }
 
+void changeLevel(Game *g, int level) {
+    if (level > 3) {
+	level = 1;
+	g->curLevel = 1;
+    }
+    g->level = loadLevel(level); //Abraham's level loading
+
+    g->ship.enableBooster2();
+    g->ship.setPosX(g->level.rocket.x);
+    g->ship.setPosY(g->level.rocket.y);
+
+    for (int i = 0; i < g->level.platformCount; i++) { 
+	g->plats[i].setPosX(g->level.platform.x[i]);
+	g->plats[i].setPosY(g->level.platform.y[i]);
+	g->plats[i].setWidth(100);
+	g->plats[i].setHeight(32);
+    }
+
+    g->goal.setPosX(g->level.goalX);
+    g->goal.setPosY(g->level.goalY);
+    g->goal.setWidth(100);
+    g->goal.setHeight(27);
+
+    g->fueler.setPosX(850);
+    g->fueler.setPosY(340);
+    g->fueler.setWidth(100);
+    g->fueler.setHeight(27);
+
+    init_opengl(g);
+}
+
 void physics(Game *g)
 {
     g->ship.addGravity(GRAVITY);
@@ -439,7 +473,8 @@ void physics(Game *g)
 
     // Check for collision with goal platform
     g->ship.collidesWith(g->goal);
-    g->ship.goalTriggered(g->goal);
+    if (g->ship.goalTriggered(g->goal))
+	changeLevel(g, ++g->curLevel);
 
     // Check for collision with fueler platform
     g->ship.collidesWith(g->fueler);

@@ -1,0 +1,16 @@
+1 	// level number
+53 	// rocket x
+32 	// rocket y
+3 	// asteroidCount
+0 	// enemyCount
+1 	// gravity
+60 	//time
+950 	// goal x
+740 	// goal y
+3 	// platform count
+100 	// x
+600 	// y
+550 	// x
+440 	// y
+100
+300
