@@ -435,6 +435,12 @@ void changeLevel(Game *g, int level) {
 	g->curLevel = 1;
     }
     g->level = loadLevel(level); //Abraham's level loading
+#ifdef USE_OPENAL_SOUND
+    stopSound(p.alSourceAstroid);	//stops bgm
+    playSound(p.alSourceVictory);	//Victory
+    sleep(5);
+    playSound(p.alSourceAstroid);	//bgm
+#endif //end openal sound
 
     g->ship.enableBooster2();
     g->ship.setPosX(g->level.rocket.x);
@@ -468,7 +474,7 @@ void physics(Game *g)
     // Check for collision with platforms
     g->ship.collidesWith(g->ground);
     for (int i=0; i<g->level.platformCount; i++) {
-        g->ship.collidesWith(g->plats[i]);
+	g->ship.collidesWith(g->plats[i]);
     }
 
     // Check for collision with goal platform
@@ -480,46 +486,46 @@ void physics(Game *g)
     g->ship.collidesWith(g->fueler);
     // If fueler is triggered and it has fuel left
     if (g->ship.fuelerTriggered(g->fueler) && g->fueler.getFuelLeft() > 1) {
-        // Do not overfill the ship
-        if (!(g->ship.getFuelLeft() > g->ship.getFuelMax()-1)) {
-            g->fueler.removeFuel();
-            g->ship.addFuel();
-        }
+	// Do not overfill the ship
+	if (!(g->ship.getFuelLeft() > g->ship.getFuelMax()-1)) {
+	    g->fueler.removeFuel();
+	    g->ship.addFuel();
+	}
     }
 
     if (g->ship.getPosX() < 0.0) {
-        g->ship.setPosX(g->ship.getPosX() + (float)xres);
+	g->ship.setPosX(g->ship.getPosX() + (float)xres);
     }
     else if (g->ship.getPosX() > (float)xres) {
-        g->ship.setPosX(g->ship.getPosX() - (float)xres);
+	g->ship.setPosX(g->ship.getPosX() - (float)xres);
     }
     //---------------------------------------------------
     //check keys pressed now
     if (keys[XK_Left]) {
-        g->ship.rotateLeft();
+	g->ship.rotateLeft();
 
     }
     if (keys[XK_Right]) {
-        g->ship.rotateRight();
+	g->ship.rotateRight();
     }
     if (keys[XK_Up]) {
 #ifdef USE_OPENAL_SOUND
-        playSound(p.alSourceBooster);	//Booster
+	playSound(p.alSourceBooster);	//Booster
 #endif //end openal sound
-        g->ship.accelerate();
+	g->ship.accelerate();
     }
 
     if (g->ship.shipExploded()) {
-        g->ship.setPosX(53);
-        g->ship.setPosY(32);
-        g->ship.setVelX(0);
-        g->ship.setVelY(0);
-        g->ship.setRot(0);
-        printf("Ship exploded!\n");
+	g->ship.setPosX(53);
+	g->ship.setPosY(32);
+	g->ship.setVelX(0);
+	g->ship.setVelY(0);
+	g->ship.setRot(0);
+	printf("Ship exploded!\n");
 #ifdef USE_OPENAL_SOUND
-        playSound(p.alSourceCollide);	//Collide
+	playSound(p.alSourceCollide);	//Collide
 #endif //end openal sound
-        g->ship.reset();
+	g->ship.reset();
     }
 }
 
@@ -561,7 +567,7 @@ void render(Game *g)
 
     g->ground.draw();
     for (int i = 0; i < g->level.platformCount; i++)
-        g->plats[i].draw();
+	g->plats[i].draw();
 
     g->goal.draw();
     g->fueler.draw();

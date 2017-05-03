@@ -261,6 +261,11 @@ void playSound(ALuint source)
 {
     alSourcePlay(source);
 }
+
+void stopSound(ALuint source)
+{
+    alSourceStop(source);
+}
 #endif // close use_openal_sound
 
 #ifdef USE_OPENAL_SOUND

@@ -13,6 +13,7 @@ void renderMenu(void);
 void menus(Rect r);
 void menus2(Rect r);
 #ifdef USE_OPENAL_SOUND
+void stopSound(ALuint source);
 void playSound(ALuint source);
 #endif
 
