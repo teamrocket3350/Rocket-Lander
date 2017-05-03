@@ -24,8 +24,8 @@
 
 using namespace std;
 
-extern Ppmimage *bg_image;
-extern GLuint bg_texture;
+extern Ppmimage *bgc_image;
+extern GLuint bgc_texture;
 extern Ppmimage *backgroundImage;
 extern GLuint backgroundTexture;
 extern int xres,yres;
@@ -41,7 +41,7 @@ void showCredits(int xres, int yres, Rect r)
 	glEnd();
 	glPopMatrix();	
 
-	glBindTexture(GL_TEXTURE_2D, bg_texture);
+	glBindTexture(GL_TEXTURE_2D, bgc_texture);
 	glPushMatrix();
 	glBegin(GL_QUADS);
 	glTexCoord2f(0.0, 1); glVertex2i(0, 0);
@@ -70,7 +70,7 @@ void showCredits(int xres, int yres, Rect r)
 	glEnd();
 	glPopMatrix();	
 
-	glBindTexture(GL_TEXTURE_2D, bg_texture);
+	glBindTexture(GL_TEXTURE_2D, bgc_texture);
 	glPushMatrix();
 	glBegin(GL_QUADS);
 	glTexCoord2f(0.0, 1); glVertex2i(0, 0);
