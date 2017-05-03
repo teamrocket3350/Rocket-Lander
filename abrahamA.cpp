@@ -241,6 +241,46 @@ int getData(int count, int flag)
 		load.close();
 		return (level);
 	}
+	else if (flag == 4) {
+		int level;
+		ifstream load;
+		load.open ("./level_4.txt");
+		if (load.is_open()) {
+			if (count == 1) {
+				cout << "\nLevel 4 has been loaded successfully.\n\n";
+			}
+			for (int i = 0; i < count; i++) {
+				load >> level;
+			}
+		}
+		else {
+			cout << "\nCould not open save file\n";
+			level = 1;
+			cout << "Default level - 1\n";
+		}
+		load.close();
+		return (level);
+	}
+	else if (flag == 5) {
+		int level;
+		ifstream load;
+		load.open ("./level_5.txt");
+		if (load.is_open()) {
+			if (count == 1) {
+				cout << "\nLevel 5 has been loaded successfully.\n\n";
+			}
+			for (int i = 0; i < count; i++) {
+				load >> level;
+			}
+		}
+		else {
+			cout << "\nCould not open save file\n";
+			level = 1;
+			cout << "Default level - 1\n";
+		}
+		load.close();
+		return (level);
+	}
 	else {
 		cout << "Error\n";
 		return (1);
