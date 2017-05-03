@@ -440,7 +440,7 @@ int check_keys(XEvent *e)
 }
 
 void changeLevel(Game *g, int level) {
-    if (level > 3) {
+    if (level > 5) {
 #ifdef USE_OPENAL_SOUND
 	    stopSound(p.alSourceAstroid);
 	    playSound(p.alSourceVictory);
