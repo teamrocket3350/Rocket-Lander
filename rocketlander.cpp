@@ -535,8 +535,8 @@ void physics(Game *g)
     }
 
     if (g->ship.shipExploded()) {
-	g->ship.setPosX(53);
-	g->ship.setPosY(32);
+	g->ship.setPosX(g->level.rocket.x);
+	g->ship.setPosY(g->level.rocket.y);
 	g->ship.setVelX(0);
 	g->ship.setVelY(0);
 	g->ship.setRot(0);
