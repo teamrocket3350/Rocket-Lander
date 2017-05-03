@@ -431,6 +431,13 @@ int check_keys(XEvent *e)
 
 void changeLevel(Game *g, int level) {
     if (level > 3) {
+#ifdef USE_OPENAL_SOUND
+	    stopSound(p.alSourceAstroid);
+	    playSound(p.alSourceVictory);
+	    sleep(5);
+#endif
+	pat_menu = 1;
+	credits = 1;
 	level = 1;
 	g->curLevel = 1;
     }
