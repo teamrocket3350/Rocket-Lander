@@ -88,13 +88,15 @@ GLuint backgroundTexture;
 GLuint bg_texture;
 
 struct Game {
-    levelData level = loadLevel(1); //Abraham's level loading
+    levelData level; //Abraham's level loading
     Ship ship; // Nick's ship class
     Platform ground;
     Platform plats[100]; // Nick's platform class
     Goal goal;
     Fueler fueler;
     Game() {
+	level = loadLevel(1); //Abraham's level loading
+
         ship.enableBooster2();
         ship.setPosX(level.rocket.x);
         ship.setPosY(level.rocket.y);
