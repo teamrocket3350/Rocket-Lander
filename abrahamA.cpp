@@ -124,6 +124,7 @@ void imageConvert()
 	//clean up all images in master folder
 	remove("./images/background.ppm");
 	remove("./images/background2.ppm");
+	remove("./images/background3.ppm");
 	remove("./images/RocketFinal.ppm");
 	remove("./images/goal.ppm");
 	remove("./images/refuel.ppm");
@@ -134,6 +135,7 @@ void imageConvert()
 	//convert images to ppm
 	system("mogrify -format ppm ./images/background.jpg");
 	system("mogrify -format ppm ./images/background2.jpg");
+	system("mogrify -format ppm ./images/background3.jpg");
 	system("mogrify -format ppm ./images/RocketFinal.jpg");
 	system("mogrify -format ppm ./images/goal.jpg");
 	system("mogrify -format ppm ./images/refuel.jpg");
@@ -147,6 +149,7 @@ void imageClean()
 	//clean up all images in master folder
 	remove("./images/background.ppm");
 	remove("./images/background2.ppm");
+	remove("./images/background3.ppm");
 	remove("./images/RocketFinal.ppm");
 	remove("./images/goal.ppm");
 	remove("./images/refuel.ppm");
