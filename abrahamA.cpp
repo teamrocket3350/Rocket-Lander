@@ -24,8 +24,31 @@
 
 using namespace std;
 
+extern Ppmimage *bg_image;
+extern GLuint bg_texture;
+extern Ppmimage *backgroundImage;
+extern GLuint backgroundTexture;
+extern int xres,yres;
+
 void showCredits(int xres, int yres, Rect r)
 {
+	glPushMatrix();
+	glBegin(GL_QUADS);
+	glVertex2i(0, 0);
+	glVertex2i(0, yres);
+	glVertex2i(xres, yres);
+	glVertex2i(xres, 0);
+	glEnd();
+	glPopMatrix();	
+
+	glBindTexture(GL_TEXTURE_2D, bg_texture);
+	glPushMatrix();
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0, 1); glVertex2i(0, 0);
+	glTexCoord2f(0.0, 0.0); glVertex2i(0, yres);
+	glTexCoord2f(1, 0.0); glVertex2i(xres, yres);
+	glTexCoord2f(1, 1); glVertex2i(xres, 0);
+	glEnd();	
 	glColor3f(0.1,0.1,0.1);
 	int cx = xres/2;
 	int cy = yres/2;
@@ -36,6 +59,24 @@ void showCredits(int xres, int yres, Rect r)
 		glVertex2f(cx-700, cy-500);
 	glEnd();
 	glEnable(GL_TEXTURE_2D);
+	
+	glPushMatrix();
+	glBegin(GL_QUADS);
+	glVertex2i(0, 0);
+	glVertex2i(0, yres);
+	glVertex2i(xres, yres);
+	glVertex2i(xres, 0);
+	glEnd();
+	glPopMatrix();	
+
+	glBindTexture(GL_TEXTURE_2D, bg_texture);
+	glPushMatrix();
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0, 1); glVertex2i(0, 0);
+	glTexCoord2f(0.0, 0.0); glVertex2i(0, yres);
+	glTexCoord2f(1, 0.0); glVertex2i(xres, yres);
+	glTexCoord2f(1, 1); glVertex2i(xres, 0);
+	glEnd();
 
 	r.bot = cy + 290;
 	r.left = cx;
