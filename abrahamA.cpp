@@ -50,7 +50,7 @@ void showCredits(int xres, int yres, Rect r)
 	glTexCoord2f(1, 1); glVertex2i(xres, 0);
 	glEnd();
 
-	glColor3f(0.1,0.1,0.1);
+	glColor3f(1,1,1);
 	int cx = xres/2;
 	int cy = yres/2;
 	glBegin(GL_QUADS);
