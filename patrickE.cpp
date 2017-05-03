@@ -72,8 +72,7 @@ void startMenu(Rect r)
     r.left=cx;
     r.center=1;
     ggprint16(&r,160,0xffcc11,"Rocket Lander");    
-    ggprint13(&r,20,0xffcc11,"Press P to Play");
-    ggprint13(&r,20,0xffcc11,"Press S for Saved Files"); 
+    ggprint13(&r,20,0xffcc11,"Press P to Play"); 
     ggprint13(&r,20,0xffcc11,"Press C for Credits"); 
 }
 
