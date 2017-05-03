@@ -103,6 +103,12 @@ Ship::Ship()
 
     fuel = 100;
     fuelMax = 100;
+
+
+    watchGoal = false;
+    watchFuel = false;
+    exploded = false;
+
 }
 
 void Ship::move()

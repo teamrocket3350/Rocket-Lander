@@ -144,9 +144,9 @@ class Ship : public MovableObject {
 		float fuel;
 		float fuelMax;
 
-		bool watchGoal = false;
-		bool watchFuel = false;
-		bool exploded = false;
+		bool watchGoal;
+		bool watchFuel;
+		bool exploded;
 
 		// Choose between the 3
 		bool haveBooster1;
