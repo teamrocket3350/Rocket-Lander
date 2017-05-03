@@ -82,7 +82,7 @@ void showCredits(int xres, int yres, Rect r)
 	r.bot = cy + 290;
 	r.left = cx;
 	r.center = 1;
-	ggprint40(&r,16, 0xffd700, "Rocket Lander");
+	ggprint40(&r,16, 0xffd700, "Rocket  Lander");
 	
 	r.bot = cy + 220;
 	r.left = cx;
