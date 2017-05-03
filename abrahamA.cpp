@@ -48,7 +48,8 @@ void showCredits(int xres, int yres, Rect r)
 	glTexCoord2f(0.0, 0.0); glVertex2i(0, yres);
 	glTexCoord2f(1, 0.0); glVertex2i(xres, yres);
 	glTexCoord2f(1, 1); glVertex2i(xres, 0);
-	glEnd();	
+	glEnd();
+
 	glColor3f(0.1,0.1,0.1);
 	int cx = xres/2;
 	int cy = yres/2;
