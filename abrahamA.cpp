@@ -36,40 +36,45 @@ void showCredits(int xres, int yres, Rect r)
 		glVertex2f(cx-700, cy-500);
 	glEnd();
 	glEnable(GL_TEXTURE_2D);
-	
-	r.bot = cy + 300;
+
+	r.bot = cy + 290;
 	r.left = cx;
 	r.center = 1;
-	ggprint40(&r,16, 0xffffff, "Game Credits");
+	ggprint40(&r,16, 0xffd700, "Rocket Lander");
+	
+	r.bot = cy + 220;
+	r.left = cx;
+	r.center = 1;
+	ggprint40(&r,16, 0xffd700, "Game Credits");
 
 	glColor3f(1,1,1);
 	glBegin(GL_QUADS);
-		glVertex2f(cx-160, cy+300);
-		glVertex2f(cx+160, cy+300);
-		glVertex2f(cx+160, cy+295);
-		glVertex2f(cx-160, cy+295);
+		glVertex2f(cx-160, cy+190);
+		glVertex2f(cx+160, cy+190);
+		glVertex2f(cx+160, cy+185);
+		glVertex2f(cx-160, cy+185);
 	glEnd();
 	glEnable(GL_TEXTURE_2D);
 	
-	r.bot = cy + 200;
+	r.bot = cy + 130;
 	r.left = cx;
 	r.center = 1;
-	ggprint16(&r,16, 0xffffff, "Abraham Aldana");
+	ggprint16(&r,16, 0xffd700, "Abraham Aldana");
 	
-	r.bot = cy + 150;
+	r.bot = cy + 70;
 	r.left = cx;
 	r.center = 1;
-	ggprint16(&r,16, 0xffffff, "Nicholas Polach");
+	ggprint16(&r,16, 0xffd700, "Nicholas Polach");
 	
-	r.bot = cy + 100;
+	r.bot = cy + 10;
 	r.left = cx;
 	r.center = 1;
-	ggprint16(&r,16, 0xffffff, "Patrick Espiritu");
+	ggprint16(&r,16, 0xffd700, "Patrick Espiritu");
 	
-	r.bot = cy + 50;
+	r.bot = cy - 50;
 	r.left = cx;
 	r.center = 1;
-	ggprint16(&r,16, 0xffffff, "Ramon Romero");
+	ggprint16(&r,16, 0xffd700, "Ramon Romero");
 }
 
 void imageConvert()
@@ -322,15 +327,15 @@ levelData loadLevel(int levelNumber)
 	parCount++;
 
 	level.time = getData(parCount, levelNumber);
-	cout << "Time - " << level.time << endl << endl;
+	cout << "Time - " << level.time << endl;
 	parCount++;
 
 	level.goalX = getData(parCount, levelNumber);
-	cout << "Goal x position - " << level.goalX << endl << endl;
+	cout << "Goal x position - " << level.goalX << endl;
 	parCount++;
 	
 	level.goalY = getData(parCount, levelNumber);
-	cout << "Goal y position - " << level.goalY << endl << endl;
+	cout << "Goal y position - " << level.goalY << endl;
 	parCount++;
 	
 	level.platformCount = getData(parCount, levelNumber);
