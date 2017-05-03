@@ -89,7 +89,7 @@ void showCredits(int xres, int yres, Rect r)
 	r.center = 1;
 	ggprint40(&r,16, 0xffd700, "Credits");
 
-	glColor3f(1,1,1);
+	glColor3f(1,(215/255),1);
 	glBegin(GL_QUADS);
 		glVertex2f(cx-160, cy+190);
 		glVertex2f(cx+160, cy+190);
