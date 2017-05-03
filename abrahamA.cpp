@@ -87,7 +87,7 @@ void showCredits(int xres, int yres, Rect r)
 	r.bot = cy + 220;
 	r.left = cx;
 	r.center = 1;
-	ggprint40(&r,16, 0xffd700, "Game Credits");
+	ggprint40(&r,16, 0xffd700, "Credits");
 
 	glColor3f(1,1,1);
 	glBegin(GL_QUADS);
