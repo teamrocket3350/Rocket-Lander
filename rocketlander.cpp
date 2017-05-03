@@ -79,7 +79,7 @@ extern struct Global {
 int xres=1250, yres=900;
 int credits = 0;
 int renderShip = 0;
-int pat_menu = 0;	// change to 1 to turn on Main Menu
+int pat_menu = 1;	// change to 1 to turn on Main Menu
 int ramon_menu = 0;
 
 Ppmimage * backgroundImage=NULL;
