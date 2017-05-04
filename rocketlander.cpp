@@ -458,8 +458,8 @@ void changeLevel(Game *g, int level) {
 #endif
         pat_menu = 1;
         credits = 1;
-        level = 1;
-        g->curLevel = 1;
+        level = 0;
+        g->curLevel = 0;
     } else {
         g->level = loadLevel(level); //Abraham's level loading
 #ifdef USE_OPENAL_SOUND
