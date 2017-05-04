@@ -100,8 +100,8 @@ struct Game {
     Goal goal;
     Fueler fueler;
     Game() {
-	curLevel = 1;
-	level = loadLevel(curLevel); //Abraham's level loading
+        curLevel = 1;
+        level = loadLevel(curLevel); //Abraham's level loading
 
         ship.enableBooster2();
         ship.setPosX(level.rocket.x);
@@ -320,7 +320,7 @@ void init_opengl(Game *g)
 
     // Initialize background image
     init_image((char *)"./images/background.ppm",
-	    backgroundImage, &backgroundTexture);
+            backgroundImage, &backgroundTexture);
 
     platform_image = ppm6GetImage("./images/platform.ppm");	
     glGenTextures(1, &platform_texture);
@@ -328,7 +328,7 @@ void init_opengl(Game *g)
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, 3, platform_image->width, platform_image->height,
-	    0, GL_RGB, GL_UNSIGNED_BYTE, platform_image->data);
+            0, GL_RGB, GL_UNSIGNED_BYTE, platform_image->data);
 
     bg_image = ppm6GetImage("./images/background2.ppm");	
     glGenTextures(1, &bg_texture);
@@ -336,7 +336,7 @@ void init_opengl(Game *g)
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, 3, bg_image->width, bg_image->height,
-	    0, GL_RGB, GL_UNSIGNED_BYTE, bg_image->data);
+            0, GL_RGB, GL_UNSIGNED_BYTE, bg_image->data);
 
     bgc_image = ppm6GetImage("./images/background3.ppm");	
     glGenTextures(1, &bgc_texture);
@@ -344,7 +344,7 @@ void init_opengl(Game *g)
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, 3, bgc_image->width, bgc_image->height,
-	    0, GL_RGB, GL_UNSIGNED_BYTE, bgc_image->data);
+            0, GL_RGB, GL_UNSIGNED_BYTE, bgc_image->data);
 
 
 }
@@ -354,11 +354,11 @@ void check_resize(XEvent *e)
     //The ConfigureNotify is sent by the
     //server if the window is resized.
     if (e->type != ConfigureNotify)
-	return;
+        return;
     XConfigureEvent xce = e->xconfigure;
     if (xce.width != xres || xce.height != yres) {
-	//Window size did change.
-	reshape_window(xce.width, xce.height);
+        //Window size did change.
+        reshape_window(xce.width, xce.height);
     }
 }
 
@@ -371,9 +371,9 @@ void normalize(Vec v)
 {
     Flt len = v[0]*v[0] + v[1]*v[1];
     if (len == 0.0f) {
-	v[0] = 1.0;
-	v[1] = 0.0;
-	return;
+        v[0] = 1.0;
+        v[1] = 0.0;
+        return;
     }
     len = 1.0f / sqrt(len);
     v[0] *= len;
@@ -388,9 +388,9 @@ void set_mouse_position(int x, int y)
 void show_mouse_cursor(const int onoff)
 {
     if (onoff) {
-	//this removes our own blank cursor.
-	XUndefineCursor(dpy, win);
-	return;
+        //this removes our own blank cursor.
+        XUndefineCursor(dpy, win);
+        return;
     }
     //vars to make blank cursor
     Pixmap blank;
@@ -400,7 +400,7 @@ void show_mouse_cursor(const int onoff)
     //make a blank cursor
     blank = XCreateBitmapFromData (dpy, win, data, 1, 1);
     if (blank == None)
-	std::cout << "error: out of memory." << std::endl;
+        std::cout << "error: out of memory." << std::endl;
     cursor = XCreatePixmapCursor(dpy, blank, blank, &dummy, &dummy, 0, 0);
     XFreePixmap(dpy, blank);
     //this makes you the cursor. then set it using this function
@@ -417,34 +417,34 @@ int check_keys(XEvent *e)
     int key = XLookupKeysym(&e->xkey, 0);
     //Log("key: %i\n", key);
     if (e->type == KeyRelease) {
-	keys[key]=0;
-	if (key == XK_Shift_L || key == XK_Shift_R)
-	    shift=0;
-	return 0;
+        keys[key]=0;
+        if (key == XK_Shift_L || key == XK_Shift_R)
+            shift=0;
+        return 0;
     }
     if (e->type == KeyPress) {
-	//std::cout << "press" << std::endl;
-	keys[key]=1;
-	if (key == XK_Shift_L || key == XK_Shift_R) {
-	    shift=1;
-	    return 0;
-	}
+        //std::cout << "press" << std::endl;
+        keys[key]=1;
+        if (key == XK_Shift_L || key == XK_Shift_R) {
+            shift=1;
+            return 0;
+        }
     } else {
-	return 0;
+        return 0;
     }
     if (shift){}
     switch (key) {
-	case XK_Escape:
-	    return 1;
-	case XK_c:
-	    credits = credits ^ 1;
-	    break;
-	case XK_r:
-	    ramon_menu = ramon_menu ^ 1;
-	    break;
-	case XK_p:
-	    pat_menu = pat_menu ^ 1;
-	    break;
+        case XK_Escape:
+            return 1;
+        case XK_c:
+            credits = credits ^ 1;
+            break;
+        case XK_r:
+            ramon_menu = ramon_menu ^ 1;
+            break;
+        case XK_p:
+            pat_menu = pat_menu ^ 1;
+            break;
     }
     return 0;
 }
@@ -452,46 +452,46 @@ int check_keys(XEvent *e)
 void changeLevel(Game *g, int level) {
     if (level > 5) {
 #ifdef USE_OPENAL_SOUND
-	stopSound(p.alSourceAstroid);
-	playSound(p.alSourceVictory);
-	sleep(5);
+        stopSound(p.alSourceAstroid);
+        playSound(p.alSourceVictory);
+        sleep(5);
 #endif
-	pat_menu = 1;
-	credits = 1;
-	level = 1;
-	g->curLevel = 1;
+        pat_menu = 1;
+        credits = 1;
+        level = 1;
+        g->curLevel = 1;
     } else {
-	g->level = loadLevel(level); //Abraham's level loading
+        g->level = loadLevel(level); //Abraham's level loading
 #ifdef USE_OPENAL_SOUND
-	stopSound(p.alSourceAstroid);	//stops bgm
-	playSound(p.alSourceVictory);	//Victory
-	sleep(5);
-	playSound(p.alSourceAstroid);	//bgm
+        stopSound(p.alSourceAstroid);	//stops bgm
+        playSound(p.alSourceVictory);	//Victory
+        sleep(5);
+        playSound(p.alSourceAstroid);	//bgm
 #endif //end openal sound
 
-	g->ship.enableBooster2();
-	g->ship.setPosX(g->level.rocket.x);
-	g->ship.setPosY(g->level.rocket.y);
-	g->ship.resetFuel();
+        g->ship.enableBooster2();
+        g->ship.setPosX(g->level.rocket.x);
+        g->ship.setPosY(g->level.rocket.y);
+        g->ship.resetFuel();
 
-	for (int i = 0; i < g->level.platformCount; i++) { 
-	    g->plats[i].setPosX(g->level.platform.x[i]);
-	    g->plats[i].setPosY(g->level.platform.y[i]);
-	    g->plats[i].setWidth(100);
-	    g->plats[i].setHeight(32);
-	}
+        for (int i = 0; i < g->level.platformCount; i++) { 
+            g->plats[i].setPosX(g->level.platform.x[i]);
+            g->plats[i].setPosY(g->level.platform.y[i]);
+            g->plats[i].setWidth(100);
+            g->plats[i].setHeight(32);
+        }
 
-	g->goal.setPosX(g->level.goalX);
-	g->goal.setPosY(g->level.goalY);
-	g->goal.setWidth(100);
-	g->goal.setHeight(27);
+        g->goal.setPosX(g->level.goalX);
+        g->goal.setPosY(g->level.goalY);
+        g->goal.setWidth(100);
+        g->goal.setHeight(27);
 
-	g->fueler.setPosX(850);
-	g->fueler.setPosY(340);
-	g->fueler.setWidth(100);
-	g->fueler.setHeight(27);
+        g->fueler.setPosX(850);
+        g->fueler.setPosY(340);
+        g->fueler.setWidth(100);
+        g->fueler.setHeight(27);
 
-	init_opengl(g);
+        init_opengl(g);
     }
 }
 
@@ -503,58 +503,58 @@ void physics(Game *g)
     // Check for collision with platforms
     g->ship.collidesWith(g->ground);
     for (int i=0; i<g->level.platformCount; i++) {
-	g->ship.collidesWith(g->plats[i]);
+        g->ship.collidesWith(g->plats[i]);
     }
 
     // Check for collision with goal platform
     g->ship.collidesWith(g->goal);
     if (g->ship.goalTriggered(g->goal))
-	changeLevel(g, ++g->curLevel);
+        changeLevel(g, ++g->curLevel);
 
     // Check for collision with fueler platform
     g->ship.collidesWith(g->fueler);
     // If fueler is triggered and it has fuel left
     if (g->ship.fuelerTriggered(g->fueler) && g->fueler.getFuelLeft() > 1) {
-	// Do not overfill the ship
-	if (!(g->ship.getFuelLeft() > g->ship.getFuelMax()-1)) {
-	    g->fueler.removeFuel();
-	    g->ship.addFuel();
-	}
+        // Do not overfill the ship
+        if (!(g->ship.getFuelLeft() > g->ship.getFuelMax()-1)) {
+            g->fueler.removeFuel();
+            g->ship.addFuel();
+        }
     }
 
     if (g->ship.getPosX() < 0.0) {
-	g->ship.setPosX(g->ship.getPosX() + (float)xres);
+        g->ship.setPosX(g->ship.getPosX() + (float)xres);
     }
     else if (g->ship.getPosX() > (float)xres) {
-	g->ship.setPosX(g->ship.getPosX() - (float)xres);
+        g->ship.setPosX(g->ship.getPosX() - (float)xres);
     }
     //---------------------------------------------------
     //check keys pressed now
     if (keys[XK_Left]) {
-	g->ship.rotateLeft();
+        g->ship.rotateLeft();
 
     }
     if (keys[XK_Right]) {
-	g->ship.rotateRight();
+        g->ship.rotateRight();
     }
     if (keys[XK_Up]) {
 #ifdef USE_OPENAL_SOUND
-	playSound(p.alSourceBooster);	//Booster
+        playSound(p.alSourceBooster);	//Booster
 #endif //end openal sound
-	g->ship.accelerate();
+        g->ship.accelerate();
     }
 
     if (g->ship.shipExploded()) {
-	g->ship.setPosX(g->level.rocket.x);
-	g->ship.setPosY(g->level.rocket.y);
-	g->ship.setVelX(0);
-	g->ship.setVelY(0);
-	g->ship.setRot(0);
-	printf("Ship exploded!\n");
+        g->ship.setPosX(g->level.rocket.x);
+        g->ship.setPosY(g->level.rocket.y);
+        g->ship.setVelX(0);
+        g->ship.setVelY(0);
+        g->ship.setRot(0);
+        printf("Ship exploded!\n");
 #ifdef USE_OPENAL_SOUND
-	playSound(p.alSourceCollide);	//Collide
+        playSound(p.alSourceCollide);	//Collide
 #endif //end openal sound
-	g->ship.reset();
+        g->ship.reset();
     }
 }
 
@@ -596,7 +596,7 @@ void render(Game *g)
 
     g->ground.draw();
     for (int i = 0; i < g->level.platformCount; i++)
-	g->plats[i].draw();
+        g->plats[i].draw();
 
     g->goal.draw();
     g->fueler.draw();

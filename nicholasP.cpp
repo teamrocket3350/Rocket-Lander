@@ -91,10 +91,6 @@ Ship::Ship()
     collidables[4].base = 26;
     collidables[4].height = 20;
 
-    // Booster
-    //collidables[5].width = 26;
-    //collidables[5].height= 10;
-
     // Overall ship size
     shape.width = collidables[0].width +
         collidables[1].base*.5 + collidables[2].base*.5;
