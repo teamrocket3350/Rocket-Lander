@@ -25,10 +25,10 @@
 
 #ifdef USE_OPENAL_SOUND
 struct Global {
-    ALuint alBufferLaser, alBufferBooster, alBufferAstroid, alBufferVictory, 
-	   alBufferCollide;
-    ALuint alSourceLaser, alSourceBooster, alSourceAstroid, alSourceVictory, 
-	   alSourceCollide;
+    ALuint alBufferLaser, alBufferBooster, alBufferAstroid, alBufferVictory,
+	alBufferCollide;
+    ALuint alSourceLaser, alSourceBooster, alSourceAstroid, alSourceVictory,
+	alSourceCollide;
 } p;
 #endif // close use_openal_sound
 
